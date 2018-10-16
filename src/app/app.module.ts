@@ -7,24 +7,22 @@ import { routing, appRoutingProviders } from './app.routing';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
 import { FooterComponent } from './footer/footer.component';
-import { EstructuraComponent } from './estructura/estructura.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-import { AddclientesComponent } from './clientes/addclientes/addclientes.component';
-import { ClientesComponent } from './clientes/clientes/clientes.component';
-import { TiendaComponent } from './tienda/tienda/tienda.component';
+import { ClientsComponent } from './clients/clients/clients.component';
+import { AddclientsComponent } from './clients/addclients/addclients.component';
+import { ShopComponent } from './shop/shop/shop.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
     FooterComponent,
-    EstructuraComponent,
     LoginComponent,
     HomeComponent,
-    AddclientesComponent,
-    ClientesComponent,
-    TiendaComponent
+    ClientsComponent,
+    AddclientsComponent,
+    ShopComponent
   ],
   imports: [
     BrowserModule,
