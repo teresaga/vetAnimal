@@ -20,10 +20,11 @@
               <a class="dropdown-item" href="#">
                 <i class="dropdown-icon fe fe-settings"></i> Cambiar contraseña
               </a>
-              <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">
                 <i class="dropdown-icon fe fe-help-circle"></i> Ayuda
               </a>
+
+              <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">
                 <i class="dropdown-icon fe fe-log-out"></i> Cerrar sesión
               </a>
@@ -59,17 +60,31 @@
                 <i class="fe fe-user"></i> Clientes
               </a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link"><i class="fe fe-file"></i> Pages</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a  class="nav-link"><i class="fe fe-check-square"></i> Forms</a>
+            <li class="nav-item">
+              <a [routerLink]="['/animales']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fe fe-twitter"></i> Mascotas
+              </a>
             </li>
             <li class="nav-item">
-              <a  class="nav-link"><i class="fe fe-image"></i> Gallery</a>
+              <a [routerLink]="['/empleados']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fe fe-user"></i> Empleados
+              </a>
             </li>
             <li class="nav-item">
-              <a  class="nav-link"><i class="fe fe-file-text"></i> Documentation</a>
+              <a [routerLink]="['/proveedores']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fe fe-truck"></i> Proveedores
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/productos']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fe fe-box"></i> Productos
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-settings"></i> Panel de Control</a>
+              <div class="dropdown-menu dropdown-menu-arrow">
+                <a [routerLink]="['/usuarios']" [routerLinkActive]="['active']" class="dropdown-item ">Usuarios</a>
+              </div>
             </li>
           </ul>
         </div>
