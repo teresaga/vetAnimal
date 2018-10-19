@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-12 card">
+        <div class="card-header">
+            <h3 class="card-title">Productos</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="input-icon mb-3 search">
+                    <input type="text" class="form-control" placeholder="Filtrar Productos...">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-search"></i>
+                    </span>
+                </div>
+                <div class="col-md-1 col-lg-1">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProduct">
+                        <i class="fe fe-plus-circle mr-2"></i>
+                        Nuevo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 card">
+        <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap">
+                <thead>
+                    <tr>
+                        <th class="w-1">ID</th>
+                        <th>Descripción</th>
+                        <th>Stock Actual</th>
+                        <th>Stock Mínimo</th>
+                        <th>Stock Máximo</th>
+                        <th>Unidad de Medida</th>
+                        <th>Tipo</th>
+                        <th>Precio</th>
+                        <th>Costo</th>
+                        <th>Proveedor</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="text-muted">1</span></td>
+                    <td>PLATO DE COMIDA</td>
+                    <td>15</td>
+                    <td>10</td>
+                    <td>25</td>
+                    <td>PIEZA</td>
+                    <td>ACCESORIO</td>
+                    <td>120</td>
+                    <td>100</td>
+                    <td>1</td>
+                    <td>
+                        <span class="status-icon bg-success"></span> Activo
+                    </td>
+                    <td>
+                        <a class="icon" href="javascript:void(0)">
+                            <i class="fe fe-eye mr-2" style="color:blue;"></i>
+                        </a>
+                        <a class="icon" href="javascript:void(0)">
+                            <i class="fe fe-edit mr-2" style="color:orange;"></i>
+                        </a>
+                        <a class="icon" href="javascript:void(0)">
+                            <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+  
+  <!--MODAL ALTA-->
+  <app-addproduct></app-addproduct>
+  <!--MODAL ALTA END-->

@@ -1,18 +1,18 @@
 <div class="row">
   <div class="col-12 card">
       <div class="card-header">
-          <h3 class="card-title">Clientes</h3>
+          <h3 class="card-title">Proveedores</h3>
       </div>
       <div class="card-body">
           <div class="row">
               <div class="input-icon mb-3 search">
-                  <input type="text" class="form-control" placeholder="Filtrar Clientes...">
+                  <input type="text" class="form-control" placeholder="Filtrar Proveedores...">
                   <span class="input-icon-addon">
                       <i class="fe fe-search"></i>
                   </span>
               </div>
               <div class="col-md-1 col-lg-1">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addClient">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProvider">
                       <i class="fe fe-plus-circle mr-2"></i>
                       Nuevo
                   </button>
@@ -27,9 +27,9 @@
                   <tr>
                       <th class="w-1">ID</th>
                       <th>Nombre</th>
-                      <th>Apellido Paterno</th>
-                      <th>Apellido Materno</th>
-                      <th>Edad</th>
+                      <th>Razón Social</th>
+                      <th>RFC</th>
+                      <th>Nombre contacto</th>
                       <th>Dirección</th>
                       <th>Teléfono</th>
                       <th>Email</th>
@@ -40,15 +40,15 @@
               <tbody>
               <tr>
                   <td><span class="text-muted">1</span></td>
-                  <td>TERESA</td>
-                  <td>GALAVIZ</td>
-                  <td>ALEJOS</td>
-                  <td>21</td>
+                  <td>WHISKAS</td>
+                  <td>ALIMENTO WHISKAS</td>
+                  <td>GAAT970927RF2</td>
+                  <td>TERESA GALAVIZ</td>
                   <td>Cipres Residencial del valle</td>
                   <td>6681223311</td>
                   <td>tere@gmail.com</td>
                   <td>
-                      <span class="status-icon bg-success"></span> Activo
+                    <span class="status-icon bg-success"></span> Activo
                   </td> 
                   <td>
                       <a class="icon" href="javascript:void(0)">
@@ -69,5 +69,5 @@
 </div>
 
 <!--MODAL ALTA-->
-<app-addclient></app-addclient>
+<app-addprovider></app-addprovider>
 <!--MODAL ALTA END-->

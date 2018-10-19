@@ -1,0 +1,178 @@
+<div class="modal" id="addAnimal" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+  
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">NUEVA MASCOTA</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>   
+        </div>
+  
+        <div class="modal-body">
+            <form action="" method="POST">  
+  
+              <div class="form-group">
+                  <div class="row gutters-xs">
+                      <div class="col-6">
+                          <label for="cliente">Cliente</label>
+                          <select class="form-control custom-select" id="cliente">
+                            <option value="">Seleccionar cliente...</option>
+                          </select> 
+                      </div>
+  
+                      <div class="col-6">
+                        <label for="animal">Nombre de mascota</label>
+                        <input class="form-control" id="animal" name="animal" type="text" required> 
+                      </div>
+                  </div>  
+              </div>
+              
+              <div class="form-group">
+                  <div class="row gutters-xs">
+                      <div class="col-6">
+                          <label for="sexo">Sexo</label>
+                          <select class="form-control custom-select" id="sexo">
+                            <option value="">Seleccionar...</option>
+                            <option value="">Hembra</option>
+                            <option value="">Macho</option>
+                          </select> 
+                      </div>
+                      
+                      <div class="col-6">
+                        <label for="fechanac">Fecha de nacimiento</label>
+                        <input class="form-control" id="fechanac" name="fechanac" type="date" required> 
+                      </div>
+                  </div>  
+              </div>
+  
+              <div class="row gutters-xs">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="especie">Especie</label>
+              
+                    <div class="input-group">
+                      <select class="form-control custom-select" id="especie">
+                        <option value="">Seleccionar...</option>
+                      </select> 
+                      <span class="input-group-append">
+                        <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="raza">Raza</label>
+              
+                    <div class="input-group">
+                      <select class="form-control custom-select" id="raza">
+                        <option value="">Seleccionar...</option>
+                      </select> 
+                      <span class="input-group-append">
+                        <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="row gutters-xs">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="caracter">Carácter</label>
+              
+                    <div class="input-group">
+                      <select class="form-control custom-select" id="caracter">
+                        <option value="">Seleccionar...</option>
+                      </select> 
+                      <span class="input-group-append">
+                        <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="pelo">Pelo</label>
+              
+                    <div class="input-group">
+                      <select class="form-control custom-select" id="pelo">
+                        <option value="">Seleccionar...</option>
+                      </select> 
+                      <span class="input-group-append">
+                        <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="row gutters-xs">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="habitat">Hábitat</label>
+              
+                    <div class="input-group">
+                      <select class="form-control custom-select" id="habitat">
+                        <option value="">Seleccionar...</option>
+                      </select> 
+                      <span class="input-group-append">
+                        <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-3">
+                  <label for="animal">Peso</label>
+                  <input class="form-control" id="animal" name="animal" type="text" required> 
+                </div>
+  
+                <div class="col-3">
+                  <label for="animal">Altura</label>
+                  <input class="form-control" id="animal" name="animal" type="text" required> 
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <label class="">Selecciona</label>
+                <div>
+                  <div class="form-check custom-control custom-checkbox custom-control-inline">
+                    <input class="form-check-input" type="checkbox" value="" id="esterilizado">
+                    <label class="form-check-label" for="esterilizado">
+                      Esterilizado
+                    </label>
+                  </div>
+  
+                  <div class="form-check custom-control custom-checkbox custom-control-inline">
+                    <input class="form-check-input" type="checkbox" value="" id="unias">
+                    <label class="form-check-label" for="unias">
+                      Uñas largas
+                    </label>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <label for="observaciones">Observaciones</label>
+                <textarea class="form-control" rows="2" id="observaciones" name="observaciones" required></textarea>   
+              </div>
+  
+              <div class="form-group">
+                <label for="foto">Fotografías</label>
+                <textarea class="form-control" rows="2" id="foto" name="foto" required></textarea>   
+              </div>
+  
+              <div id="alert" class=""><strong id="tituloMensaje"></strong><span id="mensajes"></span></div>
+            </form>
+        </div>
+  
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
+          <button type="button" class="btn btn-warning cerrar" data-dismiss="modal" name="cerrar">Cerrar</button>
+        </div>
+      </div>
+  
+    </div>
+  </div> 
