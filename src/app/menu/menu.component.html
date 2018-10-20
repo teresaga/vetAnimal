@@ -81,7 +81,7 @@
               </a>
             </li>
             <li class="nav-item dropdown">
-              <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-settings"></i> Panel de Control</a>
+              <a [routerLink]="['/usuarios']" [routerLinkActive]="['active']" href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-settings"></i> Panel de Control</a>
               <div class="dropdown-menu dropdown-menu-arrow">
                 <a [routerLink]="['/usuarios']" [routerLinkActive]="['active']" class="dropdown-item ">Usuarios</a>
               </div>
