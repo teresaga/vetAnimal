@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-12 card">
+        <div class="card-header">
+            <h3 class="card-title">Historial médico</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="form-group col-md-4 col-lg-4">
+                  <label class="form-label">Cliente</label>
+                  <select class="form-control custom-select" id="cliente">
+                      <option value="">Selecciona...</option>
+                      <option value="">TERESA</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-3 col-lg-3">
+                  <label class="form-label">Mascota</label>
+                  <select class="form-control custom-select" id="animal">
+                      <option value="">Selecciona...</option>
+                      <option value="">YUKI</option>
+                  </select>
+                </div>
+                <div class="col-md-1 col-lg-1">
+                    <br>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addConsultation">
+                        <i class="fe fe-plus-circle mr-2"></i>
+                        Nuevo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <div class="col-12 card">
+        <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap">
+                <thead>
+                    <tr>
+                        <th class="w-1">ID Mascota</th>
+                        <th>Mascota</th>
+                        <th>Cliente</th>
+                        <th>Peso</th>
+                        <th>Temperatura</th>
+                        <th>Observaciones</th>
+                        <th>Fecha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="text-muted">1</span></td>
+                    <td>YUKI</td>
+                    <td>TERESA</td>
+                    <td>6 kg</td>
+                    <td>38</td>
+                    <td>...</td>
+                    <td>15/06/2016</td>
+                    <td>
+                        <a class="icon" href="javascript:void(0)">
+                            <i class="fe fe-eye mr-2" style="color:blue;"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+  
+  <!--MODAL ALTA-->
+  <app-addconsultation></app-addconsultation>
+  <!--MODAL ALTA END-->

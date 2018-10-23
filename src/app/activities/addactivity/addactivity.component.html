@@ -1,0 +1,78 @@
+<div class="modal" id="addActivity" tabindex="-1" role="dialog" aria-labellebdy="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+  
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">NUEVA ACTIVIDAD</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>   
+        </div>
+  
+        <div class="modal-body">
+            <form action="" method="POST">  
+  
+              <div class="form-group">
+                  <div class="row gutters-xs">
+                      <div class="col-6">
+                          <label for="cliente">Cliente</label>
+                          <select class="form-control custom-select" id="cliente">
+                            <option value="">Seleccionar cliente...</option>
+                          </select> 
+                      </div>
+  
+                      <div class="col-6">
+                          <label for="mascota">Mascota</label>
+                          <select class="form-control custom-select" id="animal">
+                            <option value="">Seleccionar mascota...</option>
+                          </select> 
+                      </div>
+                  </div>  
+              </div>
+              
+              <div class="form-group">
+                  <div class="row gutters-xs">
+                    <div class="col-6">
+                      <label for="fecha">Fecha</label>
+                      <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="fe fe-calendar"></i>
+                        </span> 
+                        <input class="form-control" id="fecha" name="fecha" type="date" required> 
+                      </div>
+                    </div>
+      
+                    <div class="col-6">
+                      <label for="hora">Hora</label>
+                      <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="fe fe-clock"></i>
+                        </span> 
+                        <input class="form-control" id="hora" name="hora" type="time" value="00:00:00" step="1" required>  
+                      </div>
+                    </div>
+                  </div>  
+              </div>
+
+              <div class="form-group">
+                <label for="servicio">Servicio</label>
+                <select class="form-control custom-select" id="servicio">
+                  <option value="">Seleccionar...</option>
+                </select>   
+              </div>
+
+              <div class="form-group">
+                <label for="notas">Notas</label>
+                <textarea class="form-control" rows="2" id="notas" name="notas" required></textarea>   
+              </div>
+  
+              <div id="alert" class=""><strong id="tituloMensaje"></strong><span id="mensajes"></span></div>
+            </form>
+        </div>
+  
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
+          <button type="button" class="btn btn-warning cerrar" data-dismiss="modal" name="cerrar">Cerrar</button>
+        </div>
+      </div>
+  
+    </div>
+  </div> 

@@ -5,7 +5,6 @@ import { HttpModule } from '@angular/http';
 import { routing, appRoutingProviders } from './app.routing';
 
 import { AppComponent } from './app.component';
-import { MenuComponent } from './menu/menu.component';
 import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
@@ -22,11 +21,17 @@ import { ProductsComponent } from './products/products/products.component';
 import { AddproductComponent } from './products/addproduct/addproduct.component';
 import { UsersComponent } from './users/users/users.component';
 import { AdduserComponent } from './users/adduser/adduser.component';
+import { HeaderComponent } from './header/header.component';
+import { ConsultationsComponent } from './consultations/consultations/consultations.component';
+import { AddconsultationComponent } from './consultations/addconsultation/addconsultation.component';
+import { ActivitiesComponent } from './activities/activities/activities.component';
+import { AddactivityComponent } from './activities/addactivity/addactivity.component';
+import { SettingsComponent } from './settings/settings.component';
+import { ReportsComponent } from './reports/reports/reports.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MenuComponent,
     FooterComponent,
     LoginComponent,
     HomeComponent,
@@ -42,7 +47,14 @@ import { AdduserComponent } from './users/adduser/adduser.component';
     ProductsComponent,
     AddproductComponent,
     UsersComponent,
-    AdduserComponent
+    AdduserComponent,
+    HeaderComponent,
+    ConsultationsComponent,
+    AddconsultationComponent,
+    ActivitiesComponent,
+    AddactivityComponent,
+    SettingsComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
