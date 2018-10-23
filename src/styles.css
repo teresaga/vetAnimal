@@ -1820,7 +1820,9 @@ pre code {
 .table-responsive {
   display: block;
   width: 100%;
+  max-height: 400px;
   overflow-x: auto;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
