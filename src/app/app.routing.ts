@@ -14,10 +14,12 @@ import { ActivitiesComponent } from './activities/activities/activities.componen
 import { SettingsComponent } from './settings/settings.component';
 import { ReportsComponent } from './reports/reports/reports.component';
 import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
 
 const appRoutes: Routes = [
 	//{path: '', component: HomeComponent},
 	{path: '', redirectTo: 'home', pathMatch: 'full'},
+	{path: 'login', component: LoginComponent},
 	{path: 'home', component: HomeComponent},
 	{path: 'clientes', component: ClientsComponent},
 	{path: 'tienda', component: ShopComponent},
