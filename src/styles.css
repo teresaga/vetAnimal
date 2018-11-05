@@ -9,6 +9,9 @@ Dashboard UI
  * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+.pointer{
+  cursor: pointer;
+}
 .search {
   width: 80%;
 }
