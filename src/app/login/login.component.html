@@ -3,16 +3,23 @@
     <div class="container">
       <div class="row">
         <div class="col col-login mx-auto">
-          <div class="text-center mb-6">
-            <img src="../../assets/img/vetanimal.png" class="h-6" alt="">
-          </div>
-          <form class="card" action="" method="post">
+          <form class="card" #loginForm="ngForm" (ngSubmit)="onSubmit()">
             <div class="card-body p-6">
-              <div class="card-title text-center">Login</div>
+              <div class="card-title text-center"><img src="../../assets/img/vetanimal.png" class="h-6" alt=""></div>
+
+
+              <div class="alert alert-danger" *ngIf="status == 'error'">
+                  No te has identificado correctamente
+              </div>
+
               <div class="form-group">
                 <label class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Usuario">
+                <input type="text" class="form-control" id="username" name="username" #username="ngModel" [(ngModel)]="user.username" placeholder="Usuario">
+                <span *ngIf="!username.valid && username.touched">
+                    El usuario es obligatorio
+                </span>
               </div>
+
               <div class="form-group">
                 <label class="form-label">
                   Password
@@ -20,7 +27,10 @@
                   <a href="./forgot-password.html" class="float-right small">I forgot password</a>
                     -->
                 </label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <input type="password" class="form-control" id="password" name="password" #password="ngModel" [(ngModel)]="user.password" placeholder="Password">
+                <span *ngIf="!password.valid && password.touched">
+                    La contraseña es obligatoria
+                </span>
               </div>
               <div class="form-group">
                   
