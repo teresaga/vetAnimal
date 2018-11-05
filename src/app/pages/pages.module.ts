@@ -29,6 +29,7 @@ import { HomeComponent } from './home/home.component';
 
 import { UserService } from '../services/user.service';
 
+import { SearchWorkerPipe } from './pipes/search-worker.pipe';
 @NgModule({
   declarations: [
     PagesComponent,
@@ -51,7 +52,8 @@ import { UserService } from '../services/user.service';
     AddanimalComponent,
     ShopComponent,
     ClientsComponent,
-    AddclientComponent
+    AddclientComponent,
+    SearchWorkerPipe
   ],
   imports: [
     SharedModule,

@@ -6,7 +6,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="input-icon mb-3 search">
-                    <input type="text" class="form-control" placeholder="Filtrar Empleados...">
+                    <input type="text" class="form-control" placeholder="Filtrar Empleados..." [(ngModel)]="busqueda">
                     <span class="input-icon-addon">
                         <i class="fe fe-search"></i>
                     </span>
@@ -33,7 +33,6 @@
                         <th>Dirección</th>
                         <th>Teléfono</th>
                         <th>Email</th>
-                        <th>Salario</th>
                         <th>Puesto</th>
                         <th>Horario</th>
                         <th>Estado</th>
@@ -41,20 +40,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><span class="text-muted">1</span></td>
-                    <td>TERESA</td>
-                    <td>GALAVIZ</td>
-                    <td>ALEJOS</td>
-                    <td>21</td>
-                    <td>Cipres Residencial del valle</td>
-                    <td>6681223311</td>
-                    <td>tere@gmail.com</td>
-                    <td>1000</td>
-                    <td>Veterinario</td>
-                    <td>9:00 - 15:00</td>
+                <tr *ngFor="let worker of workers | searchWorker: busqueda; index as i">
+                    <td><span class="text-muted">{{i+1}}</span></td>
+                    <td>{{worker.name}}</td>
+                    <td>{{worker.paternal_surname}}</td>
+                    <td>{{worker.maternal_surname}}</td>
+                    <td>{{worker.age}}</td>
+                    <td>{{worker.address}}</td>
+                    <td>{{worker.tel}}</td>
+                    <td>{{worker.email}}</td>
+                    <td>{{worker.job.name}}</td>
+                    <td>{{worker.entry_horary}} - {{worker.departure_horary}}</td>
                     <td>
-                        <span class="status-icon bg-success"></span> Activo
+                        <span [ngClass]="{'bg-success': worker.status === 'A', 'bg-danger': worker.status === 'B'}" class="status-icon"></span> {{worker.status}}
                     </td>
                     <td>
                         <a class="icon" href="javascript:void(0)">
