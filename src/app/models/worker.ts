@@ -4,6 +4,7 @@ export class Worker{
         public name: string,
         public paternal_surname: string,
         public maternal_surname: string,
+        public tel: string,
         public address: string,
         public age: string,
         public email: string,

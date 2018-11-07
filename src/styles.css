@@ -9,11 +9,31 @@ Dashboard UI
  * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+ .sub-modal{
+  margin:0 auto; 
+  margin-top:10%;
+ }
 .pointer{
   cursor: pointer;
 }
 .search {
   width: 80%;
+}
+
+input.ng-invalid.ng-touched {
+  border-left: 5px solid #a94442;
+}
+
+input.ng-valid.ng-dirty {
+  border-left: 5px solid #42A948;
+}
+
+select.ng-invalid.ng-touched {
+  border-left: 5px solid #a94442;
+}
+
+select.ng-valid.ng-dirty {
+  border-left: 5px solid #42A948;
 }
 
 :root {

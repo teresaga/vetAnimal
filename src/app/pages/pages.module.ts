@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { PagesComponent } from './pages.component';
 import { PAGES_ROUTES } from './pages.routing';
-
+ 
 import { SharedModule } from '../shared/shared.module';
 
 import { ClientsComponent } from './clients/clients/clients.component';
@@ -30,6 +32,9 @@ import { HomeComponent } from './home/home.component';
 import { UserService } from '../services/user.service';
 
 import { SearchWorkerPipe } from './pipes/search-worker.pipe';
+import { JobsComponent } from './jobs/jobs/jobs.component';
+import { AddjobComponent } from './jobs/addjob/addjob.component';
+import { EditworkerComponent } from './workers/editworker/editworker.component';
 @NgModule({
   declarations: [
     PagesComponent,
@@ -53,12 +58,17 @@ import { SearchWorkerPipe } from './pipes/search-worker.pipe';
     ShopComponent,
     ClientsComponent,
     AddclientComponent,
-    SearchWorkerPipe
+    SearchWorkerPipe,
+    JobsComponent,
+    AddjobComponent,
+    EditworkerComponent
   ],
   imports: [
     SharedModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
     PAGES_ROUTES
   ],
   exports: [
