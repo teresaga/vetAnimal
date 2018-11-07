@@ -8,16 +8,15 @@
       </div>
 
       <div class="modal-body">
-          <form [formGroup]="workerForm" (ngSubmit)="onSubmit()">  
+          <form #formAdd="ngForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
               <label for="nombre">Nombre </label>&nbsp;
-              <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.name.invalid && workerForm.controls.name.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
               <div class="input-icon">
                   <span class="input-icon-addon">
                       <i class="fe fe-user"></i>
                   </span>
-                <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+                <input class="form-control" type="text" name="name" #name="ngModel" [(ngModel)]="worker.name" required> 
               </div>  
             </div>
 
@@ -25,68 +24,60 @@
                 <div class="row gutters-xs">
                     <div class="col-6">
                       <label for="app">Apellido Paterno</label>&nbsp;
-                      <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.paternal_surname.invalid && workerForm.controls.paternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
-                      <input class="form-control" id="paternal_surname" name="paternal_surname" type="text" formControlName="paternal_surname">
+                      <input class="form-control" type="text" name="paternal_surname" #paternal_surname="ngModel" [(ngModel)]="worker.paternal_surname" required>
                     </div>
                     <div class="col-6">
                       <label for="app">Apellido Materno</label>&nbsp;
-                      <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.maternal_surname.invalid && workerForm.controls.maternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
-                      <input class="form-control" id="maternal_surname" name="maternal_surname" type="text" formControlName="maternal_surname">
+                      <input class="form-control" type="text" name="maternal_surname" #maternal_surname="ngModel" [(ngModel)]="worker.maternal_surname">
                     </div>
                 </div>  
             </div>
             
             <div class="form-group">
               <label for="direccion">Dirección</label>&nbsp;
-              <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.address.invalid && workerForm.controls.address.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
-              <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"></textarea>
+              <textarea class="form-control" rows="2" name="address" #address="ngModel" [(ngModel)]="worker.address" required></textarea>
             </div>
             
             <div class="form-group">
               <div class="row gutters-xs">
                 <div class="col-8">
                   <label for="telefono">Teléfono</label>&nbsp;
-                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.tel.invalid && workerForm.controls.tel.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                   <div class="input-icon">
                       <span class="input-icon-addon">
                           <i class="fe fe-phone"></i>
                       </span>
-                    <input class="form-control" id="tel" name="tel" type="text" formControlName="tel">
+                    <input class="form-control" type="text" name="tel" #tel="ngModel" [(ngModel)]="worker.tel" required>
                   </div>
                 </div>
                 <div class="col-4">
                   <label for="edad">Edad</label>&nbsp;
-                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.age.invalid && workerForm.controls.age.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
-                  <input class="form-control" id="age" name="age" type="number"formControlName="age">
+                  <input class="form-control" type="number" name="age" #age="ngModel" [(ngModel)]="worker.age" required>
                 </div>
               </div>
             </div> 
 
             <div class="form-group">
               <label for="email">Email</label>&nbsp;
-              <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.email.invalid && workerForm.controls.email.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
               <div class="input-icon">
                   <span class="input-icon-addon">
                       <i class="fe fe-mail"></i>
                   </span>
-                  <input class="form-control" id="email" name="email" type="email" formControlName="email">
+                  <input class="form-control" type="email" name="email" #email="ngModel" [(ngModel)]="worker.email" required>
               </div>  
             </div>
 
             <div class="row gutters-xs">
               <div class="col-6">
                 <label for="salary">Salario</label>&nbsp;
-                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.salary.invalid && workerForm.controls.salary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
-                <input class="form-control" id="salary" name="salary" type="text" formControlName="salary">
+                <input class="form-control" type="text" name="salary" #salary="ngModel" [(ngModel)]="worker.salary" required>
               </div>
 
               <div class="col-6">
                 <div class="form-group">
                   <label class="puesto">Puesto</label>&nbsp;
-                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.job.invalid && workerForm.controls.job.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
             
                   <div class="input-group">
-                    <select class="form-control custom-select" id="job" formControlName="job"> 
+                    <select class="form-control custom-select" name="job" #job="ngModel" [(ngModel)]="worker.job._id" required> 
                       <option value="">Seleccionar...</option>
                       <option *ngFor="let job of jobs; index as i" [value]="job._id">{{i+1}}.- {{job.name}}</option>
                     </select>
@@ -103,13 +94,11 @@
               <div class="row gutters-xs">
                   <div class="col-6">
                     <label for="entrada">Entrada</label>&nbsp;
-                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.entry_horary.invalid && workerForm.controls.entry_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
-                    <input class="form-control" id="entry_horary" name="entry_horary" type="time" value="00:00:00" step="1" formControlName="entry_horary"> 
+                    <input class="form-control" type="time" value="00:00:00" step="1" name="entry_horary" #entry_horary="ngModel" [(ngModel)]="worker.entry_horary" required> 
                   </div>
                   <div class="col-6">
                     <label for="salida">Salida</label>&nbsp;
-                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.departure_horary.invalid && workerForm.controls.departure_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
-                    <input class="form-control" id="departure_horarydeparture_horary" name="departure_horary" type="time" value="00:00:00" step="1" formControlName="departure_horary"> 
+                    <input class="form-control" type="time" value="00:00:00" step="1" name="departure_horary" #departure_horary="ngModel" [(ngModel)]="worker.departure_horary" required> 
                   </div>
               </div>  
             </div>

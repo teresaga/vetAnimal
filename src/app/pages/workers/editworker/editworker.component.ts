@@ -8,7 +8,8 @@ import { WorkerService } from '../../../services/worker.service';
 import { Worker } from '../../../models/worker';
 import { UserService } from '../../../services/user.service';
 import { WorkersComponent } from '../workers/workers.component';
-
+declare var jQuery:any;
+declare var $:any;
 @Component({
   selector: 'app-editworker',
   templateUrl: './editworker.component.html',
@@ -21,7 +22,6 @@ export class EditworkerComponent implements OnInit {
   public url: string;
   public token;
   public status: string;
-  workerForm: FormGroup;
 
   constructor(
     private pf: FormBuilder,
@@ -39,23 +39,26 @@ export class EditworkerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.workerForm = this.pf.group({
-      name: ['', Validators.required],
-      paternal_surname: ['', Validators.required],
-      maternal_surname: [''],
-      age: ['', [Validators.required, Validators.min(18)]],
-      address: ['', Validators.required],
-      tel: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      salary: ['', Validators.required],
-      job: ['', Validators.required],
-      departure_horary: ['', Validators.required],
-      entry_horary: ['', Validators.required]
-    });
     this.getJobsA();
+    this.getWorker();
   }
 
-  getJobsA(){
+  getWorker(){
+    this._workerService.getWorker(this.nom).subscribe(
+      response => {
+        if(!response.worker){
+          this._router.navigate(['/']);
+        }else{
+          this.worker = response.worker;
+        }
+      }, error => {
+        console.log(<any>error);
+        this._router.navigate(['/']);
+      }
+    );
+  }
+
+  public getJobsA(){
     this._jobService.getJobsA().subscribe(
       response => {
         
@@ -71,7 +74,6 @@ export class EditworkerComponent implements OnInit {
 
   cerrar(){
     if(this.status=="success"){
-      this.workerForm.reset();
       this._workerComponent.getWorkers();
       this.status="";
     }
