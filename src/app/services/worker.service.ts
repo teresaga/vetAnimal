@@ -17,6 +17,38 @@ export class WorkerService {
     this.url = GLOBAL.url;
   }
 
+  addWorker(token, worker: Worker): Observable<any>{
+    let params = JSON.stringify(worker);
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.post(this.url+'worker', params, {headers: headers});
+  }
+
+  editWorker(token, id, worker: Worker): Observable<any>{
+    let params = JSON.stringify(worker);
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'worker/'+id, params, {headers: headers});
+  }
+
+  deactivateWorker(token, id): Observable<any>{
+    let params = "";
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'deactivate-worker/'+id, params, {headers: headers});
+  }
+
+  activateWorker(token, id): Observable<any>{
+    let params = "";
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'activate-worker/'+id, params, {headers: headers});
+  }
+
+  getWorker(id): Observable<any>{
+    return this._http.get(this.url+'worker/'+id);
+  }
+
   getWrokers(): Observable<any>{
     return this._http.get(this.url+'workers');
   }
