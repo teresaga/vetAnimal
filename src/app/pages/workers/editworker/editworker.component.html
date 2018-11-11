@@ -8,7 +8,7 @@
       </div>
 
       <div class="modal-body">
-          <form #formAdd="ngForm" (ngSubmit)="onSubmit()">  
+          <form [formGroup]="workerForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
               <label for="nombre">Nombre </label>&nbsp;
@@ -16,7 +16,7 @@
                   <span class="input-icon-addon">
                       <i class="fe fe-user"></i>
                   </span>
-                <input class="form-control" type="text" name="name" #name="ngModel" [(ngModel)]="worker.name" required> 
+                <input class="form-control" type="text" name="name" formControlName="name"> 
               </div>  
             </div>
 
@@ -24,18 +24,18 @@
                 <div class="row gutters-xs">
                     <div class="col-6">
                       <label for="app">Apellido Paterno</label>&nbsp;
-                      <input class="form-control" type="text" name="paternal_surname" #paternal_surname="ngModel" [(ngModel)]="worker.paternal_surname" required>
+                      <input class="form-control" type="text" name="paternal_surname" formControlName="paternal_surname">
                     </div>
                     <div class="col-6">
                       <label for="app">Apellido Materno</label>&nbsp;
-                      <input class="form-control" type="text" name="maternal_surname" #maternal_surname="ngModel" [(ngModel)]="worker.maternal_surname">
+                      <input class="form-control" type="text" name="maternal_surname" formControlName="maternal_surname">
                     </div>
                 </div>  
             </div>
             
             <div class="form-group">
               <label for="direccion">Dirección</label>&nbsp;
-              <textarea class="form-control" rows="2" name="address" #address="ngModel" [(ngModel)]="worker.address" required></textarea>
+              <textarea class="form-control" rows="2" name="address" formControlName="address"></textarea>
             </div>
             
             <div class="form-group">
@@ -46,12 +46,12 @@
                       <span class="input-icon-addon">
                           <i class="fe fe-phone"></i>
                       </span>
-                    <input class="form-control" type="text" name="tel" #tel="ngModel" [(ngModel)]="worker.tel" required>
+                    <input class="form-control" type="text" name="tel" formControlName="tel">
                   </div>
                 </div>
                 <div class="col-4">
                   <label for="edad">Edad</label>&nbsp;
-                  <input class="form-control" type="number" name="age" #age="ngModel" [(ngModel)]="worker.age" required>
+                  <input class="form-control" type="number" name="age" formControlName="tel">
                 </div>
               </div>
             </div> 
@@ -62,14 +62,14 @@
                   <span class="input-icon-addon">
                       <i class="fe fe-mail"></i>
                   </span>
-                  <input class="form-control" type="email" name="email" #email="ngModel" [(ngModel)]="worker.email" required>
+                  <input class="form-control" type="email" name="email" formControlName="email">
               </div>  
             </div>
 
             <div class="row gutters-xs">
               <div class="col-6">
                 <label for="salary">Salario</label>&nbsp;
-                <input class="form-control" type="text" name="salary" #salary="ngModel" [(ngModel)]="worker.salary" required>
+                <input class="form-control" type="text" name="salary" formControlName="salary">
               </div>
 
               <div class="col-6">
@@ -77,7 +77,7 @@
                   <label class="puesto">Puesto</label>&nbsp;
             
                   <div class="input-group">
-                    <select class="form-control custom-select" name="job" #job="ngModel" [(ngModel)]="worker.job" required> 
+                    <select class="form-control custom-select" name="job" formControlName="job"> 
                       <option value="">Seleccionar...</option>
                       <option *ngFor="let job of jobs; index as i" [value]="job._id">{{i+1}}.- {{job.name}}</option>
                     </select>
@@ -94,11 +94,11 @@
               <div class="row gutters-xs">
                   <div class="col-6">
                     <label for="entrada">Entrada</label>&nbsp;
-                    <input class="form-control" type="time" value="00:00:00" step="1" name="entry_horary" #entry_horary="ngModel" [(ngModel)]="worker.entry_horary" required> 
+                    <input class="form-control" type="time" value="00:00:00" step="1" name="entry_horary" formControlName="entry_horary"> 
                   </div>
                   <div class="col-6">
                     <label for="salida">Salida</label>&nbsp;
-                    <input class="form-control" type="time" value="00:00:00" step="1" name="departure_horary" #departure_horary="ngModel" [(ngModel)]="worker.departure_horary" required> 
+                    <input class="form-control" type="time" value="00:00:00" step="1" name="departure_horary" formControlName="departure_horary"> 
                   </div>
               </div>  
             </div>

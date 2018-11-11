@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import { WorkerService } from '../../../services/worker.service';
 import { Worker } from '../../../models/worker';
