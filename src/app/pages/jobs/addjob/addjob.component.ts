@@ -26,9 +26,7 @@ export class AddjobComponent implements OnInit {
     private _route: ActivatedRoute, 
     private _router: Router,
     private _userService: UserService,
-    private _jobService: JobService,
-    private _workerComponent: AddworkerComponent
-
+    private _jobService: JobService
   ) { 
     this.job = new Job('','','','','');
     this.token = this._userService.getToken();
@@ -37,7 +35,7 @@ export class AddjobComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this._router.url);
+    //console.log(this._router.url);
     this.jobForm = this.pf.group({
       name: ['', Validators.required]
     });
@@ -67,7 +65,7 @@ export class AddjobComponent implements OnInit {
   cerrar(){
     if(this.status=="success"){
       this.jobForm.reset();
-      this._workerComponent.getJobsA();
+      //this._workerComponent.getJobsA();
       this.status="";
     }
   }

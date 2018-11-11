@@ -35,6 +35,7 @@ import { SearchWorkerPipe } from './pipes/search-worker.pipe';
 import { JobsComponent } from './jobs/jobs/jobs.component';
 import { AddjobComponent } from './jobs/addjob/addjob.component';
 import { EditworkerComponent } from './workers/editworker/editworker.component';
+import { DetailsworkerComponent } from './workers/detailsworker/detailsworker.component';
 @NgModule({
   declarations: [
     PagesComponent,
@@ -61,7 +62,8 @@ import { EditworkerComponent } from './workers/editworker/editworker.component';
     SearchWorkerPipe,
     JobsComponent,
     AddjobComponent,
-    EditworkerComponent
+    EditworkerComponent,
+    DetailsworkerComponent
   ],
   imports: [
     SharedModule,

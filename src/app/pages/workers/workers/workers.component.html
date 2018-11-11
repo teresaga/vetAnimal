@@ -29,12 +29,10 @@
                         <th>Nombre</th>
                         <th>Apellido Paterno</th>
                         <th>Apellido Materno</th>
-                        <th>Edad</th>
                         <th>Dirección</th>
                         <th>Teléfono</th>
                         <th>Email</th>
                         <th>Puesto</th>
-                        <th>Horario</th>
                         <th>Estado</th>
                         <th></th>
                     </tr>
@@ -45,33 +43,58 @@
                     <td>{{worker.name}}</td>
                     <td>{{worker.paternal_surname}}</td>
                     <td>{{worker.maternal_surname}}</td>
-                    <td>{{worker.age}}</td>
                     <td>{{worker.address}}</td>
                     <td>{{worker.tel}}</td>
                     <td>{{worker.email}}</td>
                     <td>{{worker.job.name}}</td>
-                    <td>{{worker.entry_horary}} - {{worker.departure_horary}}</td>
                     <td>
                         <span [ngClass]="{'bg-success': worker.status === 'A', 'bg-danger': worker.status === 'B'}" class="status-icon"></span> {{worker.status}}
                     </td>
                     <td>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-eye mr-2" style="color:blue;"></i>
+                        <a class="icon" href="#detailsWorker-{{worker._id}}"  role="button" data-toggle="modal">
+                            <i class="fe fe-eye mr-2" style="color:blue;" data-toggle="tooltip" title="Ver"></i>
                         </a>
                         <a class="icon" href="#editWorker-{{worker._id}}"  role="button" data-toggle="modal">
-                            <i class="fe fe-edit mr-2" style="color:orange;"></i>
+                            <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>
                         <a class="icon" (click)="deactivateWorker(worker._id)" *ngIf="worker.status==='A'">
-                            <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
+                            <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Activar"></i>
                         </a>
                         <a class="icon" (click)="activateWorker(worker._id)" *ngIf="worker.status==='B'">
-                            <i class="far fa-check-circle mr-2" style="color:green;"></i>
+                            <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Desactivar"></i>
                         </a>
                     </td>
                     
                     <!--MODAL EDITAR-->
-                    <app-editworker [nom]="worker._id"></app-editworker>
+                    <app-editworker [id]="worker._id"
+                                    [name]="worker.name"
+                                    [paternal_surname]="worker.paternal_surname"
+                                    [maternal_surname]="worker.maternal_surname"
+                                    [age]="worker.age"
+                                    [address]="worker.address"
+                                    [tel]="worker.tel"
+                                    [email]="worker.email"
+                                    [job]="worker.job._id"
+                                    [entry_horary]="worker.entry_horary"
+                                    [departure_horary]="worker.departure_horary"
+                                    [salary]="worker.salary"
+                    ></app-editworker>
                     <!--MODAL EDITAR END-->
+                    <!--MODAL DETAILS-->
+                    <app-detailsworker [id]="worker._id"
+                                    [name]="worker.name"
+                                    [paternal_surname]="worker.paternal_surname"
+                                    [maternal_surname]="worker.maternal_surname"
+                                    [age]="worker.age"
+                                    [address]="worker.address"
+                                    [tel]="worker.tel"
+                                    [email]="worker.email"
+                                    [job]="worker.job.name"
+                                    [entry_horary]="worker.entry_horary"
+                                    [departure_horary]="worker.departure_horary"
+                                    [salary]="worker.salary"
+                    ></app-detailsworker>
+                    <!--MODAL DETAILS END-->
                 </tr>
                 </tbody>
             </table>
@@ -82,3 +105,5 @@
 <!--MODAL ALTA-->
 <app-addworker></app-addworker>
 <!--MODAL ALTA END-->
+
+<app-addjob></app-addjob>
