@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
 import { WorkerService } from '../../../services/worker.service';
@@ -7,14 +7,16 @@ import { GLOBAL } from '../../../services/global';
 import { Job } from '../../../models/job';
 import { JobService } from '../../../services/job.service';
 
+declare var jQuery:any;
+declare var $:any;
 @Component({
   selector: 'app-workers',
   templateUrl: './workers.component.html',
   styleUrls: ['./workers.component.css']
 })
 export class WorkersComponent implements OnInit {
-  jobForm: FormGroup;
-  public job: Job;
+  public jobs: Job[];
+  public url: string;
 
   public workers: Worker[];
   public token;
@@ -22,12 +24,12 @@ export class WorkersComponent implements OnInit {
 
   constructor(
     private _workerService: WorkerService,
-    private _userService: UserService
-
+    private _userService: UserService,
+    private _jobService: JobService
   ){
     this.token = this._userService.getToken();
   }
-
+  
   ngOnInit() {
     this.getWorkers();
   }

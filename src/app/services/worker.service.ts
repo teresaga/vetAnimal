@@ -28,7 +28,7 @@ export class WorkerService {
     let params = JSON.stringify(worker);
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.put(this.url+'worker/'+id, params, {headers: headers});
+    return this._http.put(this.url+'update-worker/'+id, params, {headers: headers});
   }
 
   deactivateWorker(token, id): Observable<any>{

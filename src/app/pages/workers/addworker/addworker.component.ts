@@ -33,10 +33,15 @@ export class AddworkerComponent implements OnInit {
     private _workerService: WorkerService,
     private _workerComponent: WorkersComponent
   ) {
-    this.worker = new Worker('','','','','','','','','','','','','','','');
+    this.worker = new Worker('','','','','','',0,'','','','','','','','');
     this.token = this._userService.getToken();
     this.url = GLOBAL.url;
     this.status = "";
+    //PROBAR
+    $("#addWorker").on("hidden.bs.modal", function(e) {
+      alert("hola");
+      this.getJobsA();
+    });
   }
 
   ngOnInit() {
