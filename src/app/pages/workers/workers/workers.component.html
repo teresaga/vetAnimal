@@ -58,10 +58,10 @@
                             <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>
                         <a class="icon" (click)="deactivateWorker(worker._id)" *ngIf="worker.status==='A'">
-                            <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Activar"></i>
+                            <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
                         </a>
                         <a class="icon" (click)="activateWorker(worker._id)" *ngIf="worker.status==='B'">
-                            <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Desactivar"></i>
+                            <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
                         </a>
                     </td>
                     

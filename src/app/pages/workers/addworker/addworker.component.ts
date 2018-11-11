@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { GLOBAL } from '../../../services/global';
@@ -8,6 +8,7 @@ import { WorkerService } from '../../../services/worker.service';
 import { Worker } from '../../../models/worker';
 import { UserService } from '../../../services/user.service';
 import { WorkersComponent } from '../workers/workers.component';
+
 declare var jQuery:any;
 declare var $:any;
 @Component({
