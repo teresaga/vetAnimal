@@ -20,19 +20,19 @@ Dashboard UI
   width: 80%;
 }
 
-input.form-control.ng-invalid.ng-touched {
+input:not(.busq).ng-invalid.ng-touched {
   border-left: 5px solid #a94442;
 }
 
-input.form-control.ng-valid.ng-dirty {
+input:not(.busq).ng-valid.ng-dirty {
   border-left: 5px solid #42A948;
 }
 
-select.form-control.ng-invalid.ng-touched {
+select:not(.busq).ng-invalid.ng-touched {
   border-left: 5px solid #a94442;
 }
 
-select.form-control.ng-valid.ng-dirty {
+select:not(.busq).ng-valid.ng-dirty {
   border-left: 5px solid #42A948;
 }
 

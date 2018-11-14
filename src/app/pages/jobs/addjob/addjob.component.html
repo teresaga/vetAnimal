@@ -28,7 +28,7 @@
             <br>
             <div class="modal-footer d-flex">
               <button type="button" class="btn btn-warning cerrar" (click)="cerrar()" data-dismiss="modal" name="cerrar">Cerrar</button>
-              <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
+              <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" [disabled]="!jobForm.valid">
             </div>
 
           </form>

@@ -21,6 +21,10 @@ export class WorkersComponent implements OnInit {
   public token;
   public busqueda;
 
+  //Variables para paginacion
+  pag: number = 0;
+  totalRegistros: number = 0;
+
   constructor(
     private _workerService: WorkerService,
     private _userService: UserService,
@@ -34,6 +38,7 @@ export class WorkersComponent implements OnInit {
   }
 
   deactivateWorker(id){
+    $('#desactiveWorker-'+id).modal('hide');
     this._workerService.deactivateWorker(this.token, id).subscribe(
       response => {
         if(!response.worker){
@@ -47,6 +52,7 @@ export class WorkersComponent implements OnInit {
   }
 
   activateWorker(id){
+    $('#activeWorker-'+id).modal('hide');
     this._workerService.activateWorker(this.token, id).subscribe(
       response => {
         if(!response.worker){
@@ -60,17 +66,32 @@ export class WorkersComponent implements OnInit {
   }
 
   getWorkers(){
-    this._workerService.getWrokers().subscribe(
+    this._workerService.getWokers(this.token, this.pag).subscribe(
       response => {
         
         if(response.workers){
           this.workers = response.workers;
+          this.totalRegistros = response.total;
         }
       }, error => {
         console.log(<any>error);
       } 
       
     );
+  }
+
+  cambiarPag( valor: number){
+    let pag = this.pag + valor;
+
+    if( pag >= this.totalRegistros){
+      return;
+    }
+    if ( pag < 0 ){
+      return;
+    }
+
+    this.pag += valor;
+    this.getWorkers();
   }
 
 }
