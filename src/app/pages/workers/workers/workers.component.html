@@ -6,13 +6,13 @@
         <div class="card-body">
             <div class="row">
                 <div class="input-icon mb-3 search">
-                    <input type="text" class="form-control" placeholder="Filtrar Empleados..." [(ngModel)]="busqueda">
+                    <input type="text" class="form-control busq" placeholder="Filtrar Empleados..." [(ngModel)]="busqueda">
                     <span class="input-icon-addon">
                         <i class="fe fe-search"></i>
                     </span>
                 </div>
                 <div class="col-md-1 col-lg-1">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addWorker">
+                    <button id="tar" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addWorker">
                         <i class="fe fe-plus-circle mr-2"></i>
                         Nuevo
                     </button>
@@ -20,12 +20,18 @@
             </div>
         </div>
     </div>
+
+    <div class="">
+        <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
+        <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
+    </div>
+
     <div class="col-12 card">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
                     <tr>
-                        <th class="w-1">ID</th>
+                        <th class="w-1">#</th>
                         <th>Nombre</th>
                         <th>Apellido Paterno</th>
                         <th>Apellido Materno</th>
@@ -39,7 +45,7 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let worker of workers | searchWorker: busqueda; index as i">
-                    <td><span class="text-muted">{{i+1}}</span></td>
+                    <td><span class="text-muted">{{i+1+pag}}</span></td>
                     <td>{{worker.name}}</td>
                     <td>{{worker.paternal_surname}}</td>
                     <td>{{worker.maternal_surname}}</td>
@@ -57,10 +63,10 @@
                         <a class="icon" href="#editWorker-{{worker._id}}"  role="button" data-toggle="modal">
                             <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>
-                        <a class="icon" (click)="deactivateWorker(worker._id)" *ngIf="worker.status==='A'">
+                        <a class="icon" href="#desactiveWorker-{{worker._id}}" role="button" data-toggle="modal" *ngIf="worker.status==='A'">
                             <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
                         </a>
-                        <a class="icon" (click)="activateWorker(worker._id)" *ngIf="worker.status==='B'">
+                        <a class="icon" href="#activeWorker-{{worker._id}}" role="button" data-toggle="modal" *ngIf="worker.status==='B'">
                             <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
                         </a>
                     </td>
@@ -95,6 +101,46 @@
                                     [salary]="worker.salary"
                     ></app-detailsworker>
                     <!--MODAL DETAILS END-->
+                    <!--MODAL DESACTIVAR-->
+                    <div id="desactiveWorker-{{worker._id}}" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">DAR DE BAJA</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>¿Desea dar de baja al empleado <strong>{{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</strong>?</p>
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-danger" (click)="deactivateWorker(worker._id)">Dar de Baja</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--MODAL DESACTIVAR END-->
+                    <!--MODAL DESACTIVAR-->
+                    <div id="activeWorker-{{worker._id}}" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">DAR DE ALTA</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>¿Desea dar de alta al empleado <strong>{{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</strong>?</p>
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-danger" (click)="activateWorker(worker._id)">Dar de Alta</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--MODAL DESACTIVAR END-->
                 </tr>
                 </tbody>
             </table>

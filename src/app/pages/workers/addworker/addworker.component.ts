@@ -1,6 +1,5 @@
-import { Component, OnInit, Input, ViewChild} from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { GLOBAL } from '../../../services/global';
 import { Job } from '../../../models/job';
 import { JobService } from '../../../services/job.service';
@@ -28,8 +27,6 @@ export class AddworkerComponent implements OnInit {
   constructor(
     private pf: FormBuilder,
     private _jobService: JobService,
-    private _route: ActivatedRoute, 
-    private _router: Router,
     private _userService: UserService,
     private _workerService: WorkerService,
     private _workerComponent: WorkersComponent
@@ -38,14 +35,13 @@ export class AddworkerComponent implements OnInit {
     this.token = this._userService.getToken();
     this.url = GLOBAL.url;
     this.status = "";
-    //PROBAR
-    $("#addWorker").on("hidden.bs.modal", function(e) {
-      alert("hola");
-      this.getJobsA();
-    });
   }
 
   ngOnInit() {
+    $('#addJob').on('hidden.bs.modal', () => { 
+      alert("hola");
+      this.getJobsA();
+    });
     //$('.jssingle').select2();
     this.workerForm = this.pf.group({
       name: ['', Validators.required],

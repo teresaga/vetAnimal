@@ -48,6 +48,7 @@ export class EditworkerComponent implements OnInit {
     this.token = this._userService.getToken();
     this.url = GLOBAL.url;
     this.status = "";
+   
   }
 
   ngOnInit() {
@@ -109,7 +110,7 @@ export class EditworkerComponent implements OnInit {
     );
   }
 
-  public getJobsA(){
+  getJobsA(){
     this._jobService.getJobsA().subscribe(
       response => {
         

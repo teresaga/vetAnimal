@@ -109,7 +109,7 @@
                   <div class="col-6">
                     <label for="salida">Salida</label>&nbsp;
                     <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.departure_horary.invalid && workerForm.controls.departure_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
-                    <input class="form-control" id="departure_horarydeparture_horary" name="departure_horary" type="time" value="00:00:00" step="1" formControlName="departure_horary"> 
+                    <input class="form-control" id="departure_horary" name="departure_horary" type="time" value="00:00:00" step="1" formControlName="departure_horary"> 
                   </div>
               </div>  
             </div>
@@ -121,7 +121,7 @@
             <br>
             <div class="modal-footer d-flex">
               <button type="button" class="btn btn-warning cerrar" (click)="cerrar()" data-dismiss="modal" name="cerrar">Cerrar</button>
-              <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
+              <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" [disabled]="!workerForm.valid">
             </div>
 
           </form>

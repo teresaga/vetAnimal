@@ -7,6 +7,8 @@ import { JobService } from '../../../services/job.service';
 import { UserService } from '../../../services/user.service';
 import { AddworkerComponent } from '../../workers/addworker/addworker.component';
 import { EditworkerComponent } from '../../workers/editworker/editworker.component';
+declare var jQuery:any;
+declare var $:any;
 
 @Component({
   selector: 'app-addjob',
@@ -60,6 +62,9 @@ export class AddjobComponent implements OnInit {
         }
       }
     );
+
+    //$("#job").append( "<option>"+this.job.name+"</option>" );
+    
   }
 
   cerrar(){
