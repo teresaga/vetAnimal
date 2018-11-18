@@ -8,7 +8,7 @@
       </div>
 
       <div class="modal-body">
-          <form action="" method="POST">  
+          <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
               <label for="nombre">Nombre</label>
@@ -16,7 +16,7 @@
                   <span class="input-icon-addon">
                       <i class="fe fe-user"></i>
                   </span>
-                <input class="form-control" id="nombre" name="nombre" type="text" required> 
+                <input class="form-control" id="name" type="text" name="name" formControlName="name"> 
               </div>  
             </div>
 
@@ -24,34 +24,34 @@
                 <div class="row gutters-xs">
                     <div class="col-6">
                       <label for="app">Apellido Paterno</label>
-                      <input class="form-control" id="app" name="app" type="text" required> 
+                      <input class="form-control" type="text" id="paternal_surname" name="paternal_surname" formControlName="paternal_surname"> 
                     </div>
                     <div class="col-6">
                       <label for="app">Apellido Materno</label>
-                      <input class="form-control" id="apm" name="apm" type="text" required> 
+                      <input class="form-control" type="text" id="maternal_surname" name="maternal_surname" formControlName="maternal_surname"> 
                     </div>
                 </div>  
             </div>
             
             <div class="form-group">
               <label for="direccion">Dirección</label>
-              <textarea class="form-control" rows="2" id="direccion" name="direccion" required></textarea>   
+              <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"> </textarea>   
             </div>
             
             <div class="form-group">
               <div class="row gutters-xs">
-                <div class="col-8">
+                <div class="col-6">
                   <label for="telefono">Teléfono</label>
                   <div class="input-icon">
                       <span class="input-icon-addon">
                           <i class="fe fe-phone"></i>
                       </span>
-                    <input class="form-control" id="telefono" name="telefono" type="text" required>
+                    <input class="form-control" type="text" id="tel" name="tel" formControlName="tel">
                   </div>
                 </div>
-                <div class="col-4">
-                  <label for="edad">Edad</label>
-                  <input class="form-control" id="edad" name="edad" type="number" required>
+                <div class="col-6">
+                    <label for="fechanac">Fecha de nacimiento</label>
+                    <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
                 </div>
               </div>
             </div> 
@@ -62,17 +62,20 @@
                   <span class="input-icon-addon">
                       <i class="fe fe-mail"></i>
                   </span>
-                  <input class="form-control" id="email" name="email" type="email" required> 
+                  <input class="form-control" type="email" id="email" name="email" formControlName="email"> 
               </div>  
             </div>
 
-            <div id="alert" class=""><strong id="tituloMensaje"></strong><span id="mensajes"></span></div>
-          </form>
-      </div>
+            <div class="alert alert-success" *ngIf="status == 'success'">
+              Guardado exitosamente.
+            </div>
 
-      <div class="modal-footer">
-        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
-        <button type="button" class="btn btn-warning cerrar" data-dismiss="modal" name="cerrar">Cerrar</button>
+            <br>
+            <div class="modal-footer d-flex">
+              <button type="button" class="btn btn-warning cerrar" (click)="cerrar()" data-dismiss="modal" name="cerrar">Cerrar</button>
+              <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" [disabled]="!clientForm.valid">
+            </div>          
+          </form>
       </div>
     </div>
 

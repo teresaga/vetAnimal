@@ -8,7 +8,7 @@
       </div>
 
       <div class="modal-body">
-          <form action="" method="POST">  
+          <form [formGroup]="userForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
               <label for="nombre">Nombre de usuario</label>
@@ -16,7 +16,7 @@
                   <span class="input-icon-addon">
                       <i class="fe fe-user"></i>
                   </span>
-                <input class="form-control" id="nombre" name="nombre" type="text" required> 
+                <input class="form-control" type="text" id="username" name="username" formControlName="username"> 
               </div>  
             </div>
 
@@ -24,7 +24,7 @@
               <label class="empleado">Empleado</label>
         
               <div class="input-group">
-                <select class="form-control custom-select" id="empleado">
+                <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
                   <option value="">Seleccionar...</option>
                 </select> 
                 <span class="input-group-append">
@@ -34,10 +34,10 @@
             </div>
 
             <div class="form-group">
-              <label class="tipo">Tipo</label>
+              <label class="tipo">Rol</label>
         
               <div class="input-group">
-                <select class="form-control custom-select" id="tipo">
+                <select class="form-control custom-select" id="role" name="role" formControlName="role">
                   <option value="">Seleccionar...</option>
                 </select> 
                 <span class="input-group-append">
@@ -48,21 +48,24 @@
 
             <div class="form-group">
               <label for="password">Contraseña</label>
-              <input class="form-control" id="password" name="password" type="text" required> 
+              <input class="form-control" id="password" name="password" type="text" formControlName="password">
             </div>
 
             <div class="form-group">
               <label for="verPassword">Verificar Contraseña</label>
-              <input class="form-control" id="verPassword" name="verPassword" type="text" required> 
+              <input class="form-control" id="verPassword" name="verPassword" type="text" formControlName="password_check">
             </div>
 
-            <div id="alert" class=""><strong id="tituloMensaje"></strong><span id="mensajes"></span></div>
-          </form>
-      </div>
+            <div class="alert alert-success" *ngIf="status == 'success'">
+              Guardado exitosamente.
+            </div>
 
-      <div class="modal-footer">
-        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
-        <button type="button" class="btn btn-warning cerrar" data-dismiss="modal" name="cerrar">Cerrar</button>
+            <br>
+            <div class="modal-footer d-flex">
+              <button type="button" class="btn btn-warning cerrar" (click)="cerrar()" data-dismiss="modal" name="cerrar">Cerrar</button>
+              <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" [disabled]="!userForm.valid">
+            </div>
+          </form>
       </div>
     </div>
 

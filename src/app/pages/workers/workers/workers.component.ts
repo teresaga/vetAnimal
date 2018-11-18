@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
 import { WorkerService } from '../../../services/worker.service';
 import { Worker } from '../../../models/worker';
@@ -14,9 +15,12 @@ declare var $:any;
   styleUrls: ['./workers.component.css']
 })
 export class WorkersComponent implements OnInit {
-  public jobs: Job[];
-  public url: string;
+  //Variables para registrar puestos
+  jobForm: FormGroup;
+  public job: Job;
+  public status: string;
 
+  //Variables busqueda de empleados
   public workers: Worker[];
   public token;
   public busqueda;
@@ -26,15 +30,21 @@ export class WorkersComponent implements OnInit {
   totalRegistros: number = 0;
 
   constructor(
+    private pf: FormBuilder,
     private _workerService: WorkerService,
     private _userService: UserService,
     private _jobService: JobService
   ){
     this.token = this._userService.getToken();
+    this.job = new Job('','','','','');
+    this.status = "";
   }
   
   ngOnInit() {
     this.getWorkers();
+    this.jobForm = this.pf.group({
+      name: ['', Validators.required]
+    });
   }
 
   deactivateWorker(id){
@@ -92,6 +102,36 @@ export class WorkersComponent implements OnInit {
 
     this.pag += valor;
     this.getWorkers();
+  }
+
+  //onSubmit para Puestos
+  onSubmit(){
+    this.job.name = this.jobForm.get('name').value;
+    
+    this._jobService.addJob(this.token, this.job).subscribe(
+      response => {
+        if(!response.job){
+          this.status = 'error';
+        }else{
+          this.status = 'success';
+          this.job = response.job;
+        }
+      },
+      error => {
+        var errorMessage = <any>error;
+        if (errorMessage != null){
+          this.status = 'error';
+        }
+      }
+    );
+  }
+
+  //Funcion al cerrar modal Puestos
+  cerrar(){
+    if(this.status=="success"){
+      this.jobForm.reset();
+      this.status="";
+    }
   }
 
 }

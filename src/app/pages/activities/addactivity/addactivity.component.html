@@ -8,20 +8,20 @@
         </div>
   
         <div class="modal-body">
-            <form action="" method="POST">  
+            <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">  
   
               <div class="form-group">
                   <div class="row gutters-xs">
                       <div class="col-6">
                           <label for="cliente">Cliente</label>
-                          <select class="form-control custom-select" id="cliente">
+                          <select class="form-control custom-select" id="client" name="client" formControlName="client">
                             <option value="">Seleccionar cliente...</option>
                           </select> 
                       </div>
   
                       <div class="col-6">
                           <label for="mascota">Mascota</label>
-                          <select class="form-control custom-select" id="animal">
+                          <select class="form-control custom-select" id="animal" name="animal" formControlName="animal">
                             <option value="">Seleccionar mascota...</option>
                           </select> 
                       </div>
@@ -36,7 +36,7 @@
                         <span class="input-icon-addon">
                             <i class="fe fe-calendar"></i>
                         </span> 
-                        <input class="form-control" id="fecha" name="fecha" type="date" required> 
+                        <input class="form-control" id="date" name="date" formControlName="date" type="date"> 
                       </div>
                     </div>
       
@@ -46,31 +46,42 @@
                         <span class="input-icon-addon">
                             <i class="fe fe-clock"></i>
                         </span> 
-                        <input class="form-control" id="hora" name="hora" type="time" value="00:00:00" step="1" required>  
+                        <input class="form-control" id="time" name="time" formControlName="time" type="time" value="00:00:00" step="1">  
                       </div>
                     </div>
                   </div>  
               </div>
 
               <div class="form-group">
-                <label for="servicio">Servicio</label>
-                <select class="form-control custom-select" id="servicio">
+                <label for="service">Servicio</label>
+                <select class="form-control custom-select" id="service" name="service" formControlName="service">
                   <option value="">Seleccionar...</option>
                 </select>   
               </div>
 
               <div class="form-group">
-                <label for="notas">Notas</label>
-                <textarea class="form-control" rows="2" id="notas" name="notas" required></textarea>   
+                <label for="worker">Empleado</label>
+                <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
+                  <option value="">Seleccionar...</option>
+                </select>   
+              </div>
+
+              <div class="form-group">
+                <label for="notes">Notas</label>
+                <textarea class="form-control" rows="2" id="notes" name="notes" formControlName="notes"></textarea>   
               </div>
   
-              <div id="alert" class=""><strong id="tituloMensaje"></strong><span id="mensajes"></span></div>
+              <div class="alert alert-success" *ngIf="status == 'success'">
+                Guardado exitosamente.
+              </div>
+
+              <br>
+              <div class="modal-footer d-flex">
+                <button type="button" class="btn btn-warning cerrar" (click)="cerrar()" data-dismiss="modal" name="cerrar">Cerrar</button>
+                <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" [disabled]="!activityForm.valid">
+              </div>
+
             </form>
-        </div>
-  
-        <div class="modal-footer">
-          <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
-          <button type="button" class="btn btn-warning cerrar" data-dismiss="modal" name="cerrar">Cerrar</button>
         </div>
       </div>
   

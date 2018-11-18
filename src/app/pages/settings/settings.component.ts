@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-settings',
@@ -6,10 +7,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
+  settingForm: FormGroup;
+  public status: string;
 
-  constructor() { }
+  constructor(
+    private pf: FormBuilder
+  ) { 
+    this.status = "";
+  }
 
   ngOnInit() {
+    this.settingForm = this.pf.group({
+      password_actual: ['', Validators.required],
+      password_new: ['', Validators.required],
+      password_check: ['', Validators.required]
+    });
   }
 
 }
