@@ -8,20 +8,20 @@
         </div>
   
         <div class="modal-body">
-            <form action="" method="POST">  
+            <form [formGroup]="animalForm" (ngSubmit)="onSubmit()">  
   
               <div class="form-group">
                   <div class="row gutters-xs">
                       <div class="col-6">
                           <label for="cliente">Cliente</label>
-                          <select class="form-control custom-select" id="cliente">
+                          <select class="form-control custom-select" id="client" name="client" formControlName="client">
                             <option value="">Seleccionar cliente...</option>
                           </select> 
                       </div>
   
                       <div class="col-6">
                         <label for="animal">Nombre de mascota</label>
-                        <input class="form-control" id="animal" name="animal" type="text" required> 
+                        <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
                       </div>
                   </div>  
               </div>
@@ -30,7 +30,7 @@
                   <div class="row gutters-xs">
                       <div class="col-6">
                           <label for="sexo">Sexo</label>
-                          <select class="form-control custom-select" id="sexo">
+                          <select class="form-control custom-select" id="sex" name="sex" formControlName="sex">
                             <option value="">Seleccionar...</option>
                             <option value="">Hembra</option>
                             <option value="">Macho</option>
@@ -39,7 +39,7 @@
                       
                       <div class="col-6">
                         <label for="fechanac">Fecha de nacimiento</label>
-                        <input class="form-control" id="fechanac" name="fechanac" type="date" required> 
+                        <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
                       </div>
                   </div>  
               </div>
@@ -50,7 +50,7 @@
                     <label class="especie">Especie</label>
               
                     <div class="input-group">
-                      <select class="form-control custom-select" id="especie">
+                      <select class="form-control custom-select" id="specie" name="specie" formControlName="specie">
                         <option value="">Seleccionar...</option>
                       </select> 
                       <span class="input-group-append">
@@ -65,7 +65,7 @@
                     <label class="raza">Raza</label>
               
                     <div class="input-group">
-                      <select class="form-control custom-select" id="raza">
+                      <select class="form-control custom-select" id="race" name="race" formControlName="race">
                         <option value="">Seleccionar...</option>
                       </select> 
                       <span class="input-group-append">
@@ -82,7 +82,7 @@
                     <label class="caracter">Carácter</label>
               
                     <div class="input-group">
-                      <select class="form-control custom-select" id="caracter">
+                      <select class="form-control custom-select" id="character" name="character" formControlName="character">
                         <option value="">Seleccionar...</option>
                       </select> 
                       <span class="input-group-append">
@@ -97,7 +97,7 @@
                     <label class="pelo">Pelo</label>
               
                     <div class="input-group">
-                      <select class="form-control custom-select" id="pelo">
+                      <select class="form-control custom-select" id="hair" name="hair" formControlName="hair">
                         <option value="">Seleccionar...</option>
                       </select> 
                       <span class="input-group-append">
@@ -114,7 +114,7 @@
                     <label class="habitat">Hábitat</label>
               
                     <div class="input-group">
-                      <select class="form-control custom-select" id="habitat">
+                      <select class="form-control custom-select" id="habitat" name="habitat" formControlName="habitat">
                         <option value="">Seleccionar...</option>
                       </select> 
                       <span class="input-group-append">
@@ -126,12 +126,12 @@
   
                 <div class="col-3">
                   <label for="peso">Peso</label>
-                  <input class="form-control" id="peso" name="peso" type="text" required> 
+                  <input class="form-control" id="weight" type="text" name="weight" formControlName="weight"> 
                 </div>
   
                 <div class="col-3">
                   <label for="altura">Altura</label>
-                  <input class="form-control" id="altura" name="altura" type="text" required> 
+                  <input class="form-control" id="height" type="text" name="height" formControlName="height"> 
                 </div>
               </div>
   
@@ -139,14 +139,14 @@
                 <label class="">Selecciona</label>
                 <div>
                   <div class="form-check custom-control custom-checkbox custom-control-inline">
-                    <input class="form-check-input" type="checkbox" value="" id="esterilizado">
+                    <input class="form-check-input" type="checkbox" value="" id="sterilized" name="sterilized" formControlName="sterilized">
                     <label class="form-check-label" for="esterilizado">
                       Esterilizado
                     </label>
                   </div>
   
                   <div class="form-check custom-control custom-checkbox custom-control-inline">
-                    <input class="form-check-input" type="checkbox" value="" id="unias">
+                    <input class="form-check-input" type="checkbox" value="" id="nails" name="nails" formControlName="nails">
                     <label class="form-check-label" for="unias">
                       Uñas largas
                     </label>
@@ -156,21 +156,24 @@
   
               <div class="form-group">
                 <label for="observaciones">Observaciones</label>
-                <textarea class="form-control" rows="2" id="observaciones" name="observaciones" required></textarea>   
+                <textarea class="form-control" rows="2" id="notes" name="notes" formControlName="notes"></textarea>   
               </div>
   
               <div class="form-group">
                 <label for="foto">Fotografías</label>
-                <textarea class="form-control" rows="2" id="foto" name="foto" required></textarea>   
+                <textarea class="form-control" rows="2" id="image" name="image" formControlName="image"></textarea>   
               </div>
   
-              <div id="alert" class=""><strong id="tituloMensaje"></strong><span id="mensajes"></span></div>
+              <div class="alert alert-success" *ngIf="status == 'success'">
+                Guardado exitosamente.
+              </div>
+
+              <br>
+              <div class="modal-footer d-flex">
+                <button type="button" class="btn btn-warning cerrar" (click)="cerrar()" data-dismiss="modal" name="cerrar">Cerrar</button>
+                <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" [disabled]="!animalForm.valid">
+              </div>
             </form>
-        </div>
-  
-        <div class="modal-footer">
-          <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
-          <button type="button" class="btn btn-warning cerrar" data-dismiss="modal" name="cerrar">Cerrar</button>
         </div>
       </div>
   

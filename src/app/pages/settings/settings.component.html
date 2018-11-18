@@ -6,23 +6,30 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 col-lg-4">
-                    <div class="form-group">
-                      <label class="form-label">Contraseña actual</label>
-                      <input type="text" class="form-control" name="password">
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">Contraseña nueva</label>
-                      <input type="text" class="form-control" name="passwordnew">
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">Verificar contraseña nueva</label>
-                      <input type="text" class="form-control" name="verpassword">
-                    </div>
+                    <form [formGroup]="settingForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                        <label class="form-label">Contraseña actual</label>
+                        <input type="password" class="form-control" id="password_actual" name="password_actual" formControlName="password_actual">
+                        </div>
+                        <div class="form-group">
+                        <label class="form-label">Contraseña nueva</label>
+                        <input type="password" class="form-control" id="password_new" name="password_new" formControlName="password_new">
+                        </div>
+                        <div class="form-group">
+                        <label class="form-label">Verificar contraseña nueva</label>
+                        <input type="password" class="form-control" id="password_check" name="password_check" formControlName="password_check">
+                        </div>
 
-                    <button type="button" class="btn btn-primary">
-                        <i class="fas fa-save mr-1"></i>
-                        Nuevo
-                    </button>
+                        <div class="alert alert-success" *ngIf="status == 'success'">
+                            Guardado exitosamente.
+                        </div>
+        
+                        <br>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save mr-1"></i>
+                            Guardar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

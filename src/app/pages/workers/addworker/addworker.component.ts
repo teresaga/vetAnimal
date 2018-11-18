@@ -38,10 +38,11 @@ export class AddworkerComponent implements OnInit {
   }
 
   ngOnInit() {
+    /*
     $('#addJob').on('hidden.bs.modal', () => { 
       alert("hola");
       this.getJobsA();
-    });
+    });*/
     //$('.jssingle').select2();
     this.workerForm = this.pf.group({
       name: ['', Validators.required],

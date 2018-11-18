@@ -8,29 +8,29 @@
       </div>
 
       <div class="modal-body">
-          <form action="" method="POST">  
+          <form [formGroup]="providerForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
               <div class="row gutters-xs">
                   <div class="col-6">
                     <label for="nombre">Nombre</label>
-                    <input class="form-control" id="nombre" name="nombre" type="text" required> 
+                    <input class="form-control" type="text" id="name" name="name" formControlName="name"> 
                   </div>
                   <div class="col-6">
                     <label for="razonSocial">Razón Social</label>
-                    <input class="form-control" id="razonSocial" name="razonSocial" type="text" required> 
+                    <input class="form-control" type="text" id="business_name" name="business_name" formControlName="business_name"> 
                   </div>
               </div>  
             </div>
 
             <div class="form-group">
               <label for="rfc">RFC</label>
-              <input class="form-control" id="rfc" name="rfc" type="text" required> 
+              <input class="form-control" id="rfc" name="rfc" type="text" formControlName="rfc"> 
             </div>
             
             <div class="form-group">
               <label for="direccion">Dirección</label>
-              <textarea class="form-control" rows="2" id="direccion" name="direccion" required></textarea>   
+              <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"></textarea>   
             </div>
             
             <div class="form-group">
@@ -39,7 +39,7 @@
                   <span class="input-icon-addon">
                       <i class="fe fe-mail"></i>
                   </span>
-                  <input class="form-control" id="email" name="email" type="email" required> 
+                  <input class="form-control" type="email" id="email" name="email" formControlName="email"> 
               </div>  
             </div>
 
@@ -51,7 +51,7 @@
                       <span class="input-icon-addon">
                           <i class="fe fe-phone"></i>
                       </span>
-                    <input class="form-control" id="telefono" name="telefono" type="text" required>
+                    <input class="form-control" type="text" id="tel" name="tel" formControlName="tel">
                   </div>
                 </div>
                 <div class="col-6">
@@ -60,19 +60,22 @@
                       <span class="input-icon-addon">
                           <i class="fe fe-user"></i>
                       </span>
-                    <input class="form-control" id="contacto" name="contacto" type="text" required> 
+                    <input class="form-control" type="text" id="contact_person" name="contact_person" formControlName="contact_person"> 
                   </div> 
                 </div>
               </div>
             </div> 
 
-            <div id="alert" class=""><strong id="tituloMensaje"></strong><span id="mensajes"></span></div>
-          </form>
-      </div>
+            <div class="alert alert-success" *ngIf="status == 'success'">
+              Guardado exitosamente.
+            </div>
 
-      <div class="modal-footer">
-        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar">
-        <button type="button" class="btn btn-warning cerrar" data-dismiss="modal" name="cerrar">Cerrar</button>
+            <br>
+            <div class="modal-footer d-flex">
+              <button type="button" class="btn btn-warning cerrar" (click)="cerrar()" data-dismiss="modal" name="cerrar">Cerrar</button>
+              <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" [disabled]="!providerForm.valid">
+            </div>
+          </form>
       </div>
     </div>
 
