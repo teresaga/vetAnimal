@@ -48,4 +48,8 @@ export class UserService {
     }
     return this.token;
   }
+
+  getUserCount(): Observable<any>{
+    return this._http.get(this.url+'users-count');
+  }
 }
