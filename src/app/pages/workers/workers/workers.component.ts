@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
 import { WorkerService } from '../../../services/worker.service';
@@ -17,6 +18,7 @@ declare var $:any;
 export class WorkersComponent implements OnInit {
   //Variables para registrar puestos
   jobForm: FormGroup;
+  //workerForm: FormGroup;
   public job: Job;
   public status: string;
 
@@ -31,6 +33,7 @@ export class WorkersComponent implements OnInit {
 
   constructor(
     private pf: FormBuilder,
+    private modalService: NgbModal,
     private _workerService: WorkerService,
     private _userService: UserService,
     private _jobService: JobService

@@ -53,4 +53,8 @@ export class WorkerService {
     let headers = new HttpHeaders().set('Authorization', token);
     return this._http.get(this.url+'workers?pag='+pag, {headers: headers});
   }
+
+  getWorkerCount(): Observable<any>{
+    return this._http.get(this.url+'workers-count');
+  }
 }

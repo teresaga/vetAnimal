@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { PagesComponent } from './pages.component';
 import { PAGES_ROUTES } from './pages.routing';
@@ -9,16 +10,13 @@ import { PAGES_ROUTES } from './pages.routing';
 import { SharedModule } from '../shared/shared.module';
 
 import { ClientsComponent } from './clients/clients/clients.component';
-import { AddclientComponent } from './clients/addclient/addclient.component';
 import { ShopComponent } from './shop/shop/shop.component';
 import { AnimalsComponent } from './animals/animals/animals.component';
 import { AddanimalComponent } from './animals/addanimal/addanimal.component';
 import { WorkersComponent } from './workers/workers/workers.component';
 import { AddworkerComponent } from './workers/addworker/addworker.component';
 import { ProvidersComponent } from './providers/providers/providers.component';
-import { AddproviderComponent } from './providers/addprovider/addprovider.component';
 import { ProductsComponent } from './products/products/products.component';
-import { AddproductComponent } from './products/addproduct/addproduct.component';
 import { UsersComponent } from './users/users/users.component';
 import { AdduserComponent } from './users/adduser/adduser.component';
 import { ConsultationsComponent } from './consultations/consultations/consultations.component';
@@ -36,6 +34,9 @@ import { JobsComponent } from './jobs/jobs/jobs.component';
 import { AddjobComponent } from './jobs/addjob/addjob.component';
 import { EditworkerComponent } from './workers/editworker/editworker.component';
 import { DetailsworkerComponent } from './workers/detailsworker/detailsworker.component';
+import { SearchProductPipe } from './pipes/search-product.pipe';
+import { SearchProviderPipe } from './pipes/search-provider.pipe';
+import { SearchClientPipe } from './pipes/search-client.pipe';
 @NgModule({
   declarations: [
     PagesComponent,
@@ -49,21 +50,21 @@ import { DetailsworkerComponent } from './workers/detailsworker/detailsworker.co
     UsersComponent,
     AdduserComponent,
     ProductsComponent,
-    AddproductComponent,
     ProvidersComponent,
-    AddproviderComponent,
     WorkersComponent,
     AddworkerComponent,
     AnimalsComponent,
     AddanimalComponent,
     ShopComponent,
     ClientsComponent,
-    AddclientComponent,
     SearchWorkerPipe,
     JobsComponent,
     AddjobComponent,
     EditworkerComponent,
-    DetailsworkerComponent
+    DetailsworkerComponent,
+    SearchProductPipe,
+    SearchProviderPipe,
+    SearchClientPipe
   ],
   imports: [
     SharedModule,
@@ -71,7 +72,8 @@ import { DetailsworkerComponent } from './workers/detailsworker/detailsworker.co
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    PAGES_ROUTES
+    PAGES_ROUTES,
+    NgbModalModule.forRoot()
   ],
   exports: [
       HomeComponent,

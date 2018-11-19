@@ -6,13 +6,13 @@
         <div class="card-body">
             <div class="row">
                 <div class="input-icon mb-3 search">
-                    <input type="text" class="form-control" placeholder="Filtrar Productos...">
+                    <input type="text" class="form-control busq" placeholder="Filtrar Productos..." [(ngModel)]="busqueda">
                     <span class="input-icon-addon">
                         <i class="fe fe-search"></i>
                     </span>
                 </div>
                 <div class="col-md-1 col-lg-1">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProduct">
+                    <button type="button" class="btn btn-primary" (click)="openModal(addproduct)">
                         <i class="fe fe-plus-circle mr-2"></i>
                         Nuevo
                     </button>
@@ -20,49 +20,58 @@
             </div>
         </div>
     </div>
+
+    <div class="">
+        <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
+        <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
+    </div>
     <div class="col-12 card">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
                     <tr>
-                        <th class="w-1">ID</th>
+                        <th class="w-1">#</th>
                         <th>Descripción</th>
-                        <th>Stock Actual</th>
-                        <th>Stock Mínimo</th>
-                        <th>Stock Máximo</th>
-                        <th>Unidad de Medida</th>
+                        <th>Stock<br> Actual</th>
+                        <th>Stock<br> Mínimo</th>
+                        <th>Stock<br> Máximo</th>
+                        <th>Unidad de<br> Medida</th>
                         <th>Tipo</th>
                         <th>Precio</th>
                         <th>Costo</th>
                         <th>Proveedor</th>
+                        <th>Fecha Alta</th>
+                        <th>Fecha Baja</th>
                         <th>Estado</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><span class="text-muted">1</span></td>
-                    <td>PLATO DE COMIDA</td>
-                    <td>15</td>
-                    <td>10</td>
-                    <td>25</td>
-                    <td>PIEZA</td>
-                    <td>ACCESORIO</td>
-                    <td>120</td>
-                    <td>100</td>
-                    <td>1</td>
+                <tr *ngFor="let product of products | searchProduct: busqueda; index as i">
+                    <td><span class="text-muted">{{i+1+pag}}</span></td>
+                    <td>{{product.description}}</td>
+                    <td *ngIf="product.stock">{{product.stock}}</td><td *ngIf="product.stock == null || product.stock == ''">---</td>
+                    <td *ngIf="product.stock_min">{{product.stock_min}}</td><td *ngIf="product.stock_min == null || product.stock_min == ''">---</td>
+                    <td *ngIf="product.stock_max">{{product.stock_max}}</td><td *ngIf="product.stock_max == null || product.stock_max == ''">---</td>
+                    <td *ngIf="product.measurementunit">{{product.measurementunit.name}}</td><td *ngIf="product.measurementunit==null">---</td>
+                    <td *ngIf="product.typeproduct">{{product.typeproduct.name}}</td><td *ngIf="product.typeproduct==null">---</td>
+                    <td>{{product.price}}</td>
+                    <td *ngIf="product.cost">{{product.cost}}</td><td *ngIf="product.cost == null || product.cost ==''">---</td>
+                    <td *ngIf="product.provider">{{product.provider.name}}</td><td *ngIf="product.provider==null">---</td>
+                    <td>{{product.start_date}}</td>
+                    <td *ngIf="product.end_date != ''">{{product.end_date}}</td><td *ngIf="product.end_date == ''">---</td>
                     <td>
-                        <span class="status-icon bg-success"></span> Activo
+                        <span [ngClass]="{'bg-success': product.status === 'A', 'bg-danger': product.status === 'B'}" class="status-icon"></span> {{product.status}}
                     </td>
                     <td>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-eye mr-2" style="color:blue;"></i>
+                        <a class="icon" (click)="openModaledit(editproduct, product)">
+                            <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-edit mr-2" style="color:orange;"></i>
+                        <a class="icon" (click)="openModalStatus(deactivateproduct, product)" *ngIf="product.status==='A'">
+                            <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
                         </a>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
+                        <a class="icon" (click)="openModalStatus(activateproduct, product)" *ngIf="product.status==='B'">
+                            <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
                         </a>
                     </td>
                 </tr>
@@ -73,5 +82,259 @@
   </div>
   
   <!--MODAL ALTA-->
-  <app-addproduct></app-addproduct>
-  <!--MODAL ALTA END-->
+  <ng-template #addproduct let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVO PRODUCTO</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input class="form-control" type="text" id="description" name="description" formControlName="description"> 
+          </div>
+
+          <div class="form-group">
+              <div class="row gutters-xs">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="tipo">Tipo</label>
+                    
+                            <select class="form-control custom-select" id="typeproduct" name="typeproduct" formControlName="typeproduct">
+                                <option [value]="null">Seleccionar...</option>
+                                <option *ngFor="let typeproduct of typeproducts; index as i" [value]="typeproduct._id">{{i+1}}.- {{typeproduct.name}}</option>
+                            </select> 
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="precio">Precio</label>
+                        <input class="form-control" type="text" id="price" name="price" formControlName="price"> 
+                    </div>
+              </div>  
+          </div>
+          
+        <div *ngIf="productForm.controls.typeproduct.value == '5bebc3d03cf30da624b42291'">
+            <div class="form-group">
+                <label for="proveedor">Proveedor</label>
+                <select class="form-control custom-select" id="provider" name="provider" formControlName="provider">
+                <option [value]="null">Seleccionar proveedor...</option>
+                <option *ngFor="let provider of providers; index as i" [value]="provider._id">{{i+1}}.- {{provider.name}}</option>
+                </select>   
+            </div>
+
+            <div class="row gutters-xs">
+                <div class="col-6">
+                <div class="form-group">
+                    <label class="unidadMedida">Unidad de Medida</label>
+            
+                    <div class="input-group">
+                    <select class="form-control custom-select" id="measurementunit" name="measurementunit" formControlName="measurementunit">
+                        <option [value]="null">Seleccionar...</option>
+                        <option *ngFor="let measurementunit of measurementunits; index as i" [value]="measurementunit._id">{{i+1}}.- {{measurementunit.name}}</option>
+                    </select> 
+                    <span class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click)="openModalunit(addunit)"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                    </div>
+                </div>
+                </div>
+                <div class="col-6">
+                    <label for="costo">Costo</label>
+                    <input class="form-control" type="text" id="cost" name="cost" formControlName="cost"> 
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row gutters-xs">
+                <div class="col-4">
+                    <label for="stockMinimo">Stock Actual</label>
+                    <input class="form-control" type="number" id="stock" name="stock" formControlName="stock">
+                </div>
+                <div class="col-4">
+                    <label for="stockMinimo">Stock Mínimo</label>
+                    <input class="form-control" type="number" id="stock_min" name="stock_min" formControlName="stock_min">
+                </div>
+                <div class="col-4">
+                    <label for="stockMaximo">Stock Máximo</label>
+                    <input class="form-control" type="number" id="stock_max" name="stock_max" formControlName="stock_max">
+                </div>
+                </div>
+            </div> 
+        </div>
+          <div class="alert alert-success" *ngIf="status == 'success'">
+            Guardado exitosamente.
+          </div>
+        </form>
+
+    </div>
+
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddProduct();" [disabled]="!productForm.valid">
+    </div>
+  </ng-template>
+<!--MODAL ALTA END-->
+
+<!--MODAL EDIT-->
+<ng-template #editproduct let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">EDITAR PRODUCTO</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">  
+
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input class="form-control" type="text" id="description" name="description" formControlName="description"> 
+        </div>
+
+        <div class="form-group">
+            <div class="row gutters-xs">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="tipo">Tipo</label>
+                    
+                            <select class="form-control custom-select" id="typeproduct" name="typeproduct" formControlName="typeproduct">
+                                <option [value]="null">Seleccionar...</option>
+                                <option *ngFor="let typeproduct of typeproducts; index as i" [value]="typeproduct._id">{{i+1}}.- {{typeproduct.name}}</option>
+                            </select> 
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="precio">Precio</label>
+                        <input class="form-control" type="text" id="price" name="price" formControlName="price"> 
+                    </div>
+            </div>  
+        </div>
+        
+        <div *ngIf="productForm.controls.typeproduct.value == '5bebc3d03cf30da624b42291'">
+            <div class="form-group">
+                <label for="proveedor">Proveedor</label>
+                <select class="form-control custom-select" id="provider" name="provider" formControlName="provider">
+                <option [value]="null">Seleccionar proveedor...</option>
+                <option *ngFor="let provider of providers; index as i" [value]="provider._id">{{i+1}}.- {{provider.name}}</option>
+                </select>   
+            </div>
+
+            <div class="row gutters-xs">
+                <div class="col-6">
+                <div class="form-group">
+                    <label class="unidadMedida">Unidad de Medida</label>
+            
+                    <div class="input-group">
+                    <select class="form-control custom-select" id="measurementunit" name="measurementunit" formControlName="measurementunit">
+                        <option [value]="null">Seleccionar...</option>
+                        <option *ngFor="let measurementunit of measurementunits; index as i" [value]="measurementunit._id">{{i+1}}.- {{measurementunit.name}}</option>
+                    </select> 
+                    <span class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click)="openModalunit(addunit)"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                    </div>
+                </div>
+                </div>
+                <div class="col-6">
+                    <label for="costo">Costo</label>
+                    <input class="form-control" type="text" id="cost" name="cost" formControlName="cost"> 
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row gutters-xs">
+                <div class="col-4">
+                    <label for="stockMinimo">Stock Actual</label>
+                    <input class="form-control" type="number" id="stock" name="stock" formControlName="stock">
+                </div>
+                <div class="col-4">
+                    <label for="stockMinimo">Stock Mínimo</label>
+                    <input class="form-control" type="number" id="stock_min" name="stock_min" formControlName="stock_min">
+                </div>
+                <div class="col-4">
+                    <label for="stockMaximo">Stock Máximo</label>
+                    <input class="form-control" type="number" id="stock_max" name="stock_max" formControlName="stock_max">
+                </div>
+                </div>
+            </div> 
+        </div>
+        <div class="alert alert-success" *ngIf="status == 'success'">
+            Cambios guardados exitosamente.
+        </div>
+        </form>
+
+    </div>
+
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditProduct();" [disabled]="!productForm.valid">
+    </div>
+</ng-template>
+<!--MODAL EDIT END-->
+
+<!--MODAL DESACTIVAR-->
+<ng-template #deactivateproduct let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE BAJA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de baja al producto <strong>{{product.description}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Dar de Baja</button>
+    </div>
+</ng-template>
+<!--MODAL DESACTIVAR END-->
+
+<!--MODAL ACTIVAR-->
+<ng-template #activateproduct let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE ALTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de alta al producto <strong>{{product.description}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Dar de Alta</button>
+    </div>
+</ng-template>
+<!--MODAL ACTIVAR END-->
+
+<!--MODALS PARA SELECTS-->
+<ng-template #addunit let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVO TIPO DE PRODUCTO</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="unitForm" (ngSubmit)="onSubmit()">  
+
+            <div class="form-group">
+            <label for="nombre">Nombre </label>&nbsp;
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-user"></i>
+                </span>
+                <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+            </div>  
+            </div>
+
+            <div class="alert alert-success" *ngIf="status2 == 'success'">
+                Guardado exitosamente.
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddUnit()" [disabled]="!unitForm.valid">
+    </div>
+</ng-template>
+<!--MODALS SELECTS END-->

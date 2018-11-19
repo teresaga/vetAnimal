@@ -6,13 +6,13 @@
       <div class="card-body">
           <div class="row">
               <div class="input-icon mb-3 search">
-                  <input type="text" class="form-control" placeholder="Filtrar Clientes...">
+                  <input type="text" class="form-control busq" placeholder="Filtrar Clientes..." [(ngModel)]="busqueda">
                   <span class="input-icon-addon">
                       <i class="fe fe-search"></i>
                   </span>
               </div>
               <div class="col-md-1 col-lg-1">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addClient">
+                  <button type="button" class="btn btn-primary" (click)="openModal(addclient)">
                       <i class="fe fe-plus-circle mr-2"></i>
                       Nuevo
                   </button>
@@ -20,47 +20,57 @@
           </div>
       </div>
   </div>
+
+    <div class="">
+        <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
+        <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
+    </div>
   <div class="col-12 card">
       <div class="table-responsive">
           <table class="table card-table table-vcenter text-nowrap">
               <thead>
                   <tr>
-                      <th class="w-1">ID</th>
+                      <th class="w-1">#</th>
                       <th>Nombre</th>
-                      <th>Apellido Paterno</th>
-                      <th>Apellido Materno</th>
-                      <th>Fecha de Nacimiento</th>
-                      <th>Dirección</th>
+                      <th>Apellido<br> Paterno</th>
+                      <th>Apellido<br> Materno</th>
+                      <th>Fecha de <br>Nacimiento</th>
                       <th>Teléfono</th>
                       <th>Email</th>
+                      <th>Fecha Alta</th>
+                      <th>Fecha Baja</th>
                       <th>Estado</th>
                       <th></th>
                   </tr>
               </thead>
               <tbody>
-              <tr>
-                  <td><span class="text-muted">1</span></td>
-                  <td>TERESA</td>
-                  <td>GALAVIZ</td>
-                  <td>ALEJOS</td>
-                  <td>21/06/1997</td>
-                  <td>Cipres Residencial del valle</td>
-                  <td>6681223311</td>
-                  <td>tere@gmail.com</td>
-                  <td>
-                      <span class="status-icon bg-success"></span> Activo
-                  </td> 
-                  <td>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-eye mr-2" style="color:blue;"></i>
-                      </a>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-edit mr-2" style="color:orange;"></i>
-                      </a>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
-                      </a>
-                  </td>
+                <tr *ngFor="let client of clients | searchClient: busqueda; index as i">
+                        <td><span class="text-muted">{{i+1+pag}}</span></td>
+                        <td>{{client.name}}</td>
+                        <td>{{client.paternal_surname}}</td>
+                        <td *ngIf="client.maternal_surname != ''">{{client.maternal_surname}}</td><td *ngIf="client.maternal_surname == ''">---</td>
+                        <td>{{client.birthdate}}</td>
+                        <td>{{client.tel}}</td>
+                        <td>{{client.email}}</td>
+                        <td>{{client.start_date}}</td>
+                        <td *ngIf="client.end_date != ''">{{client.end_date}}</td><td *ngIf="client.end_date == ''">---</td>
+                        <td>
+                            <span [ngClass]="{'bg-success': client.status === 'A', 'bg-danger': client.status === 'B'}" class="status-icon"></span> {{client.status}}
+                        </td>
+                        <td>
+                            <a class="icon" (click)="openModaldetails(detailsclient, client)">
+                                <i class="fe fe-eye mr-2" style="color:blue;" data-toggle="tooltip" title="Ver"></i>
+                            </a>
+                            <a class="icon" (click)="openModaledit(editclient, client)">
+                                <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
+                            </a>
+                            <a class="icon" (click)="openModalStatus(deactivateclient, client)" *ngIf="client.status==='A'">
+                                <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
+                            </a>
+                            <a class="icon" (click)="openModalStatus(activateclient, client)" *ngIf="client.status==='B'">
+                                <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
+                            </a>
+                        </td>
               </tr>
               </tbody>
           </table>
@@ -69,5 +79,259 @@
 </div>
 
 <!--MODAL ALTA-->
-<app-addclient></app-addclient>
+<ng-template #addclient let-modal>
+    <div class="modal-header">
+            <h4 class="modal-title">NUEVO CLIENTE</h4>
+            <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+        </div>
+    
+        <div class="modal-body">
+            <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">  
+    
+                <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-user"></i>
+                    </span>
+                    <input class="form-control" id="name" type="text" name="name" formControlName="name"> 
+                </div>  
+                </div>
+    
+                <div class="form-group">
+                    <div class="row gutters-xs">
+                        <div class="col-6">
+                        <label for="app">Apellido Paterno</label>
+                        <input class="form-control" type="text" id="paternal_surname" name="paternal_surname" formControlName="paternal_surname"> 
+                        </div>
+                        <div class="col-6">
+                        <label for="app">Apellido Materno</label>
+                        <input class="form-control" type="text" id="maternal_surname" name="maternal_surname" formControlName="maternal_surname"> 
+                        </div>
+                    </div>  
+                </div>
+                
+                <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"> </textarea>   
+                </div>
+                
+                <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                    <label for="telefono">Teléfono</label>
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="fe fe-phone"></i>
+                        </span>
+                        <input class="form-control" type="text" id="tel" name="tel" formControlName="tel">
+                    </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="fechanac">Fecha de nacimiento</label>
+                        <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
+                    </div>
+                </div>
+                </div> 
+    
+                <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-mail"></i>
+                    </span>
+                    <input class="form-control" type="email" id="email" name="email" formControlName="email"> 
+                </div>  
+                </div>
+    
+                <div class="alert alert-success" *ngIf="status == 'success'">
+                Guardado exitosamente.
+                </div>          
+            </form>
+        </div>
+
+        <div class="modal-footer d-flex">
+            <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+            <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddClient()" [disabled]="!clientForm.valid">
+        </div>
+</ng-template>
 <!--MODAL ALTA END-->
+<!--MODAL EDIT-->
+<ng-template #editclient let-modal>
+    <div class="modal-header">
+            <h4 class="modal-title">EDITAR CLIENTE</h4>
+            <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+        </div>
+    
+        <div class="modal-body">
+            <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">  
+    
+                <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-user"></i>
+                    </span>
+                    <input class="form-control" id="name" type="text" name="name" formControlName="name"> 
+                </div>  
+                </div>
+    
+                <div class="form-group">
+                    <div class="row gutters-xs">
+                        <div class="col-6">
+                        <label for="app">Apellido Paterno</label>
+                        <input class="form-control" type="text" id="paternal_surname" name="paternal_surname" formControlName="paternal_surname"> 
+                        </div>
+                        <div class="col-6">
+                        <label for="app">Apellido Materno</label>
+                        <input class="form-control" type="text" id="maternal_surname" name="maternal_surname" formControlName="maternal_surname"> 
+                        </div>
+                    </div>  
+                </div>
+                
+                <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"> </textarea>   
+                </div>
+                
+                <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                    <label for="telefono">Teléfono</label>
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="fe fe-phone"></i>
+                        </span>
+                        <input class="form-control" type="text" id="tel" name="tel" formControlName="tel">
+                    </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="fechanac">Fecha de nacimiento</label>
+                        <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
+                    </div>
+                </div>
+                </div> 
+    
+                <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-mail"></i>
+                    </span>
+                    <input class="form-control" type="email" id="email" name="email" formControlName="email"> 
+                </div>  
+                </div>
+    
+                <div class="alert alert-success" *ngIf="status == 'success'">
+                Cambios guardados exitosamente.
+                </div>          
+            </form>
+        </div>
+
+        <div class="modal-footer d-flex">
+            <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+            <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditClient()" [disabled]="!clientForm.valid">
+        </div>
+</ng-template>
+<!--MODAL EDIT END-->
+<!--MODAL DESACTIVAR-->
+<ng-template #deactivateclient let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE BAJA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de baja al cliente <strong>{{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Dar de Baja</button>
+    </div>
+</ng-template>
+<!--MODAL DESACTIVAR END-->
+
+<!--MODAL ACTIVAR-->
+<ng-template #activateclient let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE ALTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de alta al cliente <strong>{{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Dar de Alta</button>
+    </div>
+</ng-template>
+<!--MODAL ACTIVAR END-->
+
+<!--MODAL DETAILS-->
+<ng-template #detailsclient let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DETALLES CLIENTE</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+            <div class="form-group">
+                <label for="nombre" class="form-label">Nombre</label>&nbsp;
+                {{client.name}}  
+            </div>
+    
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                        <label for="app" class="form-label">Apellido Paterno</label>&nbsp;
+                        {{client.paternal_surname}}
+                    </div>
+                    <div class="col-6">
+                        <label for="app" class="form-label">Apellido Materno</label>&nbsp;
+                        <span *ngIf="client.maternal_surname != ''">{{client.maternal_surname}}</span><span *ngIf="client.maternal_surname == ''">---</span>
+                    </div>
+                </div>  
+            </div>
+                
+            <div class="form-group">
+                <label for="direccion" class="form-label">Dirección</label>&nbsp;
+                {{client.address}}
+            </div>
+                
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                        <label for="telefono" class="form-label">Teléfono</label>&nbsp;
+                        {{client.tel}}
+                    </div>
+                    <div class="col-6">
+                        <label for="fechanac" class="form-label">Fecha de nacimiento</label>&nbsp;
+                        {{client.birthdate}}
+                    </div>
+                </div>
+            </div> 
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>&nbsp;
+                {{client.email}}
+            </div>
+
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                        <label for="telefono" class="form-label">Fecha Alta</label>&nbsp;
+                        {{client.start_date}}
+                    </div>
+                    <div class="col-6">
+                        <label for="contacto" class="form-label">Fecha Baja</label>&nbsp;
+                        <span *ngIf="client.end_date != ''">{{client.end_date}}</span><span *ngIf="client.end_date == ''">---</span>
+                    </div>
+                </div>
+            </div> 
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL DETAILS END-->

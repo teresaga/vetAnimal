@@ -6,13 +6,13 @@
       <div class="card-body">
           <div class="row">
               <div class="input-icon mb-3 search">
-                  <input type="text" class="form-control" placeholder="Filtrar Proveedores...">
+                  <input type="text" class="form-control busq" placeholder="Filtrar Proveedores..." [(ngModel)]="busqueda">
                   <span class="input-icon-addon">
                       <i class="fe fe-search"></i>
                   </span>
               </div>
               <div class="col-md-1 col-lg-1">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProvider">
+                  <button type="button" class="btn btn-primary" (click)="openModal(addprovider)">
                       <i class="fe fe-plus-circle mr-2"></i>
                       Nuevo
                   </button>
@@ -20,6 +20,11 @@
           </div>
       </div>
   </div>
+
+    <div class="">
+        <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
+        <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
+    </div>
   <div class="col-12 card">
       <div class="table-responsive">
           <table class="table card-table table-vcenter text-nowrap">
@@ -30,38 +35,43 @@
                       <th>Razón Social</th>
                       <th>RFC</th>
                       <th>Nombre contacto</th>
-                      <th>Dirección</th>
                       <th>Teléfono</th>
                       <th>Email</th>
+                      <th>Fecha Alta</th>
+                      <th>Fecha Baja</th>
                       <th>Estado</th>
                       <th></th>
                   </tr>
               </thead>
               <tbody>
-              <tr>
-                  <td><span class="text-muted">1</span></td>
-                  <td>WHISKAS</td>
-                  <td>ALIMENTO WHISKAS</td>
-                  <td>GAAT970927RF2</td>
-                  <td>TERESA GALAVIZ</td>
-                  <td>Cipres Residencial del valle</td>
-                  <td>6681223311</td>
-                  <td>tere@gmail.com</td>
-                  <td>
-                    <span class="status-icon bg-success"></span> Activo
-                  </td> 
-                  <td>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-eye mr-2" style="color:blue;"></i>
-                      </a>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-edit mr-2" style="color:orange;"></i>
-                      </a>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
-                      </a>
-                  </td>
-              </tr>
+                <tr *ngFor="let provider of providers | searchProvider: busqueda; index as i">
+                        <td><span class="text-muted">{{i+1+pag}}</span></td>
+                        <td>{{provider.name}}</td>
+                        <td>{{provider.business_name}}</td>
+                        <td>{{provider.rfc}}</td>
+                        <td>{{provider.contact_person}}</td>
+                        <td>{{provider.tel}}</td>
+                        <td>{{provider.email}}</td>
+                        <td>{{provider.start_date}}</td>
+                        <td *ngIf="provider.end_date != ''">{{provider.end_date}}</td><td *ngIf="provider.end_date == ''">---</td>
+                        <td>
+                            <span [ngClass]="{'bg-success': provider.status === 'A', 'bg-danger': provider.status === 'B'}" class="status-icon"></span> {{provider.status}}
+                        </td>
+                        <td>
+                            <a class="icon" (click)="openModaldetails(detailsprovider, provider)">
+                                <i class="fe fe-eye mr-2" style="color:blue;" data-toggle="tooltip" title="Ver"></i>
+                            </a>
+                            <a class="icon" (click)="openModaledit(editprovider, provider)">
+                                <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
+                            </a>
+                            <a class="icon" (click)="openModalStatus(deactivateprovider, provider)" *ngIf="provider.status==='A'">
+                                <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
+                            </a>
+                            <a class="icon" (click)="openModalStatus(activateprovider, provider)" *ngIf="provider.status==='B'">
+                                <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
+                            </a>
+                        </td>
+                </tr>
               </tbody>
           </table>
       </div>
@@ -69,5 +79,259 @@
 </div>
 
 <!--MODAL ALTA-->
-<app-addprovider></app-addprovider>
+<ng-template #addprovider let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVO PROVEEDOR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="providerForm" (ngSubmit)="onSubmit()">  
+
+            <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                    <label for="nombre">Nombre</label>
+                    <input class="form-control" type="text" id="name" name="name" formControlName="name"> 
+                </div>
+                <div class="col-6">
+                    <label for="razonSocial">Razón Social</label>
+                    <input class="form-control" type="text" id="business_name" name="business_name" formControlName="business_name"> 
+                </div>
+            </div>  
+            </div>
+
+            <div class="form-group">
+            <label for="rfc">RFC</label>
+            <input class="form-control" id="rfc" name="rfc" type="text" formControlName="rfc"> 
+            </div>
+            
+            <div class="form-group">
+            <label for="direccion">Dirección</label>
+            <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"></textarea>   
+            </div>
+            
+            <div class="form-group">
+            <label for="email">Email</label>
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-mail"></i>
+                </span>
+                <input class="form-control" type="email" id="email" name="email" formControlName="email"> 
+            </div>  
+            </div>
+
+            <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                <label for="telefono">Teléfono</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-phone"></i>
+                    </span>
+                    <input class="form-control" type="text" id="tel" name="tel" formControlName="tel">
+                </div>
+                </div>
+                <div class="col-6">
+                <label for="contacto">Nombre Contacto</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-user"></i>
+                    </span>
+                    <input class="form-control" type="text" id="contact_person" name="contact_person" formControlName="contact_person"> 
+                </div> 
+                </div>
+            </div>
+            </div> 
+
+            <div class="alert alert-success" *ngIf="status == 'success'">
+            Guardado exitosamente.
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddProvider()" [disabled]="!providerForm.valid">
+    </div>
+</ng-template>
 <!--MODAL ALTA END-->
+
+<!--MODAL EDIT-->
+<ng-template #editprovider let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">EDITAR PROVEEDOR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="providerForm" (ngSubmit)="onSubmit()">  
+
+            <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                    <label for="nombre">Nombre</label>
+                    <input class="form-control" type="text" id="name" name="name" formControlName="name"> 
+                </div>
+                <div class="col-6">
+                    <label for="razonSocial">Razón Social</label>
+                    <input class="form-control" type="text" id="business_name" name="business_name" formControlName="business_name"> 
+                </div>
+            </div>  
+            </div>
+
+            <div class="form-group">
+            <label for="rfc">RFC</label>
+            <input class="form-control" id="rfc" name="rfc" type="text" formControlName="rfc"> 
+            </div>
+            
+            <div class="form-group">
+            <label for="direccion">Dirección</label>
+            <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"></textarea>   
+            </div>
+            
+            <div class="form-group">
+            <label for="email">Email</label>
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-mail"></i>
+                </span>
+                <input class="form-control" type="email" id="email" name="email" formControlName="email"> 
+            </div>  
+            </div>
+
+            <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                <label for="telefono">Teléfono</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-phone"></i>
+                    </span>
+                    <input class="form-control" type="text" id="tel" name="tel" formControlName="tel">
+                </div>
+                </div>
+                <div class="col-6">
+                <label for="contacto">Nombre Contacto</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-user"></i>
+                    </span>
+                    <input class="form-control" type="text" id="contact_person" name="contact_person" formControlName="contact_person"> 
+                </div> 
+                </div>
+            </div>
+            </div> 
+
+            <div class="alert alert-success" *ngIf="status == 'success'">
+            Cambios guardados exitosamente.
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditProvider()" [disabled]="!providerForm.valid">
+    </div>
+</ng-template>
+<!--MODAL EDIT END-->
+
+<!--MODAL DESACTIVAR-->
+<ng-template #deactivateprovider let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE BAJA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de baja al proveedor <strong>{{provider.name}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Dar de Baja</button>
+    </div>
+</ng-template>
+<!--MODAL DESACTIVAR END-->
+
+<!--MODAL ACTIVAR-->
+<ng-template #activateprovider let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE ALTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de alta al proveedor <strong>{{provider.name}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Dar de Alta</button>
+    </div>
+</ng-template>
+<!--MODAL ACTIVAR END-->
+
+<!--MODAL DETAILS-->
+<ng-template #detailsprovider let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DETALLES PROVEEDOR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+            <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                    <label for="nombre" class="form-label">Nombre</label>&nbsp;
+                    {{provider.name}}
+                </div>
+                <div class="col-6">
+                    <label for="razonSocial" class="form-label">Razón Social</label>&nbsp;
+                    {{provider.business_name}}
+                </div>
+            </div>  
+            </div>
+
+            <div class="form-group">
+            <label for="rfc" class="form-label">RFC</label>&nbsp;
+            {{provider.rfc}}
+            </div>
+            
+            <div class="form-group">
+            <label for="direccion" class="form-label">Dirección</label>&nbsp;
+            {{provider.address}}
+            </div>
+            
+            <div class="form-group">
+            <label for="email" class="form-label">Email</label>&nbsp;
+            {{provider.email}}
+            </div>
+
+            <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                <label for="telefono" class="form-label">Teléfono</label>&nbsp;
+                {{provider.tel}}
+                </div>
+                <div class="col-6">
+                <label for="contacto" class="form-label">Nombre Contacto</label>&nbsp;
+                {{provider.contact_person}}
+                </div>
+            </div>
+            </div> 
+
+            <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                <label for="telefono" class="form-label">Fecha Alta</label>&nbsp;
+                {{provider.start_date}}
+                </div>
+                <div class="col-6">
+                <label for="contacto" class="form-label">Fecha Baja</label>&nbsp;
+                <span *ngIf="provider.end_date != ''">{{provider.end_date}}</span><span *ngIf="provider.end_date == ''">---</span>
+                </div>
+            </div>
+            </div> 
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL DETAILS END-->
