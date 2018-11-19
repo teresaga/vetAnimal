@@ -17,9 +17,13 @@ export class AnimalService {
     this.url = GLOBAL.url;
   }
 
-  getAnimalsClient(token, id): Observable<any>{
+  getAnimal(id): Observable<any>{
+    return this._http.get(this.url+'animal/'+id);
+  }
+
+  getAnimalsClient(token, id, pag: number = 0): Observable<any>{
     let headers = new HttpHeaders().set('Authorization', token);
-    return this._http.get(this.url+'animals-client/'+id,{headers: headers});
+    return this._http.get(this.url+'animals-client/'+id+'?pag='+pag,{headers: headers});
   }
 
   getAnimalCount(): Observable<any>{

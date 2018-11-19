@@ -8,6 +8,7 @@ export class Animal{
         public specie: String,
         public race: String,
         public character: String,
+        public color: string,
         public hair: String,
         public habitat: String,
         public weight: String,
