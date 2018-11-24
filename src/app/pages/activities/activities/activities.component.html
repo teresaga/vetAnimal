@@ -5,32 +5,57 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="form-group col-md-4 col-lg-4">
+                <div class="form-group col-3">
                   <label class="form-label">Cliente</label>
-                  <select class="form-control custom-select" id="cliente">
-                      <option value="">Selecciona...</option>
-                      <option value="">TERESA</option>
+                  <select class="form-control custom-select busq" id="cliente" [(ngModel)]="busquedaClient" (change)="changeClient()">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let client of clients; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>
                   </select>
                 </div>
-                <div class="form-group col-md-3 col-lg-3">
+                <div class="form-group col-2">
                   <label class="form-label">Mascota</label>
-                  <select class="form-control custom-select" id="animal">
-                      <option value="">Selecciona...</option>
-                      <option value="">YUKI</option>
+                  <select class="form-control custom-select busq" id="animal" [(ngModel)]="busquedaAnimal">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let animal of animals; index as i" [value]="animal._id">{{i+1}}.- {{animal.name}}</option>
                   </select>
                 </div>
-                <div class="form-group col-md-3 col-lg-3">
-                  <label class="form-label">Estado</label>
-                  <select class="form-control custom-select" id="estado">
-                      <option value="">Selecciona...</option>
-                      <option value="">En proceso</option>
-                      <option value="">Pendiente</option>
-                      <option value="">Terminado</option>
-                  </select>
+                <div class="form-group mx-sm-3">
+                    <label class="form-label">De</label>
+                    <div class="input-icon">
+                      <span class="input-icon-addon">
+                          <i class="fe fe-calendar"></i>
+                      </span> 
+                      <input class="form-control busq" id="inicio" name="inicio" type="date" [(ngModel)]="busquedaFechaDe"> 
+                    </div>
+                  </div>
+                  <div class="form-group mx-sm-3">
+                    <label class="form-label">Hasta</label>
+                    <div class="input-icon">
+                      <span class="input-icon-addon">
+                          <i class="fe fe-calendar"></i>
+                      </span> 
+                      <input class="form-control busq" id="fin" name="fin" type="date" [(ngModel)]="busquedaFechaHasta"> 
+                    </div>
+                  </div>
+                  <div class="form-group mx-sm-3">
+                    <label class="form-label">Estado</label>
+                    <select class="form-control custom-select busq" id="animal" [(ngModel)]="busquedaStatus">
+                      <option [value]="null">Selecciona...</option>
+                      <option [value]="PE">Pendiente</option>
+                      <option [value]="PR">En proceso</option>
+                      <option [value]="T">Terminada</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2 col-lg-1">
+                    <br>
+                    <button type="button" class="btn btn-success" (click)="getActivities()" [disabled]="(busquedaClient==null || busquedaAnimal==null || busquedaStatus==null) && (busquedaFechaDe==null && busquedaFechaHasta == null)">
+                        <i class="fas fa-search mr-2"></i>
+                        Buscar
+                    </button>
                 </div>
                 <div class="col-md-1 col-lg-1">
                     <br>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addActivity">
+                    <button type="button" class="btn btn-primary" (click)="openModal(addactivity)" >
                         <i class="fe fe-plus-circle mr-2"></i>
                         Nuevo
                     </button>
@@ -44,27 +69,33 @@
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
                     <tr>
-                        <th class="w-1">ID</th>
+                        <th class="w-1">#</th>
                         <th>Fecha</th>
-                        <th>Hora</th>
                         <th>Servicio</th>
                         <th>Cliente</th>
                         <th>Mascota</th>
+                        <th>Empleado</th>
                         <th>Notas</th>
+                        <th>Fecha Alta</th>
+                        <th>Fecha Baja</th>
                         <th>Estado</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><span class="text-muted">1</span></td>
-                    <td>22/10/2018</td>
-                    <td>9:00</td>
-                    <td>BAÑO</td>
-                    <td>TERESA</td>
-                    <td>YUKI</td>
-                    <td>...</td>
-                    <td>Pendiente</td>
+                <tr *ngFor="let activity of activities; index as i">
+                    <td><span class="text-muted">{{i+1+pag}}</span></td>
+                    <td>{{activity.date}}</td>
+                    <td>{{activity.service.description}}</td>
+                    <td>{{activity.client.name + " " +activity.client.paternal_surname}} <span *ngIf="activity.client.maternal_surname">{{" " + activity.client.maternal_surname}}</span></td>
+                    <td>{{activity.animal.name}}</td>                    
+                    <td>{{activity.worker.name + " " +activity.worker.paternal_surname}} <span *ngIf="activity.worker.maternal_surname">{{" " + activity.worker.maternal_surname}}</span></td>
+                    <td *ngIf="activity.notes != '' && activity.notes != null">{{activity.notes}}</td><td *ngIf="activity.notes == '' || activity.notes == null">---</td>
+                    <td>{{activity.start_date | dates}}</td>
+                    <td *ngIf="activity.end_date != '' && activity.end_date != null">{{activity.end_date | dates}}</td><td *ngIf="activity.end_date == '' || activity.end_date == null">---</td>
+                    <td>
+                        <span [ngClass]="{'bg-success': activity.status === 'A', 'bg-danger': activity.status === 'B'}" class="status-icon"></span> {{activity.status}}
+                    </td>
                     <td>
                         <a class="icon" href="javascript:void(0)">
                             <i class="fe fe-eye mr-2" style="color:blue;"></i>
@@ -86,4 +117,20 @@
   <!--MODAL ALTA-->
   <app-addactivity></app-addactivity>
   <!--MODAL ALTA END-->
+
+  <!--MODAL INFO-->
+<ng-template #information let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">ERROR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <h5 class="form-label">No se encontró ningún registro</h5>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL INFO-->
 

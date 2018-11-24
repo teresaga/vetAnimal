@@ -4,25 +4,25 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { UserService } from '../../../services/user.service';
 import { GLOBAL } from '../../../services/global';
 
-import { Job } from '../../../models/job';
-import { JobService } from '../../../services/job.service';
+import { Specie } from '../../../models/specie';
+import { SpecieService } from '../../../services/specie.service';
 @Component({
-  selector: 'app-jobs',
-  templateUrl: './jobs.component.html',
-  styleUrls: ['./jobs.component.css']
+  selector: 'app-species',
+  templateUrl: './species.component.html',
+  styleUrls: ['./species.component.css']
 })
-export class JobsComponent implements OnInit {
-  //Para form y registrar puesto
-  jobForm: FormGroup;
-  public job: Job;
+export class SpeciesComponent implements OnInit {
+  //Para form y registrar especies
+  specieForm: FormGroup;
+  public specie: Specie;
   public status: string;
 
   //token
   public url: string;
   public token;
 
-  //Variables para mostrar puestos y realizar paginacion
-  public jobs: Job[];
+  //Variables para mostrar especies y realizar paginacion
+  public species: Specie[];
   public busqueda;
   pag: number = 0;
   totalRegistros: number = 0;
@@ -31,17 +31,16 @@ export class JobsComponent implements OnInit {
     private pf: FormBuilder,
     private modalService: NgbModal,
     private _userService: UserService,
-    private _jobService: JobService
+    private _specieService: SpecieService
   ) { 
-    this.job = new Job('','','','','');
+    this.specie = new Specie('','','','','');
     this.token = this._userService.getToken();
     this.url = GLOBAL.url;
     this.status = "";
   }
-
   ngOnInit() {
-    this.getJobs();
-    this.jobForm = this.pf.group({
+    this.getSpecies();
+    this.specieForm = this.pf.group({
       name: ['', Validators.required]
     });
   }
@@ -52,51 +51,51 @@ export class JobsComponent implements OnInit {
     }, (reason) => {
       if(this.status=='success'){
         this.status='';
-        this.jobForm.reset();
+        this.specieForm.reset();
       }
     });
   }
 
-  openModaledit(content, job: any) {
+  openModaledit(content, specie: any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       
     }, (reason) => {
       if(this.status=='success'){
         this.status='';
-        this.jobForm.reset();
+        this.specieForm.reset();
       }
     });
-    this.job._id = job._id;
-    this.jobForm.get('name').setValue(job.name);
+    this.specie._id = specie._id;
+    this.specieForm.get('name').setValue(specie.name);
   }
 
-  openModalStatus(content, job: any){
+  openModalStatus(content, specie: any){
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       if(result=='Deactivate'){
-        this.deactivateJob(job);
+        this.deactivateSpecie(specie);
       }
       if(result=='Activate'){
-        this.activateJob(job);
+        this.activateSpecie(specie);
       }
     }, (reason) => {
     });
-    this.job.name = job.name;
+    this.specie.name = specie.name;
   }
 
   ////////////////////////////////////////////////////////////
-  //                    AGREGAR PUESTO                      //
+  //                    AGREGAR ESPECIES                    //
   ////////////////////////////////////////////////////////////
-  onSubmitAddJob(){
-    this.job.name = this.jobForm.get('name').value;
+  onSubmitAddSpecie(){
+    this.specie.name = this.specieForm.get('name').value;
     
-    this._jobService.addJob(this.token, this.job).subscribe(
+    this._specieService.addSpecie(this.token, this.specie).subscribe(
       response => {
-        if(!response.job){
+        if(!response.specie){
           this.status = 'error';
         }else{
           this.status = 'success';
-          this.job = response.job;
-          this.getJobs();
+          this.specie = response.specie;
+          this.getSpecies();
         }
       },
       error => {
@@ -108,19 +107,19 @@ export class JobsComponent implements OnInit {
     );
   }
   ////////////////////////////////////////////////////////////
-  //                     EDITAR PUESTO                      //
+  //                     EDITAR ESPECIES                    //
   ////////////////////////////////////////////////////////////
-  onSubmitEditJob(){
-    this.job.name = this.jobForm.get('name').value;
+  onSubmitEditSpecie(){
+    this.specie.name = this.specieForm.get('name').value;
 
-    this._jobService.editJob(this.token, this.job._id, this.job).subscribe(
+    this._specieService.editSpecie(this.token, this.specie._id, this.specie).subscribe(
       response => {
-        if(!response.job){
+        if(!response.specie){
           this.status = 'error';
         }else{
           this.status = 'success';
-          this.job = response.job;
-          this.getJobs();
+          this.specie = response.specie;
+          this.getSpecies();
         }
       },
       error => {
@@ -132,42 +131,42 @@ export class JobsComponent implements OnInit {
     );
   }
   ////////////////////////////////////////////////////////////
-  //               CAMBIAR ESTADO DE PUESTO                 //
+  //               CAMBIAR ESTADO DE ESPECIES               //
   ////////////////////////////////////////////////////////////
-  deactivateJob(job : Job){
-    this._jobService.deactivateJob(this.token, job._id).subscribe(
+  deactivateSpecie(specie : Specie){
+    this._specieService.deactivateSpecie(this.token, specie._id).subscribe(
       response => {
-        if(!response.job){
+        if(!response.specie){
           console.log("Error en el servidor");
         }
-        this.getJobs();
+        this.getSpecies();
       },error  => {
         console.log("Error en el servidor");
       }
     );
   }
 
-  activateJob(job : Job){
-    this._jobService.activateJob(this.token, job._id).subscribe(
+  activateSpecie(specie : Specie){
+    this._specieService.activateSpecie(this.token, specie._id).subscribe(
       response => {
-        if(!response.job){
+        if(!response.specie){
           console.log("Error en el servidor");
         }
-        this.getJobs();
+        this.getSpecies();
       },error  => {
         console.log("Error en el servidor");
       }
     );
   }
   ////////////////////////////////////////////////////////////
-  //          OBTENER PUESTOS Y REALIZAR PAGINACION         //
+  //          OBTENER ESPECIES Y REALIZAR PAGINACION        //
   ////////////////////////////////////////////////////////////
-  getJobs(){
-    this._jobService.getJobs(this.pag).subscribe(
+  getSpecies(){
+    this._specieService.getSpecies(this.pag).subscribe(
       response => {
         
-        if(response.jobs){
-          this.jobs = response.jobs;
+        if(response.species){
+          this.species = response.species;
           this.totalRegistros = response.total;
         }
       }, error => {
@@ -188,6 +187,6 @@ export class JobsComponent implements OnInit {
     }
 
     this.pag += valor;
-    this.getJobs();
+    this.getSpecies();
   }
 }

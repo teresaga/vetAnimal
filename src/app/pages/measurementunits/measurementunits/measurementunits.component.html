@@ -1,0 +1,162 @@
+<div class="row">
+  <div class="col-12 card">
+      <div class="card-header">
+          <h3 class="card-title">Unidades de Medida</h3>
+      </div>
+      <div class="card-body">
+          <div class="row">
+              <div class="input-icon mb-3 search">
+                  <input type="text" class="form-control busq" placeholder="Filtrar..." [(ngModel)]="busqueda">
+                  <span class="input-icon-addon">
+                      <i class="fe fe-search"></i>
+                  </span>
+              </div>
+              <div class="col-md-1 col-lg-1">
+                  <button type="button" class="btn btn-primary" (click)="openModal(addunit)">
+                      <i class="fe fe-plus-circle mr-2"></i>
+                      Nuevo
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="">
+      <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
+      <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
+  </div>
+  <div class="col-12 card">
+      <div class="table-responsive">
+          <table class="table card-table table-vcenter text-nowrap">
+              <thead>
+                  <tr>
+                      <th class="w-1">#</th>
+                      <th>Nombre</th>
+                      <th>Fecha Alta</th>
+                      <th>Fecha Baja</th>
+                      <th>Estado</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let measurementunit of measurementunits | searchSubmodels: busqueda; index as i">
+                  <td><span class="text-muted">{{i+1+pag}}</span></td>
+                  <td>{{measurementunit.name}}</td>
+                  <td>{{measurementunit.start_date | dates}}</td>
+                    <td *ngIf="measurementunit.end_date != '' && measurementunit.end_date != null">{{measurementunit.end_date | dates}}</td><td *ngIf="measurementunit.end_date == '' || measurementunit.end_date == null">---</td>
+                  <td>
+                      <span [ngClass]="{'bg-success': measurementunit.status === 'A', 'bg-danger': measurementunit.status === 'B'}" class="status-icon"></span> {{measurementunit.status}}
+                  </td>
+                  <td>
+                      <a class="icon" (click)="openModaledit(editunit, measurementunit)">
+                          <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
+                      </a>
+                      <a class="icon" (click)="openModalStatus(deactivateunit, measurementunit)" *ngIf="measurementunit.status==='A'">
+                          <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
+                      </a>
+                      <a class="icon" (click)="openModalStatus(activateunit, measurementunit)" *ngIf="measurementunit.status==='B'">
+                          <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
+                      </a>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+<!--MODALS PARA SELECTS-->
+<ng-template #addunit let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title">NUEVA UNIDAD DE MEDIDA</h4>
+      <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+  </div>
+
+  <div class="modal-body">
+      <form [formGroup]="unitForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+          <label for="nombre">Nombre </label>&nbsp;
+          <div class="input-icon">
+              <span class="input-icon-addon">
+                  <i class="fe fe-user"></i>
+              </span>
+              <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+          </div>  
+          </div>
+
+          <div class="alert alert-success" *ngIf="status == 'success'">
+              Guardado exitosamente.
+          </div>
+      </form>
+  </div>
+  <div class="modal-footer d-flex">
+      <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+      <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddUnit()" [disabled]="!unitForm.valid">
+  </div>
+</ng-template>
+<!--MODALS SELECTS END-->
+<!--MODAL EDIT-->
+<ng-template #editunit let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title">EDITAR UNIDAD DE MEDIDA</h4>
+      <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+  </div>
+
+  <div class="modal-body">
+      <form [formGroup]="unitForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+          <label for="nombre">Nombre </label>&nbsp;
+          <div class="input-icon">
+              <span class="input-icon-addon">
+                  <i class="fe fe-user"></i>
+              </span>
+              <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+          </div>  
+          </div>
+
+          <div class="alert alert-success" *ngIf="status == 'success'">
+              Cambios guardados exitosamente.
+          </div>
+      </form>
+  </div>
+  <div class="modal-footer d-flex">
+      <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+      <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditUnit()" [disabled]="!unitForm.valid">
+  </div>
+</ng-template>
+<!--MODALS EDIT END-->
+<!--MODAL DESACTIVAR-->
+<ng-template #deactivateunit let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE BAJA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de baja la unidad de medida <strong>{{measurementunit.name}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Dar de Baja</button>
+    </div>
+</ng-template>
+<!--MODAL DESACTIVAR END-->
+
+<!--MODAL ACTIVAR-->
+<ng-template #activateunit let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE ALTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de alta la unidad de medida <strong>{{measurementunit.name}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Dar de Alta</button>
+    </div>
+</ng-template>
+<!--MODAL ACTIVAR END-->

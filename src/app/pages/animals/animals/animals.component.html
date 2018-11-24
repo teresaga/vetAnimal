@@ -9,19 +9,19 @@
                 <label class="form-label">Cliente</label>
                 <select class="form-control custom-select busq" id="cliente" [(ngModel)]="busquedaClient">
                     <option [value]="null">Selecciona...</option>
-                    <option *ngFor="let client of clients; index as i" [value]="client._id">{{i+1}}.- {{client.name}}</option>
+                    <option *ngFor="let client of clients; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>
                 </select>
               </div>
               <div class="col-md-2 col-lg-1">
                     <br>
-                    <button type="button" class="btn btn-success" (click)="this.getAnimalsofClient();">
+                    <button type="button" class="btn btn-success" (click)="this.getAnimalsofClient();" [disabled]="busquedaClient==null || busquedaClient=='null'">
                         <i class="fas fa-search mr-2"></i>
                         Buscar
                     </button>
                 </div>
               <div class="col-md-2 col-lg-1">
                   <br>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAnimal">
+                  <button type="button" class="btn btn-primary" (click)="openModal(addanimal)">
                       <i class="fe fe-plus-circle mr-2"></i>
                       Nuevo
                   </button>
@@ -39,17 +39,17 @@
           <table class="table card-table table-vcenter text-nowrap">
               <thead>
                   <tr>
-                      <th class="w-1">ID</th>
+                      <th class="w-1">#</th>
                       <th>Nombre</th>
                       <th>Especie</th>
                       <th>Raza</th>
-                      <th>Color</th>
-                      <th>Fecha de Nacimiento</th>
+                      <th>Fecha de<br> Nacimiento</th>
                       <th>Sexo</th>
                       <th>Altura</th>
                       <th>Peso</th>
                       <th>Cliente</th>
-                      <th>Esterilizado</th>
+                      <th>Fecha Alta</th>
+                      <th>Fecha Baja</th>
                       <th>Estado</th>
                       <th></th>
                   </tr>
@@ -60,29 +60,34 @@
                 <td>{{animal.name}}</td>
                 <td>{{animal.specie.name}}</td>
                 <td>{{animal.race.name}}</td>
-                <td>{{animal.color}}</td>
                 <td>{{animal.birthdate}}</td>
                 <td>{{animal.sex}}</td>
                 <td>{{animal.height}}</td>
                 <td>{{animal.weight}}</td>
-                <td>{{animal.client.name + animal.client.paternal_surname + animal.maternal_surname}}</td>
-                <td>{{animal.sterilized}}</td>
+                <td>{{animal.client.name + " " +animal.client.paternal_surname}} <span *ngIf="animal.client.maternal_surname">{{" " + animal.client.maternal_surname}}</span></td>
+                <td>{{animal.start_date | dates}}</td>
+                <td *ngIf="animal.end_date != '' && animal.end_date != null">{{animal.end_date | dates}}</td><td *ngIf="animal.end_date == '' || animal.end_date == null">---</td>
+                <td>
+                    <span [ngClass]="{'bg-success': animal.status === 'A', 'bg-danger': animal.status === 'B'}" class="status-icon"></span> {{animal.status}}
+                </td>
                   <td>
-                    <span class="status-icon bg-success"></span> Activo
-                  </td>
-                  <td>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-eye mr-2" style="color:blue;"></i>
+                        <a class="icon" (click)="openModaldetails(detailsanimal, animal)">
+                            <i class="fe fe-eye mr-2" style="color:blue;" data-toggle="tooltip" title="Ver"></i>
                         </a>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-edit mr-2" style="color:orange;"></i>
+                        <a class="icon" (click)="openModaledit(editanimal, animal)">
+                            <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
+                        <a class="icon" (click)="openModalStatus(deactivateanimal, animal)" *ngIf="animal.status==='A'">
+                            <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
                         </a>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="far fa-clipboard mr-2" style="color:green;"></i>
+                        <a class="icon" (click)="openModalStatus(activateanimal, animal)" *ngIf="animal.status==='B'">
+                            <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
                         </a>
+                        <!--
+                        <a class="icon" href="javascript:void(0)" *ngIf="animal.status==='A'">
+                            <i class="far fa-clipboard mr-2" style="color:green;" data-toggle="tooltip" title="Realizar consulta"></i>
+                        </a>
+                        -->
                   </td>
               </tr>
               </tbody>
@@ -92,5 +97,660 @@
 </div>
 
 <!--MODAL ALTA-->
-<app-addanimal></app-addanimal>
+<ng-template #addanimal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVA MASCOTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="animalForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                      <label for="cliente">Cliente</label>
+                      <select class="form-control custom-select" id="client" name="client" formControlName="client">
+                            <option [value]="null">Selecciona...</option>
+                            <option *ngFor="let client of clients2; index as i" [value]="client._id">{{i+1}}.- {{client.name}}</option>
+    
+                      </select> 
+                  </div>
+
+                  <div class="col-6">
+                    <label for="animal">Nombre de mascota</label>
+                    <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+                  </div>
+              </div>  
+          </div>
+          
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                      <label for="sexo">Sexo</label>
+                      <select class="form-control custom-select" id="sex" name="sex" formControlName="sex">
+                        <option [value]="null">Seleccionar...</option>
+                        <option [value]="'Hembra'">Hembra</option>
+                        <option [value]="'Macho'">Macho</option>
+                      </select> 
+                  </div>
+                  
+                  <div class="col-6">
+                    <label for="fechanac">Fecha de nacimiento</label>
+                    <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
+                  </div>
+              </div>  
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="especie">Especie</label>
+          
+                <div class="input-group">
+                  <select class="form-control custom-select" id="specie" name="specie" formControlName="specie" (change)="getRacesASpecie()">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let specie of species; index as i" [value]="specie._id">{{i+1}}.- {{specie.name}}</option>
+                  </select> 
+                  <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalselect(addselect, 1)"><i class="fe fe-plus-circle"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <label class="raza">Raza</label>
+          
+                <div class="input-group">
+                  <select class="form-control custom-select" id="race" name="race" formControlName="race">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let race of races; index as i" [value]="race._id">{{i+1}}.- {{race.name}}</option>
+                  </select> 
+                  <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalselectRace(addselectrace)"><i class="fe fe-plus-circle"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="pelo">Tipo de Pelo</label>
+          
+                <div class="input-group">
+                  <select class="form-control custom-select" id="hair" name="hair" formControlName="hair">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let hair of hairs; index as i" [value]="hair._id">{{i+1}}.- {{hair.name}}</option>
+
+                  </select> 
+                  <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalselect(addselect, 2)"><i class="fe fe-plus-circle"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+                <label for="color">Color de pelo</label>
+                <input class="form-control" id="color" type="text" name="color" formControlName="color"> 
+            </div>
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="habitat">Hábitat</label>
+          
+                <div class="input-group">
+                  <select class="form-control custom-select" id="habitat" name="habitat" formControlName="habitat">
+                    <option [value]="null">Seleccionar...</option>
+                    <option *ngFor="let habitat of habitats; index as i" [value]="habitat._id">{{i+1}}.- {{habitat.name}}</option>
+                  </select> 
+                  <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalselect(addselect, 3)"><i class="fe fe-plus-circle"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="caracter">Carácter</label>
+            
+                    <div class="input-group">
+                    <select class="form-control custom-select" id="character" name="character" formControlName="character">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let character of characters; index as i" [value]="character._id">{{i+1}}.- {{character.name}}</option>
+                    </select> 
+                    <span class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click)="openModalselect(addselect, 4)"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="row gutters-xs">
+                <div class="col-3">
+                    <label for="peso">Peso</label>
+                    <input class="form-control" id="weight" type="text" name="weight" formControlName="weight"> 
+                </div>
+    
+                <div class="col-3">
+                    <label for="altura">Altura</label>
+                    <input class="form-control" id="height" type="text" name="height" formControlName="height"> 
+                </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="">Selecciona</label>
+                    <div>
+                        <div class="form-check custom-control custom-checkbox custom-control-inline">
+                        <input class="form-check-input" type="checkbox" value="" id="sterilized" name="sterilized" formControlName="sterilized">
+                        <label class="form-check-label" for="esterilizado">
+                            Esterilizado
+                        </label>
+                        </div>
+        
+                        <div class="form-check custom-control custom-checkbox custom-control-inline">
+                        <input class="form-check-input" type="checkbox" value="" id="nails" name="nails" formControlName="nails">
+                        <label class="form-check-label" for="unias">
+                            Uñas largas
+                        </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea class="form-control" rows="2" id="notes" name="notes" formControlName="notes"></textarea>   
+          </div>
+
+          <div class="form-group">
+            <label for="foto">Fotografía</label>
+            <div *ngIf="animal.image">
+                <div class="image_for_edit">
+                    <a href="{{url + 'get-image-animal/' + animal.image }}" target="_blank">
+                        <img src="{{url + 'get-image-animal/' + animal.image }}" alt="Imagen">
+                    </a>
+                </div>
+            </div>
+            <input class="form-control busq" type="file" placeholder="Subir imagen..." (change)="fileChangeEvent($event)" id="image" name="image" formControlName="image"> 
+          </div>
+
+          <div class="alert alert-success" *ngIf="status == 'success'">
+            Guardado exitosamente.
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddAnimal()" [disabled]="!animalForm.valid">
+    </div>
+</ng-template>
 <!--MODAL ALTA END-->
+<!--MODAL EDIT-->
+<ng-template #editanimal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">EDITAR MASCOTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="animalForm" (ngSubmit)="onSubmit()">  
+
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                        <label for="cliente">Cliente</label>
+                        <select class="form-control custom-select" id="client" name="client" formControlName="client">
+                            <option [value]="null">Selecciona...</option>
+                            <option *ngFor="let client of clients2; index as i" [value]="client._id">{{i+1}}.- {{client.name}}</option>
+    
+                        </select> 
+                    </div>
+
+                    <div class="col-6">
+                    <label for="animal">Nombre de mascota</label>
+                    <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+                    </div>
+                </div>  
+            </div>
+            
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                        <label for="sexo">Sexo</label>
+                        <select class="form-control custom-select" id="sex" name="sex" formControlName="sex">
+                        <option [value]="null">Seleccionar...</option>
+                        <option [value]="'Hembra'">Hembra</option>
+                        <option [value]="'Macho'">Macho</option>
+                        </select> 
+                    </div>
+                    
+                    <div class="col-6">
+                    <label for="fechanac">Fecha de nacimiento</label>
+                    <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
+                    </div>
+                </div>  
+            </div>
+
+            <div class="row gutters-xs">
+            <div class="col-6">
+                <div class="form-group">
+                <label class="especie">Especie</label>
+            
+                <div class="input-group">
+                    <select class="form-control custom-select" id="specie" name="specie" formControlName="specie" (change)="getRacesASpecie()">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let specie of species; index as i" [value]="specie._id">{{i+1}}.- {{specie.name}}</option>
+                    </select> 
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalselect(addselect, 1)"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                <label class="raza">Raza</label>
+            
+                <div class="input-group">
+                    <select class="form-control custom-select" id="race" name="race" formControlName="race">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let race of races; index as i" [value]="race._id">{{i+1}}.- {{race.name}}</option>
+                    </select> 
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="row gutters-xs">
+            <div class="col-6">
+                <div class="form-group">
+                <label class="pelo">Tipo de Pelo</label>
+            
+                <div class="input-group">
+                    <select class="form-control custom-select" id="hair" name="hair" formControlName="hair">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let hair of hairs; index as i" [value]="hair._id">{{i+1}}.- {{hair.name}}</option>
+
+                    </select> 
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalselect(addselect, 2)"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="color">Color de pelo</label>
+                <input class="form-control" id="color" type="text" name="color" formControlName="color"> 
+            </div>
+            </div>
+
+            <div class="row gutters-xs">
+            <div class="col-6">
+                <div class="form-group">
+                <label class="habitat">Hábitat</label>
+            
+                <div class="input-group">
+                    <select class="form-control custom-select" id="habitat" name="habitat" formControlName="habitat">
+                    <option [value]="null">Seleccionar...</option>
+                    <option *ngFor="let habitat of habitats; index as i" [value]="habitat._id">{{i+1}}.- {{habitat.name}}</option>
+                    </select> 
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalselect(addselect, 3)"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="caracter">Carácter</label>
+            
+                    <div class="input-group">
+                    <select class="form-control custom-select" id="character" name="character" formControlName="character">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let character of characters; index as i" [value]="character._id">{{i+1}}.- {{character.name}}</option>
+                    </select> 
+                    <span class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click)="openModalselect(addselect, 4)"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="row gutters-xs">
+                <div class="col-3">
+                    <label for="peso">Peso</label>
+                    <input class="form-control" id="weight" type="text" name="weight" formControlName="weight"> 
+                </div>
+    
+                <div class="col-3">
+                    <label for="altura">Altura</label>
+                    <input class="form-control" id="height" type="text" name="height" formControlName="height"> 
+                </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="">Selecciona</label>
+                    <div>
+                        <div class="form-check custom-control custom-checkbox custom-control-inline">
+                        <input class="form-check-input" type="checkbox" value="" id="sterilized" name="sterilized" formControlName="sterilized">
+                        <label class="form-check-label" for="esterilizado">
+                            Esterilizado
+                        </label>
+                        </div>
+        
+                        <div class="form-check custom-control custom-checkbox custom-control-inline">
+                        <input class="form-check-input" type="checkbox" value="" id="nails" name="nails" formControlName="nails">
+                        <label class="form-check-label" for="unias">
+                            Uñas largas
+                        </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea class="form-control" rows="2" id="notes" name="notes" formControlName="notes"></textarea>   
+            </div>
+
+            <div class="form-group">
+            <label for="foto">Fotografía</label>
+            <div *ngIf="animal.image">
+                <div class="image_for_edit">
+                    <a href="{{url + 'get-image-animal/' + animal.image }}" target="_blank">
+                        <img src="{{url + 'get-image-animal/' + animal.image }}" alt="Imagen">
+                    </a>
+                </div>
+            </div>
+            <input class="form-control busq" type="file" placeholder="Subir imagen..." (change)="fileChangeEvent($event)" id="image" name="image" formControlName="image"> 
+            </div>
+
+            <div class="alert alert-success" *ngIf="status == 'success'">
+            Cambios guardados exitosamente.
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditAnimal()" [disabled]="!animalForm.valid">
+    </div>
+</ng-template>
+<!--MODAL EDIT END-->
+<!--MODAL DESACTIVAR-->
+<ng-template #deactivateanimal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE BAJA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de baja a la mascota <strong>{{animal.name}}</strong> del cliente <strong>{{animal.client}}</strong> ?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Dar de Baja</button>
+    </div>
+</ng-template>
+<!--MODAL DESACTIVAR END-->
+
+<!--MODAL ACTIVAR-->
+<ng-template #activateanimal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE ALTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de alta a la mascota <strong>{{animal.name}}</strong> del cliente <strong>{{animal.client}}</strong> ?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Dar de Alta</button>
+    </div>
+</ng-template>
+<!--MODAL ACTIVAR END-->
+
+<!--MODAL DETAILS-->
+<ng-template #detailsanimal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVA MASCOTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="animalForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                      <label for="cliente" class="form-label">Cliente</label>&nbsp;
+                      {{animal.client}}
+                  </div>
+
+                  <div class="col-6">
+                    <label for="animal" class="form-label">Nombre de mascota</label>&nbsp;
+                    {{animal.name}} 
+                  </div>
+              </div>  
+          </div>
+          
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                      <label for="sexo" class="form-label">Sexo</label>&nbsp;
+                      {{animal.sex}}
+                  </div>
+                  
+                  <div class="col-6">
+                    <label for="fechanac" class="form-label">Fecha de nacimiento</label>&nbsp;
+                    {{animal.birthdate}}
+                  </div>
+              </div>  
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="especie" class="form-label">Especie</label>&nbsp;
+                {{animal.specie}}
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <label class="raza" class="form-label">Raza</label>&nbsp;
+                {{animal.race}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="pelo" class="form-label">Tipo de Pelo</label>&nbsp;
+                {{animal.hair}}<span *ngIf="animal.hair==null">---</span>
+              </div>
+            </div>
+            <div class="col-6">
+                <label for="color" class="form-label">Color de pelo</label>&nbsp;
+                {{animal.color}}<span *ngIf="animal.color==null">---</span>
+            </div>
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="habitat" class="form-label">Hábitat</label>&nbsp;
+                {{animal.habitat}}<span *ngIf="animal.habitat==null">---</span>
+              </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="caracter" class="form-label">Carácter</label>&nbsp;
+                    {{animal.character}}<span *ngIf="animal.character==null">---</span>
+                </div>
+            </div>
+          </div>
+
+          <div class="row gutters-xs">
+                <div class="col-3">
+                    <label for="peso" class="form-label">Peso</label>&nbsp;
+                    {{animal.weight}}
+                </div>
+    
+                <div class="col-3">
+                    <label for="altura" class="form-label">Altura</label>&nbsp;
+                    {{animal.height}}
+                </div>
+                <div class="col-3">
+                    <label for="peso" class="form-label">Esterilizado</label>&nbsp;
+                    {{animal.sterilized}}
+                </div>
+    
+                <div class="col-3">
+                    <label for="altura" class="form-label">Uñas largas</label>&nbsp;
+                    {{animal.nails}}
+                </div>
+          </div>
+
+          <div class="form-group">
+            <label for="observaciones" class="form-label">Observaciones</label>&nbsp;
+            {{animal.notes}}<span *ngIf="animal.notes==null">---</span>
+          </div>
+
+          <div class="form-group">
+            <label for="foto" class="form-label">Fotografía</label>
+            <div *ngIf="animal.image!='' && animal.image!=null">
+                <div class="image_for_edit">
+                    <a href="{{url + 'get-image-animal/' + animal.image }}" target="_blank">
+                        <img src="{{url + 'get-image-animal/' + animal.image }}" alt="Imagen">
+                    </a>
+                </div>
+            </div><span *ngIf="animal.image==''">---</span>
+          </div>
+
+          <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                <label for="telefono" class="form-label">Fecha Alta</label>&nbsp;
+                {{animal.start_date | dates}}
+                </div>
+                <div class="col-6">
+                <label for="contacto" class="form-label">Fecha Baja</label>&nbsp;
+                <span *ngIf="animal.end_date != '' && animal.end_date != null">{{animal.end_date | dates}}</span><span *ngIf="animal.end_date == '' || animal.end_date == null">---</span>
+                </div>
+            </div>
+            </div> 
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL DETAILS END-->
+
+<!--MODALS PARA SELECTS-->
+<ng-template #addselect let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEV{{title}}</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="selectForm" (ngSubmit)="onSubmit()">  
+
+            <div class="form-group">
+            <label for="nombre">Nombre </label>&nbsp;
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-user"></i>
+                </span>
+                <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+            </div>  
+            </div>
+
+            <div class="alert alert-success" *ngIf="status2 == 'success'">
+                Guardado exitosamente.
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input *ngIf="title=='A ESPECIE'" type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddSpecie()" [disabled]="!selectForm.valid">
+        <input *ngIf="title=='O TIPO DE PELO'" type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddHair()" [disabled]="!selectForm.valid">
+        <input *ngIf="title=='A HABITAT'" type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddHabitat()" [disabled]="!selectForm.valid">
+        <input *ngIf="title=='O CARACTER'" type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddCharacter()" [disabled]="!selectForm.valid">
+
+    </div>
+</ng-template>
+<!--MODALS SELECTS END-->
+<!--MODALS PARA SELECT RACE-->
+<ng-template #addselectrace let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVA RAZA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="raceForm" (ngSubmit)="onSubmit()">  
+
+            <div class="form-group">
+            <label for="nombre">Nombre </label>&nbsp;
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-user"></i>
+                </span>
+                <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+            </div>  
+            </div>
+
+            <div class="form-group">
+                <label class="especie">Especie</label>
+                <select class="form-control custom-select" id="specie" name="specie" formControlName="specie">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let specie of species; index as i" [value]="specie._id">{{i+1}}.- {{specie.name}}</option>
+                </select> 
+            </div>
+
+            <div class="alert alert-success" *ngIf="status2 == 'success'">
+                Guardado exitosamente.
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddRace()" [disabled]="!raceForm.valid">
+    </div>
+</ng-template>
+<!--MODALS SELECTS END-->
+
+<!--MODAL INFO-->
+<ng-template #information let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">ERROR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <h5 class="form-label">No se encontró ningún registro</h5>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL INFO-->

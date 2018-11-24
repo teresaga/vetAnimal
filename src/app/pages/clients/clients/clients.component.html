@@ -52,8 +52,8 @@
                         <td>{{client.birthdate}}</td>
                         <td>{{client.tel}}</td>
                         <td>{{client.email}}</td>
-                        <td>{{client.start_date}}</td>
-                        <td *ngIf="client.end_date != ''">{{client.end_date}}</td><td *ngIf="client.end_date == ''">---</td>
+                        <td>{{client.start_date | dates}}</td>
+                        <td *ngIf="client.end_date != '' && client.end_date != null">{{client.end_date | dates}}</td><td *ngIf="client.end_date == '' || client.end_date == null">---</td>
                         <td>
                             <span [ngClass]="{'bg-success': client.status === 'A', 'bg-danger': client.status === 'B'}" class="status-icon"></span> {{client.status}}
                         </td>
@@ -321,11 +321,11 @@
                 <div class="row gutters-xs">
                     <div class="col-6">
                         <label for="telefono" class="form-label">Fecha Alta</label>&nbsp;
-                        {{client.start_date}}
+                        {{client.start_date | dates}}
                     </div>
                     <div class="col-6">
                         <label for="contacto" class="form-label">Fecha Baja</label>&nbsp;
-                        <span *ngIf="client.end_date != ''">{{client.end_date}}</span><span *ngIf="client.end_date == ''">---</span>
+                        <span *ngIf="client.end_date != '' && client.end_date != null">{{client.end_date | dates}}</span><span *ngIf="client.end_date == '' || client.end_date == null">---</span>
                     </div>
                 </div>
             </div> 

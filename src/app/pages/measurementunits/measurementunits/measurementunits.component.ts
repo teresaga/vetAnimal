@@ -4,17 +4,16 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { UserService } from '../../../services/user.service';
 import { GLOBAL } from '../../../services/global';
 
-import { Job } from '../../../models/job';
-import { JobService } from '../../../services/job.service';
+import { Measurementunit } from '../../../models/measurementunit';
+import { MeasurementunitService } from '../../../services/measurementunit.service';
 @Component({
-  selector: 'app-jobs',
-  templateUrl: './jobs.component.html',
-  styleUrls: ['./jobs.component.css']
+  selector: 'app-measurementunits',
+  templateUrl: './measurementunits.component.html',
+  styleUrls: ['./measurementunits.component.css']
 })
-export class JobsComponent implements OnInit {
-  //Para form y registrar puesto
-  jobForm: FormGroup;
-  public job: Job;
+export class MeasurementunitsComponent implements OnInit {
+  unitForm: FormGroup;
+  public measurementunit: Measurementunit;
   public status: string;
 
   //token
@@ -22,7 +21,7 @@ export class JobsComponent implements OnInit {
   public token;
 
   //Variables para mostrar puestos y realizar paginacion
-  public jobs: Job[];
+  public measurementunits: Measurementunit[];
   public busqueda;
   pag: number = 0;
   totalRegistros: number = 0;
@@ -31,17 +30,17 @@ export class JobsComponent implements OnInit {
     private pf: FormBuilder,
     private modalService: NgbModal,
     private _userService: UserService,
-    private _jobService: JobService
+    private _measurementunitService: MeasurementunitService,
   ) { 
-    this.job = new Job('','','','','');
+    this.measurementunit = new Measurementunit('','','','','');
     this.token = this._userService.getToken();
     this.url = GLOBAL.url;
     this.status = "";
   }
 
   ngOnInit() {
-    this.getJobs();
-    this.jobForm = this.pf.group({
+    this.getMeasurementunits();
+    this.unitForm = this.pf.group({
       name: ['', Validators.required]
     });
   }
@@ -52,51 +51,52 @@ export class JobsComponent implements OnInit {
     }, (reason) => {
       if(this.status=='success'){
         this.status='';
-        this.jobForm.reset();
+        this.unitForm.reset();
       }
     });
   }
 
-  openModaledit(content, job: any) {
+  openModaledit(content, unit: any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       
     }, (reason) => {
       if(this.status=='success'){
         this.status='';
-        this.jobForm.reset();
+        this.unitForm.reset();
       }
     });
-    this.job._id = job._id;
-    this.jobForm.get('name').setValue(job.name);
+    this.measurementunit._id = unit._id;
+    this.unitForm.get('name').setValue(unit.name);
   }
 
-  openModalStatus(content, job: any){
+  openModalStatus(content, unit: any){
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       if(result=='Deactivate'){
-        this.deactivateJob(job);
+        this.deactivateUnit(unit);
       }
       if(result=='Activate'){
-        this.activateJob(job);
+        this.activateUnit(unit);
       }
     }, (reason) => {
     });
-    this.job.name = job.name;
+    this.measurementunit.name = unit.name;
   }
 
+
   ////////////////////////////////////////////////////////////
-  //                    AGREGAR PUESTO                      //
+  //                    AGREGAR UNIDAD                      //
   ////////////////////////////////////////////////////////////
-  onSubmitAddJob(){
-    this.job.name = this.jobForm.get('name').value;
-    
-    this._jobService.addJob(this.token, this.job).subscribe(
+  onSubmitAddUnit(){
+    this.measurementunit.name = this.unitForm.get('name').value;
+
+    this._measurementunitService.addMeasurementunit(this.token, this.measurementunit).subscribe(
       response => {
-        if(!response.job){
+        if(!response.measurementunit){
           this.status = 'error';
         }else{
           this.status = 'success';
-          this.job = response.job;
-          this.getJobs();
+          this.measurementunit = response.measurementunit;
+          this.getMeasurementunits();
         }
       },
       error => {
@@ -107,20 +107,21 @@ export class JobsComponent implements OnInit {
       }
     );
   }
+
   ////////////////////////////////////////////////////////////
   //                     EDITAR PUESTO                      //
   ////////////////////////////////////////////////////////////
-  onSubmitEditJob(){
-    this.job.name = this.jobForm.get('name').value;
+  onSubmitEditUnit(){
+    this.measurementunit.name = this.unitForm.get('name').value;
 
-    this._jobService.editJob(this.token, this.job._id, this.job).subscribe(
+    this._measurementunitService.editMeasurementunit(this.token, this.measurementunit._id, this.measurementunit).subscribe(
       response => {
-        if(!response.job){
+        if(!response.measurementunit){
           this.status = 'error';
         }else{
           this.status = 'success';
-          this.job = response.job;
-          this.getJobs();
+          this.measurementunit = response.measurementunit;
+          this.getMeasurementunits();
         }
       },
       error => {
@@ -134,41 +135,40 @@ export class JobsComponent implements OnInit {
   ////////////////////////////////////////////////////////////
   //               CAMBIAR ESTADO DE PUESTO                 //
   ////////////////////////////////////////////////////////////
-  deactivateJob(job : Job){
-    this._jobService.deactivateJob(this.token, job._id).subscribe(
+  deactivateUnit(unit : Measurementunit){
+    this._measurementunitService.deactivateMeasurementunit(this.token, unit._id).subscribe(
       response => {
-        if(!response.job){
+        if(!response.measurementunit){
           console.log("Error en el servidor");
         }
-        this.getJobs();
+        this.getMeasurementunits();
       },error  => {
         console.log("Error en el servidor");
       }
     );
   }
 
-  activateJob(job : Job){
-    this._jobService.activateJob(this.token, job._id).subscribe(
+  activateUnit(unit : Measurementunit){
+    this._measurementunitService.activateMeasurementunit(this.token, unit._id).subscribe(
       response => {
-        if(!response.job){
+        if(!response.measurementunit){
           console.log("Error en el servidor");
         }
-        this.getJobs();
+        this.getMeasurementunits();
       },error  => {
         console.log("Error en el servidor");
       }
     );
   }
   ////////////////////////////////////////////////////////////
-  //          OBTENER PUESTOS Y REALIZAR PAGINACION         //
+  //          OBTENER UNIDADES Y REALIZAR PAGINACION         //
   ////////////////////////////////////////////////////////////
-  getJobs(){
-    this._jobService.getJobs(this.pag).subscribe(
+  getMeasurementunits(){
+    this._measurementunitService.getMeasurementunits(this.pag).subscribe(
       response => {
         
-        if(response.jobs){
-          this.jobs = response.jobs;
-          this.totalRegistros = response.total;
+        if(response.measurementunits){
+          this.measurementunits = response.measurementunits;
         }
       }, error => {
         console.log(<any>error);
@@ -188,6 +188,7 @@ export class JobsComponent implements OnInit {
     }
 
     this.pag += valor;
-    this.getJobs();
+    this.getMeasurementunits();
   }
+
 }

@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Job } from '../models/job';
+import { Hair } from '../models/hair';
 import { GLOBAL } from './global';
 
 @Injectable({
   providedIn: 'root'
 })
-export class JobService {
+export class HairService {
   public url: string;
   public identity;
   public token;
@@ -17,39 +17,39 @@ export class JobService {
     this.url = GLOBAL.url;
   }
 
-  addJob(token, job: Job): Observable<any>{
-    let params = JSON.stringify(job);
+  addHair(token, hair: Hair): Observable<any>{
+    let params = JSON.stringify(hair);
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.post(this.url+'job', params, {headers: headers});
+    return this._http.post(this.url+'hair', params, {headers: headers});
   }
 
-  editJob(token, id, job: Job): Observable<any>{
-    let params = JSON.stringify(job);
+  editHair(token, id, hair: Hair): Observable<any>{
+    let params = JSON.stringify(hair);
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.put(this.url+'update-job/'+id, params, {headers: headers});
+    return this._http.put(this.url+'update-hair/'+id, params, {headers: headers});
   }
 
-  deactivateJob(token, id): Observable<any>{
+  deactivateHair(token, id): Observable<any>{
     let params = "";
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.put(this.url+'deactivate-job/'+id, params, {headers: headers});
+    return this._http.put(this.url+'deactivate-hair/'+id, params, {headers: headers});
   }
 
-  activateJob(token, id): Observable<any>{
+  activateHair(token, id): Observable<any>{
     let params = "";
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.put(this.url+'activate-job/'+id, params, {headers: headers});
+    return this._http.put(this.url+'activate-hair/'+id, params, {headers: headers});
   }
 
-  getJobs(pag: number = 0): Observable<any>{
-    return this._http.get(this.url+'jobs?pag='+pag);
+  getHairs(pag: number = 0): Observable<any>{
+    return this._http.get(this.url+'hairs?pag='+pag);
   }
 
-  getJobsA(): Observable<any>{
-    return this._http.get(this.url+'jobsa');
+  getHairsA(): Observable<any>{
+    return this._http.get(this.url+'hairsa');
   }
 }

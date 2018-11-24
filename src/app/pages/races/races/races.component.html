@@ -1,0 +1,181 @@
+<div class="row">
+  <div class="col-12 card">
+      <div class="card-header">
+          <h3 class="card-title">Razas</h3>
+      </div>
+      <div class="card-body">
+          <div class="row">
+              <div class="input-icon mb-3 search">
+                  <input type="text" class="form-control busq" placeholder="Filtrar Razas..." [(ngModel)]="busqueda">
+                  <span class="input-icon-addon">
+                      <i class="fe fe-search"></i>
+                  </span>
+              </div>
+              <div class="col-md-1 col-lg-1">
+                  <button type="button" class="btn btn-primary" (click)="openModal(addrace)">
+                      <i class="fe fe-plus-circle mr-2"></i>
+                      Nuevo
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="">
+      <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
+      <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
+  </div>
+  <div class="col-12 card">
+      <div class="table-responsive">
+          <table class="table card-table table-vcenter text-nowrap">
+              <thead>
+                  <tr>
+                      <th class="w-1">#</th>
+                      <th>Nombre</th>
+                      <th>Especie</th>
+                      <th>Fecha Alta</th>
+                      <th>Fecha Baja</th>
+                      <th>Estado</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let race of races | searchSubmodels: busqueda; index as i">
+                  <td><span class="text-muted">{{i+1+pag}}</span></td>
+                  <td>{{race.name}}</td>
+                  <td>{{race.specie.name}}</td>
+                  <td>{{race.start_date | dates}}</td>
+                    <td *ngIf="race.end_date != '' && race.end_date != null">{{race.end_date | dates}}</td><td *ngIf="race.end_date == '' || race.end_date == null">---</td>
+                  <td>
+                      <span [ngClass]="{'bg-success': race.status === 'A', 'bg-danger': race.status === 'B'}" class="status-icon"></span> {{race.status}}
+                  </td>
+                  <td>
+                      <a class="icon" (click)="openModaledit(editrace, race)">
+                          <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
+                      </a>
+                      <a class="icon" (click)="openModalStatus(deactivaterace, race)" *ngIf="race.status==='A'">
+                          <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
+                      </a>
+                      <a class="icon" (click)="openModalStatus(activaterace, race)" *ngIf="race.status==='B'">
+                          <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
+                      </a>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+<!--MODAL ALTA-->
+<ng-template #addrace let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">NUEVA RAZA</h4>
+      <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+  </div>
+
+  <div class="modal-body">
+      <form [formGroup]="raceForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+          <label for="nombre">Nombre </label>&nbsp;
+          <div class="input-icon">
+              <span class="input-icon-addon">
+                  <i class="fe fe-user"></i>
+              </span>
+              <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+          </div>  
+          </div>
+
+          <div class="form-group">
+              <label class="especie">Especie</label>
+              <select class="form-control custom-select" id="specie" name="specie" formControlName="specie">
+                  <option [value]="null">Selecciona...</option>
+                  <option *ngFor="let specie of species; index as i" [value]="specie._id">{{i+1}}.- {{specie.name}}</option>
+              </select> 
+          </div>
+
+          <div class="alert alert-success" *ngIf="status == 'success'">
+              Guardado exitosamente.
+          </div>
+      </form>
+  </div>
+  <div class="modal-footer d-flex">
+      <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+      <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddRace()" [disabled]="!raceForm.valid">
+  </div>
+</ng-template>
+<!--MODAL ALTA END-->
+<!--MODAL EDIT-->
+<ng-template #editrace let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">NUEVA RAZA</h4>
+    <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="raceForm" (ngSubmit)="onSubmit()">  
+
+        <div class="form-group">
+        <label for="nombre">Nombre </label>&nbsp;
+        <div class="input-icon">
+            <span class="input-icon-addon">
+                <i class="fe fe-user"></i>
+            </span>
+            <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+        </div>  
+        </div>
+
+        <div class="form-group">
+            <label class="especie">Especie</label>
+            <select class="form-control custom-select" id="specie" name="specie" formControlName="specie">
+                <option [value]="null">Selecciona...</option>
+                <option *ngFor="let specie of species; index as i" [value]="specie._id">{{i+1}}.- {{specie.name}}</option>
+            </select> 
+        </div>
+
+        <div class="alert alert-success" *ngIf="status == 'success'">
+            Cambios guardados exitosamente.
+        </div>
+    </form>
+</div>
+<div class="modal-footer d-flex">
+    <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditRace()" [disabled]="!raceForm.valid">
+</div>
+</ng-template>
+<!--MODAL EDIT END-->
+
+<!--MODAL DESACTIVAR-->
+<ng-template #deactivaterace let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title">DAR DE BAJA</h4>
+      <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+  </div>
+  <div class="modal-body">
+      <p>¿Desea dar de baja la raza <strong>{{race.name}}</strong>?</p>
+      
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+      <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Dar de Baja</button>
+  </div>
+</ng-template>
+<!--MODAL DESACTIVAR END-->
+
+<!--MODAL ACTIVAR-->
+<ng-template #activaterace let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title">DAR DE ALTA</h4>
+      <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+  </div>
+  <div class="modal-body">
+      <p>¿Desea dar de alta la raza <strong>{{race.name}}</strong>?</p>
+      
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+      <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Dar de Alta</button>
+  </div>
+</ng-template>
+<!--MODAL ACTIVAR END-->

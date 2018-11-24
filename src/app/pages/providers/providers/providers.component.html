@@ -30,7 +30,7 @@
           <table class="table card-table table-vcenter text-nowrap">
               <thead>
                   <tr>
-                      <th class="w-1">ID</th>
+                      <th class="w-1">#</th>
                       <th>Nombre</th>
                       <th>Razón Social</th>
                       <th>RFC</th>
@@ -52,8 +52,8 @@
                         <td>{{provider.contact_person}}</td>
                         <td>{{provider.tel}}</td>
                         <td>{{provider.email}}</td>
-                        <td>{{provider.start_date}}</td>
-                        <td *ngIf="provider.end_date != ''">{{provider.end_date}}</td><td *ngIf="provider.end_date == ''">---</td>
+                        <td>{{provider.start_date | dates}}</td>
+                        <td *ngIf="provider.end_date != '' && provider.end_date != null">{{provider.end_date | dates}}</td><td *ngIf="provider.end_date == '' || provider.end_date == null">---</td>
                         <td>
                             <span [ngClass]="{'bg-success': provider.status === 'A', 'bg-danger': provider.status === 'B'}" class="status-icon"></span> {{provider.status}}
                         </td>
@@ -321,11 +321,11 @@
             <div class="row gutters-xs">
                 <div class="col-6">
                 <label for="telefono" class="form-label">Fecha Alta</label>&nbsp;
-                {{provider.start_date}}
+                {{provider.start_date | dates}}
                 </div>
                 <div class="col-6">
                 <label for="contacto" class="form-label">Fecha Baja</label>&nbsp;
-                <span *ngIf="provider.end_date != ''">{{provider.end_date}}</span><span *ngIf="provider.end_date == ''">---</span>
+                <span *ngIf="provider.end_date != '' && provider.end_date != null">{{provider.end_date | dates}}</span><span *ngIf="provider.end_date == '' || provider.end_date == null">---</span>
                 </div>
             </div>
             </div> 
