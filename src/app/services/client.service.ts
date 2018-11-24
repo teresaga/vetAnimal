@@ -59,6 +59,11 @@ export class ClientService {
     return this._http.get(this.url+'clientsa',{headers: headers});
   }
 
+  getClientsSelect(token): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'clients-select',{headers: headers});
+  }
+
   getClientCount(): Observable<any>{
     return this._http.get(this.url+'clients-count');
   }

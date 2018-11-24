@@ -18,7 +18,9 @@
             </div>
             <span class="ml-2 d-none d-lg-block">
               <span class="text-default">{{identity.username}}</span>
-              <small class="text-muted d-block mt-1">Administrator</small>
+              <small *ngIf="identity.role=='ADMIN'" class="text-muted d-block mt-1">Administrator</small>
+              <small *ngIf="identity.role=='VET'" class="text-muted d-block mt-1">Veterinario</small>
+              <small *ngIf="identity.role=='CAJERO'" class="text-muted d-block mt-1">Cajero</small>
             </span>
           </a>
           <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
@@ -93,10 +95,32 @@
             </a>
           </li>
           <li class="nav-item dropdown">
-            <a [routerLinkActive]="['active']" href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-settings"></i> Panel de Control</a>
+            <a [routerLinkActive]="['active']" class="nav-link" data-toggle="dropdown"><i class="fe fe-settings"></i> Panel de Control</a>
             <div class="dropdown-menu dropdown-menu-arrow">
               <a [routerLink]="['/usuarios']" [routerLinkActive]="['active']" class="dropdown-item ">
-                <i class="fe fe-user"></i>Usuarios</a>
+                <i class="fe fe-user"></i>Usuarios
+              </a>
+              <a [routerLink]="['/puestos']" [routerLinkActive]="['active']" class="dropdown-item ">
+                <i class="fas fa-briefcase"></i>Puestos
+              </a>
+              <a [routerLink]="['/caracter']" [routerLinkActive]="['active']" class="dropdown-item ">
+                <i class="fas fa-paw"></i>Carácter de Mascotas
+              </a>
+              <a [routerLink]="['/habitat']" [routerLinkActive]="['active']" class="dropdown-item ">
+                <i class="fas fa-paw"></i>Hábitat de Mascotas
+              </a>
+              <a [routerLink]="['/tipos-pelo']" [routerLinkActive]="['active']" class="dropdown-item ">
+                <i class="fas fa-paw"></i>Tipos de pelo de Mascotas
+              </a>
+              <a [routerLink]="['/especies']" [routerLinkActive]="['active']" class="dropdown-item ">
+                <i class="fas fa-paw"></i>Especies
+              </a>
+              <a [routerLink]="['/razas']" [routerLinkActive]="['active']" class="dropdown-item ">
+                <i class="fas fa-paw"></i>Razas
+              </a>
+              <a [routerLink]="['/unidades']" [routerLinkActive]="['active']" class="dropdown-item ">
+                <i class="fe fe-box"></i>Unidad de Medida
+              </a>
             </div>
           </li>
         </ul>

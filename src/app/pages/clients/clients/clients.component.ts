@@ -79,7 +79,9 @@ export class ClientsComponent implements OnInit {
     this.clientForm.get('name').setValue(client.name);
     this.clientForm.get('paternal_surname').setValue(client.paternal_surname);
     this.clientForm.get('maternal_surname').setValue(client.maternal_surname);
-    this.clientForm.get('birthdate').setValue(client.birthdate);
+    var p = client.birthdate;
+    this.clientForm.get('birthdate').setValue(  p.split('/')[2] + "-" + p.split('/')[1] + "-" + p.split('/')[0]);
+
     this.clientForm.get('address').setValue(client.address);
     this.clientForm.get('email').setValue(client.email);
     this.clientForm.get('tel').setValue(client.tel);
@@ -113,7 +115,8 @@ export class ClientsComponent implements OnInit {
     this.client.name = this.clientForm.get('name').value;
     this.client.paternal_surname = this.clientForm.get('paternal_surname').value;
     this.client.maternal_surname = this.clientForm.get('maternal_surname').value;
-    this.client.birthdate = this.clientForm.get('birthdate').value;
+    var p = this.clientForm.get('birthdate').value;
+    this.client.birthdate = p.split('-')[2] + "/" + p.split('-')[1] + "/" + p.split('-')[0];
     this.client.address = this.clientForm.get('address').value;
     this.client.email = this.clientForm.get('email').value;
     this.client.tel = this.clientForm.get('tel').value;
@@ -144,7 +147,8 @@ export class ClientsComponent implements OnInit {
     this.client.name = this.clientForm.get('name').value;
     this.client.paternal_surname = this.clientForm.get('paternal_surname').value;
     this.client.maternal_surname = this.clientForm.get('maternal_surname').value;
-    this.client.birthdate = this.clientForm.get('birthdate').value;
+    var p = this.clientForm.get('birthdate').value;
+    this.client.birthdate = p.split('-')[2] + "/" + p.split('-')[1] + "/" + p.split('-')[0];
     this.client.address = this.clientForm.get('address').value;
     this.client.email = this.clientForm.get('email').value;
     this.client.tel = this.clientForm.get('tel').value;

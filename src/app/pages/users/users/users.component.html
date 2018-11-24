@@ -6,13 +6,13 @@
       <div class="card-body">
           <div class="row">
               <div class="input-icon mb-3 search">
-                  <input type="text" class="form-control" placeholder="Filtrar Usuarios...">
+                  <input type="text" class="form-control busq" placeholder="Filtrar Usuarios..." [(ngModel)]="busqueda">
                   <span class="input-icon-addon">
                       <i class="fe fe-search"></i>
                   </span>
               </div>
               <div class="col-md-1 col-lg-1">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUser">
+                  <button type="button" class="btn btn-primary" (click)="openModal(adduser)">
                       <i class="fe fe-plus-circle mr-2"></i>
                       Nuevo
                   </button>
@@ -28,32 +28,39 @@
                       <th class="w-1">ID</th>
                       <th>Usuario</th>
                       <th>Empleado</th>
-                      <th>Tipo</th>
+                      <th>Rol</th>
+                      <th>Fecha Alta</th>
+                      <th>Fecha Baja</th>
                       <th>Estado</th>
                       <th></th>
                   </tr>
               </thead>
               <tbody>
-              <tr>
-                  <td><span class="text-muted">1</span></td>
-                  <td>TERESA</td>
-                  <td>TERESA GALAVIZ</td>
-                  <td>admin</td>
-                  <td>
-                      <span class="status-icon bg-success"></span> Activo
-                  </td> 
-                  <td>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-eye mr-2" style="color:blue;"></i>
-                      </a>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-edit mr-2" style="color:orange;"></i>
-                      </a>
-                      <a class="icon" href="javascript:void(0)">
-                          <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
-                      </a>
-                  </td>
-              </tr>
+                <tr *ngFor="let user of users | searchUsers: busqueda; index as i">
+                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">
+                        <span *ngIf="identity._id!='admin'" class="text-muted">{{i+1+pag}}</span>
+                        <span *ngIf="identity._id=='admin'" class="text-muted">{{i+1+pag-1}}</span>
+                    </td>
+                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">{{user.username}}</td>
+                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">{{user.worker.name + " " +user.worker.paternal_surname +" " + user.worker.maternal_surname}}</td>
+                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">{{user.role}}</td>
+                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">{{user.start_date | dates}}</td>
+                      <td *ngIf="user.end_date != '' && user.end_date != null && user.surname!='admin' && identity._id!=user._id">{{user.end_date | dates}}</td><td *ngIf="user.end_date == '' || user.end_date == null && user.surname!='admin' && identity._id!=user._id">---</td>
+                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">
+                        <span [ngClass]="{'bg-success': user.status === 'A', 'bg-danger': user.status === 'B'}" class="status-icon"></span> {{user.status}}
+                    </td>
+                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">
+                        <a class="icon" (click)="openModaledit(edituser, user)">
+                            <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
+                        </a>
+                        <a class="icon" (click)="openModalStatus(deactivateuser, user)" *ngIf="user.status==='A'">
+                            <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
+                        </a>
+                        <a class="icon" (click)="openModalStatus(activateuser, user)" *ngIf="user.status==='B'">
+                            <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
+                        </a>
+                    </td>
+                </tr>
               </tbody>
           </table>
       </div>
@@ -61,5 +68,164 @@
 </div>
 
 <!--MODAL ALTA-->
-<app-adduser></app-adduser>
-<!--MODAL ALTA END-->
+<ng-template #adduser let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">NUEVO USUARIO</h4>
+            <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+        </div>
+    
+        <div class="modal-body">
+            <form [formGroup]="userForm" (ngSubmit)="onSubmit()">  
+    
+                <div class="form-group">
+                <label for="nombre">Nombre de usuario</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-user"></i>
+                    </span>
+                    <input class="form-control" type="text" id="username" name="username" formControlName="username"> 
+                </div>  
+                </div>
+    
+                <div class="form-group">
+                <label class="empleado">Empleado</label>
+            
+                <div class="input-group">
+                    <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
+                    <option [value]="null">Seleccionar...</option>
+                    <option *ngFor="let worker of workers; index as i" [value]="worker._id">{{i+1}}.- {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</option>
+                </select> 
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                </div>
+                </div>
+    
+                <div class="form-group">
+                <label class="tipo">Rol</label>
+            
+                <div class="input-group">
+                    <select class="form-control custom-select" id="role" name="role" formControlName="role">
+                    <option [value]="null">Seleccionar...</option>
+                    <option [value]="'ADMIN'">1.- Administrador</option>
+                    <option [value]="'VET'">2.- Veterinario</option>
+                    <option [value]="'CAJERO'">3.- Cajero</option>
+                    </select> 
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                </div>
+                </div>
+    
+                <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input class="form-control" id="password" name="password" type="password" formControlName="password">
+                </div>
+    
+                <div class="form-group">
+                    <label for="verPassword">Verificar Contraseña</label>
+                    <input class="form-control" id="password_check" name="password_check" type="password" formControlName="password_check">
+                </div>
+    
+                <div class="alert alert-success" *ngIf="status == 'success'">
+                {{message}}
+                </div>
+                <div class="alert alert-danger" *ngIf="status == 'error'">
+                {{message}}
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer d-flex">
+                <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+                <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddUser()" [disabled]="!userForm.valid">
+        </div>
+</ng-template>
+
+<!--MODAL EDIT-->
+<ng-template #edituser let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">EDITAR USUARIO</h4>
+            <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+        </div>
+    
+        <div class="modal-body">
+            <form [formGroup]="userEditForm" (ngSubmit)="onSubmit()">  
+    
+                <div class="form-group">
+                <label class="empleado">Empleado</label>
+            
+                <div class="input-group">
+                    <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
+                    <option [value]="null">Seleccionar...</option>
+                    <option *ngFor="let worker of workers; index as i" [value]="worker._id">{{i+1}}.- {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</option>
+                </select> 
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                </div>
+                </div>
+    
+                <div class="form-group">
+                <label class="tipo">Rol</label>
+            
+                <div class="input-group">
+                    <select class="form-control custom-select" id="role" name="role" formControlName="role">
+                    <option [value]="null">Seleccionar...</option>
+                    <option [value]="'ADMIN'">1.- Administrador</option>
+                    <option [value]="'VET'">2.- Veterinario</option>
+                    <option [value]="'CAJERO'">3.- Cajero</option>
+                    </select> 
+                    <span class="input-group-append">
+                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
+                    </span>
+                </div>
+                </div>
+    
+                <div class="alert alert-success" *ngIf="status2 == 'success'">
+                {{message2}}
+                </div>
+                <div class="alert alert-danger" *ngIf="status2 == 'error'">
+                {{message2}}
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer d-flex">
+                <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+                <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditUser()" [disabled]="!userEditForm.valid">
+        </div>
+</ng-template>
+
+<!--MODAL DESACTIVAR-->
+<ng-template #deactivateuser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE BAJA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de baja al usuario <strong>{{user.username}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Dar de Baja</button>
+    </div>
+</ng-template>
+<!--MODAL DESACTIVAR END-->
+
+<!--MODAL ACTIVAR-->
+<ng-template #activateuser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE ALTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de alta al usuario <strong>{{user.username}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Dar de Alta</button>
+    </div>
+</ng-template>
+<!--MODAL ACTIVAR END-->
+

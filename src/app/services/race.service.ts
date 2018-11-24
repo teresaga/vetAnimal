@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Job } from '../models/job';
+import { Race } from '../models/race';
 import { GLOBAL } from './global';
 
 @Injectable({
   providedIn: 'root'
 })
-export class JobService {
+export class RaceService {
   public url: string;
   public identity;
   public token;
@@ -17,39 +17,39 @@ export class JobService {
     this.url = GLOBAL.url;
   }
 
-  addJob(token, job: Job): Observable<any>{
-    let params = JSON.stringify(job);
+  addRace(token, race: Race): Observable<any>{
+    let params = JSON.stringify(race);
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.post(this.url+'job', params, {headers: headers});
+    return this._http.post(this.url+'race', params, {headers: headers});
   }
 
-  editJob(token, id, job: Job): Observable<any>{
-    let params = JSON.stringify(job);
+  editRace(token, id, race: Race): Observable<any>{
+    let params = JSON.stringify(race);
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.put(this.url+'update-job/'+id, params, {headers: headers});
+    return this._http.put(this.url+'update-race/'+id, params, {headers: headers});
   }
 
-  deactivateJob(token, id): Observable<any>{
+  deactivateRace(token, id): Observable<any>{
     let params = "";
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.put(this.url+'deactivate-job/'+id, params, {headers: headers});
+    return this._http.put(this.url+'deactivate-race/'+id, params, {headers: headers});
   }
 
-  activateJob(token, id): Observable<any>{
+  activateRace(token, id): Observable<any>{
     let params = "";
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.put(this.url+'activate-job/'+id, params, {headers: headers});
+    return this._http.put(this.url+'activate-race/'+id, params, {headers: headers});
   }
 
-  getJobs(pag: number = 0): Observable<any>{
-    return this._http.get(this.url+'jobs?pag='+pag);
+  getRaces(pag: number = 0): Observable<any>{
+    return this._http.get(this.url+'races?pag='+pag);
   }
 
-  getJobsA(): Observable<any>{
-    return this._http.get(this.url+'jobsa');
+  getRacesASpecie(id): Observable<any>{
+    return this._http.get(this.url+'racesa-specie/'+id);
   }
 }

@@ -1,18 +1,18 @@
 <div class="row">
   <div class="col-12 card">
       <div class="card-header">
-          <h3 class="card-title">Puestos</h3>
+          <h3 class="card-title">Especies</h3>
       </div>
       <div class="card-body">
           <div class="row">
               <div class="input-icon mb-3 search">
-                  <input type="text" class="form-control busq" placeholder="Filtrar Puesto..." [(ngModel)]="busqueda">
+                  <input type="text" class="form-control busq" placeholder="Filtrar Especies..." [(ngModel)]="busqueda">
                   <span class="input-icon-addon">
                       <i class="fe fe-search"></i>
                   </span>
               </div>
               <div class="col-md-1 col-lg-1">
-                  <button type="button" class="btn btn-primary" (click)="openModal(addjob)">
+                  <button type="button" class="btn btn-primary" (click)="openModal(addspecie)">
                       <i class="fe fe-plus-circle mr-2"></i>
                       Nuevo
                   </button>
@@ -39,22 +39,22 @@
                   </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let job of jobs | searchSubmodels: busqueda; index as i">
+              <tr *ngFor="let specie of species | searchSubmodels: busqueda; index as i">
                   <td><span class="text-muted">{{i+1+pag}}</span></td>
-                  <td>{{job.name}}</td>
-                  <td>{{job.start_date | dates}}</td>
-                    <td *ngIf="job.end_date != '' && job.end_date != null">{{job.end_date | dates}}</td><td *ngIf="job.end_date == '' || job.end_date == null">---</td>
+                  <td>{{specie.name}}</td>
+                  <td>{{specie.start_date | dates}}</td>
+                    <td *ngIf="specie.end_date != '' && specie.end_date != null">{{specie.end_date | dates}}</td><td *ngIf="specie.end_date == '' || specie.end_date == null">---</td>
                   <td>
-                      <span [ngClass]="{'bg-success': job.status === 'A', 'bg-danger': job.status === 'B'}" class="status-icon"></span> {{job.status}}
+                      <span [ngClass]="{'bg-success': specie.status === 'A', 'bg-danger': specie.status === 'B'}" class="status-icon"></span> {{specie.status}}
                   </td>
                   <td>
-                      <a class="icon" (click)="openModaledit(editjob, job)">
+                      <a class="icon" (click)="openModaledit(editspecie, specie)">
                           <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                       </a>
-                      <a class="icon" (click)="openModalStatus(deactivatejob, job)" *ngIf="job.status==='A'">
+                      <a class="icon" (click)="openModalStatus(deactivatespecie, specie)" *ngIf="specie.status==='A'">
                           <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
                       </a>
-                      <a class="icon" (click)="openModalStatus(activatejob, job)" *ngIf="job.status==='B'">
+                      <a class="icon" (click)="openModalStatus(activatespecie, specie)" *ngIf="specie.status==='B'">
                           <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
                       </a>
                   </td>
@@ -66,14 +66,14 @@
 </div>
 
 <!--MODAL ALTA-->
-<ng-template #addjob let-modal>
+<ng-template #addspecie let-modal>
     <div class="modal-header">
         <h4 class="modal-title">NUEVO PUESTO</h4>
         <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
 
     <div class="modal-body">
-        <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">  
+        <form [formGroup]="specieForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
             <label for="nombre">Nombre </label>&nbsp;
@@ -92,19 +92,19 @@
     </div>
     <div class="modal-footer d-flex">
         <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
-        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddJob()" [disabled]="!jobForm.valid">
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddSpecie()" [disabled]="!specieForm.valid">
     </div>
 </ng-template>
 <!--MODALS ALTA END-->
 <!--MODAL EDIT-->
-<ng-template #editjob let-modal>
+<ng-template #editspecie let-modal>
     <div class="modal-header">
         <h4 class="modal-title">NUEVO PUESTO</h4>
         <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
 
     <div class="modal-body">
-        <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">  
+        <form [formGroup]="specieForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
             <label for="nombre">Nombre </label>&nbsp;
@@ -123,18 +123,18 @@
     </div>
     <div class="modal-footer d-flex">
         <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
-        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditJob()" [disabled]="!jobForm.valid">
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditSpecie()" [disabled]="!specieForm.valid">
     </div>
 </ng-template>
 <!--MODALS EDIT END-->
 <!--MODAL DESACTIVAR-->
-<ng-template #deactivatejob let-modal>
+<ng-template #deactivatespecie let-modal>
     <div class="modal-header">
         <h4 class="modal-title">DAR DE BAJA</h4>
         <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
     <div class="modal-body">
-        <p>¿Desea dar de baja el puesto <strong>{{job.name}}</strong>?</p>
+        <p>¿Desea dar de baja la especie <strong>{{specie.name}}</strong>?</p>
         
     </div>
     <div class="modal-footer">
@@ -145,13 +145,13 @@
 <!--MODAL DESACTIVAR END-->
 
 <!--MODAL ACTIVAR-->
-<ng-template #activatejob let-modal>
+<ng-template #activatespecie let-modal>
     <div class="modal-header">
         <h4 class="modal-title">DAR DE ALTA</h4>
         <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
     <div class="modal-body">
-        <p>¿Desea dar de alta el puesto <strong>{{job.name}}</strong>?</p>
+        <p>¿Desea dar de alta la especie <strong>{{specie.name}}</strong>?</p>
         
     </div>
     <div class="modal-footer">

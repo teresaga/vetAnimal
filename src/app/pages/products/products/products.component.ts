@@ -308,7 +308,7 @@ export class ProductsComponent implements OnInit {
       error => {
         var errorMessage = <any>error;
         if (errorMessage != null){
-          this.status = 'error';
+          this.status2 = 'error';
         }
       }
     );

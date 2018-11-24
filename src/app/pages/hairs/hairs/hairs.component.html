@@ -1,18 +1,18 @@
 <div class="row">
   <div class="col-12 card">
       <div class="card-header">
-          <h3 class="card-title">Puestos</h3>
+          <h3 class="card-title">Tipos de pelo de Mascota</h3>
       </div>
       <div class="card-body">
           <div class="row">
               <div class="input-icon mb-3 search">
-                  <input type="text" class="form-control busq" placeholder="Filtrar Puesto..." [(ngModel)]="busqueda">
+                  <input type="text" class="form-control busq" placeholder="Filtrar..." [(ngModel)]="busqueda">
                   <span class="input-icon-addon">
                       <i class="fe fe-search"></i>
                   </span>
               </div>
               <div class="col-md-1 col-lg-1">
-                  <button type="button" class="btn btn-primary" (click)="openModal(addjob)">
+                  <button type="button" class="btn btn-primary" (click)="openModal(addhair)">
                       <i class="fe fe-plus-circle mr-2"></i>
                       Nuevo
                   </button>
@@ -39,22 +39,22 @@
                   </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let job of jobs | searchSubmodels: busqueda; index as i">
+              <tr *ngFor="let hair of hairs | searchSubmodels: busqueda; index as i">
                   <td><span class="text-muted">{{i+1+pag}}</span></td>
-                  <td>{{job.name}}</td>
-                  <td>{{job.start_date | dates}}</td>
-                    <td *ngIf="job.end_date != '' && job.end_date != null">{{job.end_date | dates}}</td><td *ngIf="job.end_date == '' || job.end_date == null">---</td>
+                  <td>{{hair.name}}</td>
+                  <td>{{hair.start_date | dates}}</td>
+                    <td *ngIf="hair.end_date != '' && hair.end_date != null">{{hair.end_date | dates}}</td><td *ngIf="hair.end_date == '' || hair.end_date == null">---</td>
                   <td>
-                      <span [ngClass]="{'bg-success': job.status === 'A', 'bg-danger': job.status === 'B'}" class="status-icon"></span> {{job.status}}
+                      <span [ngClass]="{'bg-success': hair.status === 'A', 'bg-danger': hair.status === 'B'}" class="status-icon"></span> {{hair.status}}
                   </td>
                   <td>
-                      <a class="icon" (click)="openModaledit(editjob, job)">
+                      <a class="icon" (click)="openModaledit(edithair, hair)">
                           <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                       </a>
-                      <a class="icon" (click)="openModalStatus(deactivatejob, job)" *ngIf="job.status==='A'">
+                      <a class="icon" (click)="openModalStatus(deactivatehair, hair)" *ngIf="hair.status==='A'">
                           <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
                       </a>
-                      <a class="icon" (click)="openModalStatus(activatejob, job)" *ngIf="job.status==='B'">
+                      <a class="icon" (click)="openModalStatus(activatehair, hair)" *ngIf="hair.status==='B'">
                           <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
                       </a>
                   </td>
@@ -66,14 +66,14 @@
 </div>
 
 <!--MODAL ALTA-->
-<ng-template #addjob let-modal>
+<ng-template #addhair let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">NUEVO PUESTO</h4>
+        <h4 class="modal-title">NUEVO TIPO DE PELO</h4>
         <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
 
     <div class="modal-body">
-        <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">  
+        <form [formGroup]="hairForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
             <label for="nombre">Nombre </label>&nbsp;
@@ -92,19 +92,19 @@
     </div>
     <div class="modal-footer d-flex">
         <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
-        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddJob()" [disabled]="!jobForm.valid">
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddHair()" [disabled]="!hairForm.valid">
     </div>
 </ng-template>
 <!--MODALS ALTA END-->
 <!--MODAL EDIT-->
-<ng-template #editjob let-modal>
+<ng-template #edithair let-modal>
     <div class="modal-header">
         <h4 class="modal-title">NUEVO PUESTO</h4>
         <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
 
     <div class="modal-body">
-        <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">  
+        <form [formGroup]="hairForm" (ngSubmit)="onSubmit()">  
 
             <div class="form-group">
             <label for="nombre">Nombre </label>&nbsp;
@@ -123,18 +123,18 @@
     </div>
     <div class="modal-footer d-flex">
         <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
-        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditJob()" [disabled]="!jobForm.valid">
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditHair()" [disabled]="!hairForm.valid">
     </div>
 </ng-template>
 <!--MODALS EDIT END-->
 <!--MODAL DESACTIVAR-->
-<ng-template #deactivatejob let-modal>
+<ng-template #deactivatehair let-modal>
     <div class="modal-header">
         <h4 class="modal-title">DAR DE BAJA</h4>
         <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
     <div class="modal-body">
-        <p>¿Desea dar de baja el puesto <strong>{{job.name}}</strong>?</p>
+        <p>¿Desea dar de baja el tipo de pelo <strong>{{hair.name}}</strong>?</p>
         
     </div>
     <div class="modal-footer">
@@ -145,13 +145,13 @@
 <!--MODAL DESACTIVAR END-->
 
 <!--MODAL ACTIVAR-->
-<ng-template #activatejob let-modal>
+<ng-template #activatehair let-modal>
     <div class="modal-header">
         <h4 class="modal-title">DAR DE ALTA</h4>
         <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
     <div class="modal-body">
-        <p>¿Desea dar de alta el puesto <strong>{{job.name}}</strong>?</p>
+        <p>¿Desea dar de alta el tipo de pelo <strong>{{hair.name}}</strong>?</p>
         
     </div>
     <div class="modal-footer">

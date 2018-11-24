@@ -5,23 +5,48 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="form-group col-md-4 col-lg-4">
+                <div class="form-group col-3">
                   <label class="form-label">Cliente</label>
-                  <select class="form-control custom-select" id="cliente">
-                      <option value="">Selecciona...</option>
-                      <option value="">TERESA</option>
+                  <select class="form-control custom-select busq" id="cliente" [(ngModel)]="busquedaClient" (change)="changeClient()">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let client of clients; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>
                   </select>
                 </div>
-                <div class="form-group col-md-3 col-lg-3">
+                <div class="form-group col-2">
                   <label class="form-label">Mascota</label>
-                  <select class="form-control custom-select" id="animal">
-                      <option value="">Selecciona...</option>
-                      <option value="">YUKI</option>
+                  <select class="form-control custom-select busq" id="animal" [(ngModel)]="busquedaAnimal">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let animal of animals; index as i" [value]="animal._id">{{i+1}}.- {{animal.name}}</option>
                   </select>
+                </div>
+                <div class="form-group mx-sm-3">
+                    <label class="form-label">De</label>
+                    <div class="input-icon">
+                      <span class="input-icon-addon">
+                          <i class="fe fe-calendar"></i>
+                      </span> 
+                      <input class="form-control busq" id="inicio" name="inicio" type="date" [(ngModel)]="busquedaFechaDe"> 
+                    </div>
+                  </div>
+                  <div class="form-group mx-sm-3">
+                    <label class="form-label">Hasta</label>
+                    <div class="input-icon">
+                      <span class="input-icon-addon">
+                          <i class="fe fe-calendar"></i>
+                      </span> 
+                      <input class="form-control busq" id="fin" name="fin" type="date" [(ngModel)]="busquedaFechaHasta" > 
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-lg-1">
+                    <br>
+                    <button type="button" class="btn btn-success" (click)="getHistoryOfAnimal()" [disabled]="busquedaClient==null || busquedaAnimal==null || busquedaFechaDe==null || busquedaFechaHasta == null">
+                        <i class="fas fa-search mr-2"></i>
+                        Buscar
+                    </button>
                 </div>
                 <div class="col-md-1 col-lg-1">
                     <br>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addConsultation">
+                    <button type="button" class="btn btn-primary" (click)="openModal(addconsultation)" >
                         <i class="fe fe-plus-circle mr-2"></i>
                         Nuevo
                     </button>
@@ -35,7 +60,7 @@
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
                     <tr>
-                        <th class="w-1">ID Mascota</th>
+                        <th class="w-1">#</th>
                         <th>Mascota</th>
                         <th>Cliente</th>
                         <th>Peso</th>
@@ -46,17 +71,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><span class="text-muted">1</span></td>
-                    <td>YUKI</td>
-                    <td>TERESA</td>
-                    <td>6 kg</td>
-                    <td>38</td>
-                    <td>...</td>
-                    <td>15/06/2016</td>
+                <tr *ngFor="let consultation of consultations; index as i">
+                    <td><span class="text-muted">{{i+1+pag}}</span></td>
+                    <td>{{consultation.animal.name}}</td>
+                    <td>{{consultation.client.name + " " +consultation.client.paternal_surname}} <span *ngIf="consultation.client.maternal_surname">{{" " + consultation.client.maternal_surname}}</span></td>
+                    <td>{{consultation.weight}}</td>
+                    <td>{{consultation.temperature}}</td>
+                    <td *ngIf="consultation.notes != '' && consultation.notes != null">{{consultation.notes}}</td><td *ngIf="consultation.notes == '' || consultation.notes == null">---</td>
+                    <td>{{consultation.date | dates}}</td>
                     <td>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-eye mr-2" style="color:blue;"></i>
+                        <a class="icon" (click)="openModaldetails(detailsconsultation, consultation)">
+                            <i class="fe fe-eye mr-2" style="color:blue;" data-toggle="tooltip" title="Ver"></i>
                         </a>
                     </td>
                 </tr>
@@ -66,6 +91,163 @@
     </div>
   </div>
   
-  <!--MODAL ALTA-->
-  <app-addconsultation></app-addconsultation>
-  <!--MODAL ALTA END-->
+<!--MODAL ALTA-->
+<ng-template #addconsultation let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVA CONSULTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                      <label for="cliente">Cliente</label>
+                      <select class="form-control custom-select" id="client" name="client" formControlName="client" (change)="changeClient2()">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let client of clients2; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>    
+                      </select> 
+                  </div>
+
+                  <div class="col-6">
+                      <label for="mascota">Mascota</label>
+                      <select class="form-control custom-select" id="animal" name="animal" formControlName="animal">
+                        <option [value]="null">Selecciona...</option>
+                        <option *ngFor="let animal of animals2; index as i" [value]="animal._id">{{i+1}}.- {{animal.name}}</option>
+                      </select> 
+                  </div>
+              </div>  
+          </div>
+          
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                    <label for="peso">Peso</label>
+                    <input class="form-control" type="text" id="weight" name="weight" formControlName="weight"> 
+                  </div>
+    
+                  <div class="col-6">
+                    <label for="temperatura">Temperatura</label>
+                    <input class="form-control" type="text" id="temperature" name="temperature" formControlName="temperature">
+                  </div>
+              </div>  
+          </div>
+
+          <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea class="form-control" rows="2" id="notes" name="notes" formControlName="notes"></textarea>   
+          </div>
+
+          <div class="form-group">
+            <label for="foto">Fotografía</label>
+            <div *ngIf="consultation.image">
+                <div class="image_for_edit">
+                    <a href="{{url + 'get-image-consultation/' + consultation.image }}" target="_blank">
+                        <img src="{{url + 'get-image-consultation/' + consultation.image }}" alt="Imagen">
+                    </a>
+                </div>
+            </div>
+            <input class="form-control busq" type="file" placeholder="Subir imagen..." (change)="fileChangeEvent($event)" id="image" name="image" formControlName="image"> 
+          </div>
+
+          <div class="alert alert-success" *ngIf="status == 'success'">
+            Guardado exitosamente.
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddConsultation()" [disabled]="!consultationForm.valid">
+      </div>
+</ng-template>
+<!--MODAL ALTA END-->
+
+<!--MODAL DETAILS-->
+<ng-template #detailsconsultation let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DETALLES DE CONSULTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                      <label for="cliente" class="form-label">Cliente</label>&nbsp;
+                      {{consultation.client}}
+                  </div>
+
+                  <div class="col-6">
+                      <label for="mascota" class="form-label">Mascota</label>&nbsp;
+                      {{consultation.animal}}
+                  </div>
+              </div>  
+          </div>
+          
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                    <label for="peso" class="form-label">Peso</label>&nbsp;
+                    {{consultation.weight}}
+                  </div>
+    
+                  <div class="col-6">
+                    <label for="temperatura" class="form-label">Temperatura</label>&nbsp;
+                    {{consultation.temperature}}
+                  </div>
+              </div>  
+          </div>
+
+          <div class="form-group">
+            <label for="observaciones" class="form-label">Observaciones</label>&nbsp;
+            {{consultation.notes}}<span *ngIf="consultation.notes==null">---</span>
+          </div>
+
+          <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="foto" class="form-label">Fotografía</label>
+                        <div *ngIf="consultation.image">
+                            <div class="image_for_edit">
+                                <a href="{{url + 'get-image-consultation/' + consultation.image }}" target="_blank">
+                                    <img src="{{url + 'get-image-consultation/' + consultation.image }}" alt="Imagen">
+                                </a>
+                            </div>
+                        </div><span *ngIf="consultation.image==''">---</span>
+                      </div>
+                </div>
+                <div class="col-6">
+                    <label for="temperatura" class="form-label">Fecha</label>&nbsp;
+                    {{consultation.date | dates}} 
+                </div>
+            </div>
+        </div>
+          
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+      </div>
+</ng-template>
+<!--MODAL DETAILS END-->
+
+<!--MODAL INFO-->
+<ng-template #information let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">ERROR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <h5 class="form-label">No se encontró ningún registro</h5>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL INFO-->

@@ -12,7 +12,7 @@
                     </span>
                 </div>
                 <div class="col-md-1 col-lg-1">
-                    <button id="tar" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addWorker">
+                    <button id="tar" type="button" class="btn btn-primary" (click)="openModal(addworker)">
                         <i class="fe fe-plus-circle mr-2"></i>
                         Nuevo
                     </button>
@@ -35,10 +35,11 @@
                         <th>Nombre</th>
                         <th>Apellido Paterno</th>
                         <th>Apellido Materno</th>
-                        <th>Dirección</th>
                         <th>Teléfono</th>
                         <th>Email</th>
                         <th>Puesto</th>
+                        <th>Fecha Alta</th>
+                        <th>Fecha Baja</th>  
                         <th>Estado</th>
                         <th></th>
                     </tr>
@@ -48,99 +49,30 @@
                     <td><span class="text-muted">{{i+1+pag}}</span></td>
                     <td>{{worker.name}}</td>
                     <td>{{worker.paternal_surname}}</td>
-                    <td>{{worker.maternal_surname}}</td>
-                    <td>{{worker.address}}</td>
+                    <td>{{worker.maternal_surname}} <span *ngIf="worker.maternal_surname == null || worker.maternal_surname == ''">---</span></td>
                     <td>{{worker.tel}}</td>
                     <td>{{worker.email}}</td>
                     <td>{{worker.job.name}}</td>
+                    <td>{{worker.start_date | dates}}</td>
+                    <td *ngIf="worker.end_date != '' && worker.end_date != null">{{worker.end_date | dates}}</td><td *ngIf="worker.end_date == '' || worker.end_date == null">---</td>
+
                     <td>
                         <span [ngClass]="{'bg-success': worker.status === 'A', 'bg-danger': worker.status === 'B'}" class="status-icon"></span> {{worker.status}}
                     </td>
                     <td>
-                        <a class="icon" href="#detailsWorker-{{worker._id}}"  role="button" data-toggle="modal">
+                        <a class="icon" (click)="openModaldetails(detailsworker, worker)">
                             <i class="fe fe-eye mr-2" style="color:blue;" data-toggle="tooltip" title="Ver"></i>
                         </a>
-                        <a class="icon" href="#editWorker-{{worker._id}}"  role="button" data-toggle="modal">
+                        <a class="icon" (click)="openModaledit(editworker, worker)">
                             <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>
-                        <a class="icon" href="#desactiveWorker-{{worker._id}}" role="button" data-toggle="modal" *ngIf="worker.status==='A'">
+                        <a class="icon" (click)="openModalStatus(deactivateworker, worker)" *ngIf="worker.status==='A'">
                             <i class="fe fe-minus-circle mr-2" style="color:red;" data-toggle="tooltip" title="Desactivar"></i>
                         </a>
-                        <a class="icon" href="#activeWorker-{{worker._id}}" role="button" data-toggle="modal" *ngIf="worker.status==='B'">
+                        <a class="icon" (click)="openModalStatus(activateworker, worker)" *ngIf="worker.status==='B'">
                             <i class="far fa-check-circle mr-2" style="color:green;" data-toggle="tooltip" title="Activar"></i>
                         </a>
                     </td>
-                    
-                    <!--MODAL EDITAR-->
-                    <app-editworker #editworker [id]="worker._id"
-                                    [name]="worker.name"
-                                    [paternal_surname]="worker.paternal_surname"
-                                    [maternal_surname]="worker.maternal_surname"
-                                    [age]="worker.age"
-                                    [address]="worker.address"
-                                    [tel]="worker.tel"
-                                    [email]="worker.email"
-                                    [job]="worker.job._id"
-                                    [entry_horary]="worker.entry_horary"
-                                    [departure_horary]="worker.departure_horary"
-                                    [salary]="worker.salary"
-                    ></app-editworker>
-                    <!--MODAL EDITAR END-->
-                    <!--MODAL DETAILS-->
-                    <app-detailsworker [id]="worker._id"
-                                    [name]="worker.name"
-                                    [paternal_surname]="worker.paternal_surname"
-                                    [maternal_surname]="worker.maternal_surname"
-                                    [age]="worker.age"
-                                    [address]="worker.address"
-                                    [tel]="worker.tel"
-                                    [email]="worker.email"
-                                    [job]="worker.job.name"
-                                    [entry_horary]="worker.entry_horary"
-                                    [departure_horary]="worker.departure_horary"
-                                    [salary]="worker.salary"
-                    ></app-detailsworker>
-                    <!--MODAL DETAILS END-->
-                    <!--MODAL DESACTIVAR-->
-                    <div id="desactiveWorker-{{worker._id}}" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">DAR DE BAJA</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>¿Desea dar de baja al empleado <strong>{{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</strong>?</p>
-                                    
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-danger" (click)="deactivateWorker(worker._id)">Dar de Baja</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--MODAL DESACTIVAR END-->
-                    <!--MODAL DESACTIVAR-->
-                    <div id="activeWorker-{{worker._id}}" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">DAR DE ALTA</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>¿Desea dar de alta al empleado <strong>{{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</strong>?</p>
-                                    
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-danger" (click)="activateWorker(worker._id)">Dar de Alta</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--MODAL DESACTIVAR END-->
                 </tr>
                 </tbody>
             </table>
@@ -149,16 +81,391 @@
 </div>
 
 <!--MODAL ALTA-->
-<app-addworker #addworker></app-addworker>
+<ng-template #addworker let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVO EMPLEADO</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="workerForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+            <label for="nombre">Nombre </label>&nbsp;
+            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.name.invalid && workerForm.controls.name.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-user"></i>
+                </span>
+              <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+            </div>  
+          </div>
+
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                    <label for="app">Apellido Paterno</label>&nbsp;
+                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.paternal_surname.invalid && workerForm.controls.paternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                    <input class="form-control" id="paternal_surname" name="paternal_surname" type="text" formControlName="paternal_surname">
+                  </div>
+                  <div class="col-6">
+                    <label for="app">Apellido Materno</label>&nbsp;
+                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.maternal_surname.invalid && workerForm.controls.maternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                    <input class="form-control" id="maternal_surname" name="maternal_surname" type="text" formControlName="maternal_surname">
+                  </div>
+              </div>  
+          </div>
+          
+          <div class="form-group">
+            <label for="direccion">Dirección</label>&nbsp;
+            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.address.invalid && workerForm.controls.address.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+            <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <div class="row gutters-xs">
+              <div class="col-6">
+                <label for="telefono">Teléfono</label>&nbsp;
+                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.tel.invalid && workerForm.controls.tel.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-phone"></i>
+                    </span>
+                  <input class="form-control" id="tel" name="tel" type="text" formControlName="tel">
+                </div>
+              </div>
+              <div class="col-6">
+                    <label for="fechanac">Fecha de nacimiento</label>&nbsp;
+                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.birthdate.invalid && workerForm.controls.birthdate.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+
+                    <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
+                </div>
+            </div>
+          </div> 
+
+          <div class="form-group">
+            <label for="email">Email</label>&nbsp;
+            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.email.invalid && workerForm.controls.email.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-mail"></i>
+                </span>
+                <input class="form-control" id="email" name="email" type="email" formControlName="email">
+            </div>  
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <label for="salary">Salario</label>&nbsp;
+              <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.salary.invalid && workerForm.controls.salary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+              <input class="form-control" id="salary" name="salary" type="text" formControlName="salary">
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <label class="puesto">Puesto</label>&nbsp;
+                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.job.invalid && workerForm.controls.job.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+          
+                <div class="input-group">
+                  <select class="form-control custom-select" id="job" formControlName="job"> 
+                    <option [value]="null">Seleccionar...</option>
+                    <option *ngFor="let job of jobs; index as i" [value]="job._id">{{i+1}}.- {{job.name}}</option>
+                  </select>
+                  <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalJob(addjob)"><i class="fe fe-plus-circle"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <label for="">Horario</label>
+          <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                  <label for="entrada">Entrada</label>&nbsp;
+                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.entry_horary.invalid && workerForm.controls.entry_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                  <input class="form-control" id="entry_horary" name="entry_horary" type="time" value="00:00:00" step="1" formControlName="entry_horary"> 
+                </div>
+                <div class="col-6">
+                  <label for="salida">Salida</label>&nbsp;
+                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.departure_horary.invalid && workerForm.controls.departure_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                  <input class="form-control" id="departure_horary" name="departure_horary" type="time" value="00:00:00" step="1" formControlName="departure_horary"> 
+                </div>
+            </div>  
+          </div>
+
+          <div class="alert alert-success" *ngIf="status == 'success'">
+              Guardado exitosamente.
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddWorker()" [disabled]="!workerForm.valid">
+    </div>
+</ng-template>
 <!--MODAL ALTA END-->
-<!--MODAL PUESTO-->
-<div class="modal hide fade modal-sm sub-modal" id="addJob" tabindex="-1">
-    <div class="modal-dialog">
-  
-    <div class="modal-content">
+<!--MODAL EDIT-->
+<ng-template #editworker let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">EDITAR EMPLEADO</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="workerForm" (ngSubmit)="onSubmit()">  
+
+          <div class="form-group">
+            <label for="nombre">Nombre </label>&nbsp;
+            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.name.invalid && workerForm.controls.name.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-user"></i>
+                </span>
+              <input class="form-control" id="name" name="name" type="text" formControlName="name"> 
+            </div>  
+          </div>
+
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                    <label for="app">Apellido Paterno</label>&nbsp;
+                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.paternal_surname.invalid && workerForm.controls.paternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                    <input class="form-control" id="paternal_surname" name="paternal_surname" type="text" formControlName="paternal_surname">
+                  </div>
+                  <div class="col-6">
+                    <label for="app">Apellido Materno</label>&nbsp;
+                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.maternal_surname.invalid && workerForm.controls.maternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                    <input class="form-control" id="maternal_surname" name="maternal_surname" type="text" formControlName="maternal_surname">
+                  </div>
+              </div>  
+          </div>
+          
+          <div class="form-group">
+            <label for="direccion">Dirección</label>&nbsp;
+            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.address.invalid && workerForm.controls.address.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+            <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <div class="row gutters-xs">
+              <div class="col-6">
+                <label for="telefono">Teléfono</label>&nbsp;
+                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.tel.invalid && workerForm.controls.tel.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-phone"></i>
+                    </span>
+                  <input class="form-control" id="tel" name="tel" type="text" formControlName="tel">
+                </div>
+              </div>
+              <div class="col-6">
+                    <label for="fechanac">Fecha de nacimiento</label>&nbsp;
+                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.birthdate.invalid && workerForm.controls.birthdate.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+
+                    <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
+                </div>
+            </div>
+          </div> 
+
+          <div class="form-group">
+            <label for="email">Email</label>&nbsp;
+            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.email.invalid && workerForm.controls.email.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+            <div class="input-icon">
+                <span class="input-icon-addon">
+                    <i class="fe fe-mail"></i>
+                </span>
+                <input class="form-control" id="email" name="email" type="email" formControlName="email">
+            </div>  
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <label for="salary">Salario</label>&nbsp;
+              <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.salary.invalid && workerForm.controls.salary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+              <input class="form-control" id="salary" name="salary" type="text" formControlName="salary">
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <label class="puesto">Puesto</label>&nbsp;
+                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.job.invalid && workerForm.controls.job.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+          
+                <div class="input-group">
+                  <select class="form-control custom-select" id="job" formControlName="job"> 
+                    <option [value]="null">Seleccionar...</option>
+                    <option *ngFor="let job of jobs; index as i" [value]="job._id">{{i+1}}.- {{job.name}}</option>
+                  </select>
+                  <span class="input-group-append">
+                    <button class="btn btn-primary" type="button" (click)="openModalJob(addjob)"><i class="fe fe-plus-circle"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <label for="">Horario</label>
+          <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                  <label for="entrada">Entrada</label>&nbsp;
+                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.entry_horary.invalid && workerForm.controls.entry_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                  <input class="form-control" id="entry_horary" name="entry_horary" type="time" value="00:00:00" step="1" formControlName="entry_horary"> 
+                </div>
+                <div class="col-6">
+                  <label for="salida">Salida</label>&nbsp;
+                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.departure_horary.invalid && workerForm.controls.departure_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
+                  <input class="form-control" id="departure_horary" name="departure_horary" type="time" value="00:00:00" step="1" formControlName="departure_horary"> 
+                </div>
+            </div>  
+          </div>
+
+          <div class="alert alert-success" *ngIf="status == 'success'">
+              Cambios guardados exitosamente.
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditWorker()" [disabled]="!workerForm.valid">
+    </div>
+</ng-template>
+<!--MODAL EDIT END-->
+
+<!--MODAL DESACTIVAR-->
+<ng-template #deactivateworker let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE BAJA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de baja al empleado <strong>{{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Dar de Baja</button>
+    </div>
+</ng-template>
+<!--MODAL DESACTIVAR END-->
+
+<!--MODAL ACTIVAR-->
+<ng-template #activateworker let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DAR DE ALTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea dar de alta al empleado <strong>{{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</strong>?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Dar de Alta</button>
+    </div>
+</ng-template>
+<!--MODAL ACTIVAR END-->
+
+<!--MODAL DETAILS-->
+<ng-template #detailsworker let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DETALLES DEL EMPLEADO</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Nombre:</label>&nbsp;
+            {{worker.name}}
+          </div>
+
+          <div class="form-group">
+              <div class="row gutters-xs">
+                  <div class="col-6">
+                    <label class="form-label">Apellido Paterno:</label>&nbsp;
+                    {{worker.paternal_surname}}
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Apellido Materno:</label>&nbsp;
+                    <span *ngIf="worker.maternal_surname != ''">{{worker.maternal_surname}}</span><span *ngIf="worker.maternal_surname == ''">---</span>
+                </div>
+              </div>  
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Dirección:</label>&nbsp;
+            {{worker.address}}
+          </div>
+          
+          <div class="form-group">
+            <div class="row gutters-xs">
+              <div class="col-8">
+                <label class="form-label">Teléfono:</label>&nbsp;
+                {{worker.tel}}
+              </div>
+              <div class="col-4">
+                <label class="form-label">Fecha de nacimiento:</label>&nbsp;
+                {{worker.birthdate}}
+              </div>
+            </div>
+          </div> 
+
+          <div class="form-group">
+            <label class="form-label">Email:</label>&nbsp;
+            {{worker.email}}
+          </div>
+
+          <div class="row gutters-xs">
+            <div class="col-6">
+              <label class="form-label">Salario:</label>&nbsp;
+              {{worker.salary}}
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <label class="form-label">Puesto:</label>&nbsp;
+                {{worker.job}}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                  <label class="form-label">Horario Entrada:</label>&nbsp;
+                  {{worker.entry_horary}}
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Horario Salida:</label>&nbsp;
+                  {{worker.departure_horary}}
+                </div>
+            </div>  
+          </div>
+
+          <div class="form-group">
+            <div class="row gutters-xs">
+                <div class="col-6">
+                <label for="telefono" class="form-label">Fecha Alta</label>&nbsp;
+                {{worker.start_date | dates}}
+                </div>
+                <div class="col-6">
+                <label for="contacto" class="form-label">Fecha Baja</label>&nbsp;
+                <span *ngIf="worker.end_date != '' && worker.end_date != null">{{worker.end_date | dates}}</span><span *ngIf="worker.end_date == '' || worker.end_date == null">---</span>
+                </div>
+            </div>
+            </div> 
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+      </div>
+</ng-template>
+
+<!--MODALS PARA SELECTS-->
+<ng-template #addjob let-modal>
     <div class="modal-header">
         <h4 class="modal-title">NUEVO PUESTO</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="addworker.getJobsA(); cerrar()"></button>   
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
     </div>
 
     <div class="modal-body">
@@ -166,7 +473,6 @@
 
             <div class="form-group">
             <label for="nombre">Nombre </label>&nbsp;
-            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="jobForm.controls.name.invalid && jobForm.controls.name.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
             <div class="input-icon">
                 <span class="input-icon-addon">
                     <i class="fe fe-user"></i>
@@ -175,19 +481,14 @@
             </div>  
             </div>
 
-            <div class="alert alert-success" *ngIf="status == 'success'">
+            <div class="alert alert-success" *ngIf="status2 == 'success'">
                 Guardado exitosamente.
             </div>
-
-            <br>
-            <div class="modal-footer d-flex">
-            <button type="button" class="btn btn-warning cerrar" (click)="addworker.getJobsA(); cerrar()" data-dismiss="modal" name="cerrar">Cerrar</button>
-            <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" [disabled]="!jobForm.valid">
-            </div>
-
         </form>
     </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddJob()" [disabled]="!jobForm.valid">
     </div>
-</div>
-</div> 
-<!--MODAL PUESTO END-->
+</ng-template>
+<!--MODALS SELECTS END-->

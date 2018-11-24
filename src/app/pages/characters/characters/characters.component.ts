@@ -4,25 +4,25 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { UserService } from '../../../services/user.service';
 import { GLOBAL } from '../../../services/global';
 
-import { Job } from '../../../models/job';
-import { JobService } from '../../../services/job.service';
+import { Character } from '../../../models/character';
+import { CharacterService } from '../../../services/character.service';
 @Component({
-  selector: 'app-jobs',
-  templateUrl: './jobs.component.html',
-  styleUrls: ['./jobs.component.css']
+  selector: 'app-characters',
+  templateUrl: './characters.component.html',
+  styleUrls: ['./characters.component.css']
 })
-export class JobsComponent implements OnInit {
-  //Para form y registrar puesto
-  jobForm: FormGroup;
-  public job: Job;
+export class CharactersComponent implements OnInit {
+  //Para form y registrar caracter
+  characterForm: FormGroup;
+  public character: Character;
   public status: string;
 
   //token
   public url: string;
   public token;
 
-  //Variables para mostrar puestos y realizar paginacion
-  public jobs: Job[];
+  //Variables para mostrar caracteres y realizar paginacion
+  public characters: Character[];
   public busqueda;
   pag: number = 0;
   totalRegistros: number = 0;
@@ -31,17 +31,17 @@ export class JobsComponent implements OnInit {
     private pf: FormBuilder,
     private modalService: NgbModal,
     private _userService: UserService,
-    private _jobService: JobService
+    private _characterService: CharacterService
   ) { 
-    this.job = new Job('','','','','');
+    this.character = new Character('','','','','');
     this.token = this._userService.getToken();
     this.url = GLOBAL.url;
     this.status = "";
   }
 
   ngOnInit() {
-    this.getJobs();
-    this.jobForm = this.pf.group({
+    this.getCharacters();
+    this.characterForm = this.pf.group({
       name: ['', Validators.required]
     });
   }
@@ -52,51 +52,51 @@ export class JobsComponent implements OnInit {
     }, (reason) => {
       if(this.status=='success'){
         this.status='';
-        this.jobForm.reset();
+        this.characterForm.reset();
       }
     });
   }
 
-  openModaledit(content, job: any) {
+  openModaledit(content, character: any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       
     }, (reason) => {
       if(this.status=='success'){
         this.status='';
-        this.jobForm.reset();
+        this.characterForm.reset();
       }
     });
-    this.job._id = job._id;
-    this.jobForm.get('name').setValue(job.name);
+    this.character._id = character._id;
+    this.characterForm.get('name').setValue(character.name);
   }
 
-  openModalStatus(content, job: any){
+  openModalStatus(content, character: any){
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       if(result=='Deactivate'){
-        this.deactivateJob(job);
+        this.deactivateCharacter(character);
       }
       if(result=='Activate'){
-        this.activateJob(job);
+        this.activateCharacter(character);
       }
     }, (reason) => {
     });
-    this.job.name = job.name;
+    this.character.name = character.name;
   }
 
   ////////////////////////////////////////////////////////////
-  //                    AGREGAR PUESTO                      //
+  //                    AGREGAR CARACTER                    //
   ////////////////////////////////////////////////////////////
-  onSubmitAddJob(){
-    this.job.name = this.jobForm.get('name').value;
+  onSubmitAddCharacter(){
+    this.character.name = this.characterForm.get('name').value;
     
-    this._jobService.addJob(this.token, this.job).subscribe(
+    this._characterService.addCharacter(this.token, this.character).subscribe(
       response => {
-        if(!response.job){
+        if(!response.character){
           this.status = 'error';
         }else{
           this.status = 'success';
-          this.job = response.job;
-          this.getJobs();
+          this.character = response.character;
+          this.getCharacters();
         }
       },
       error => {
@@ -108,19 +108,19 @@ export class JobsComponent implements OnInit {
     );
   }
   ////////////////////////////////////////////////////////////
-  //                     EDITAR PUESTO                      //
+  //                     EDITAR CARACTER                    //
   ////////////////////////////////////////////////////////////
-  onSubmitEditJob(){
-    this.job.name = this.jobForm.get('name').value;
+  onSubmitEditCharacter(){
+    this.character.name = this.characterForm.get('name').value;
 
-    this._jobService.editJob(this.token, this.job._id, this.job).subscribe(
+    this._characterService.editCharacter(this.token, this.character._id, this.character).subscribe(
       response => {
-        if(!response.job){
+        if(!response.character){
           this.status = 'error';
         }else{
           this.status = 'success';
-          this.job = response.job;
-          this.getJobs();
+          this.character = response.character;
+          this.getCharacters();
         }
       },
       error => {
@@ -132,42 +132,42 @@ export class JobsComponent implements OnInit {
     );
   }
   ////////////////////////////////////////////////////////////
-  //               CAMBIAR ESTADO DE PUESTO                 //
+  //               CAMBIAR ESTADO DE CARACTER               //
   ////////////////////////////////////////////////////////////
-  deactivateJob(job : Job){
-    this._jobService.deactivateJob(this.token, job._id).subscribe(
+  deactivateCharacter(character : Character){
+    this._characterService.deactivateCharacter(this.token, character._id).subscribe(
       response => {
-        if(!response.job){
+        if(!response.character){
           console.log("Error en el servidor");
         }
-        this.getJobs();
+        this.getCharacters();
       },error  => {
         console.log("Error en el servidor");
       }
     );
   }
 
-  activateJob(job : Job){
-    this._jobService.activateJob(this.token, job._id).subscribe(
+  activateCharacter(character : Character){
+    this._characterService.activateCharacter(this.token, character._id).subscribe(
       response => {
-        if(!response.job){
+        if(!response.character){
           console.log("Error en el servidor");
         }
-        this.getJobs();
+        this.getCharacters();
       },error  => {
         console.log("Error en el servidor");
       }
     );
   }
   ////////////////////////////////////////////////////////////
-  //          OBTENER PUESTOS Y REALIZAR PAGINACION         //
+  //          OBTENER CARACTER Y REALIZAR PAGINACION        //
   ////////////////////////////////////////////////////////////
-  getJobs(){
-    this._jobService.getJobs(this.pag).subscribe(
+  getCharacters(){
+    this._characterService.getCharacters(this.pag).subscribe(
       response => {
         
-        if(response.jobs){
-          this.jobs = response.jobs;
+        if(response.characters){
+          this.characters = response.characters;
           this.totalRegistros = response.total;
         }
       }, error => {
@@ -188,6 +188,7 @@ export class JobsComponent implements OnInit {
     }
 
     this.pag += valor;
-    this.getJobs();
+    this.getCharacters();
   }
+
 }

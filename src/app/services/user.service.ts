@@ -17,6 +17,20 @@ export class UserService {
     this.url = GLOBAL.url;
   }
 
+  register(user_to_register: User, token): Observable<any>{
+    let params = JSON.stringify(user_to_register);
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.post(this.url+'register', params, {headers: headers});
+  }
+
+  editUserPassword(token, id, user: User): Observable<any>{
+    let params = JSON.stringify(user);
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'update-user-password/'+id, params, {headers: headers});
+  }
+
   signup(user_to_login, gettoken = null): Observable<any>{
     if(gettoken != null){
       user_to_login.gettoken = gettoken;
@@ -47,6 +61,36 @@ export class UserService {
       this.token = null;
     }
     return this.token;
+  }
+
+  editUser(token, id, user: User): Observable<any>{
+    let params = JSON.stringify(user);
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'update-user/'+id, params, {headers: headers});
+  }
+
+  deactivateUser(token, id): Observable<any>{
+    let params = "";
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'deactivate-user/'+id, params, {headers: headers});
+  }
+
+  activateUser(token, id): Observable<any>{
+    let params = "";
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'activate-user/'+id, params, {headers: headers});
+  }
+
+  getUser(id): Observable<any>{
+    return this._http.get(this.url+'user/'+id);
+  }
+
+  getUsers(token, id,  pag: number = 0): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'users/'+id+'?pag='+pag, {headers: headers});
   }
 
   getUserCount(): Observable<any>{

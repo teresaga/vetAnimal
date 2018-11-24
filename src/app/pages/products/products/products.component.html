@@ -58,8 +58,8 @@
                     <td>{{product.price}}</td>
                     <td *ngIf="product.cost">{{product.cost}}</td><td *ngIf="product.cost == null || product.cost ==''">---</td>
                     <td *ngIf="product.provider">{{product.provider.name}}</td><td *ngIf="product.provider==null">---</td>
-                    <td>{{product.start_date}}</td>
-                    <td *ngIf="product.end_date != ''">{{product.end_date}}</td><td *ngIf="product.end_date == ''">---</td>
+                    <td>{{product.start_date | dates}}</td>
+                    <td *ngIf="product.end_date != '' && product.end_date != null">{{product.end_date | dates}}</td><td *ngIf="product.end_date == '' || product.end_date == null">---</td>
                     <td>
                         <span [ngClass]="{'bg-success': product.status === 'A', 'bg-danger': product.status === 'B'}" class="status-icon"></span> {{product.status}}
                     </td>

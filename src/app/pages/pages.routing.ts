@@ -14,6 +14,13 @@ import { ConsultationsComponent } from './consultations/consultations/consultati
 import { ActivitiesComponent } from './activities/activities/activities.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ReportsComponent } from './reports/reports/reports.component';
+import { JobsComponent } from './jobs/jobs/jobs.component';
+import { CharactersComponent } from './characters/characters/characters.component';
+import { HairsComponent } from './hairs/hairs/hairs.component';
+import { MeasurementunitsComponent } from './measurementunits/measurementunits/measurementunits.component';
+import { RacesComponent } from './races/races/races.component';
+import { SpeciesComponent } from './species/species/species.component';
+import { HabitatsComponent } from './habitats/habitats/habitats.component';
 import { HomeComponent } from './home/home.component';
 
 
@@ -34,6 +41,13 @@ const pagesRoutes: Routes = [
             {path: 'actividades', component: ActivitiesComponent},
             {path: 'configuracion', component: SettingsComponent},
             {path: 'informes', component: ReportsComponent},
+            {path: 'puestos', component: JobsComponent},
+            {path: 'tipos-pelo', component: HairsComponent},
+            {path: 'caracter', component: CharactersComponent},
+            {path: 'habitat', component: HabitatsComponent},
+            {path: 'especies', component: SpeciesComponent},
+            {path: 'razas', component: RacesComponent},
+            {path: 'unidades', component: MeasurementunitsComponent},
             {path: '', redirectTo: 'home', pathMatch: 'full'}
         ]
     }

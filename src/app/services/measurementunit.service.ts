@@ -24,8 +24,29 @@ export class MeasurementunitService {
     return this._http.post(this.url+'unit', params, {headers: headers});
   }
 
-  getMeasurementunits(): Observable<any>{
-    return this._http.get(this.url+'units');
+  editMeasurementunit(token, id, unit: Measurementunit): Observable<any>{
+    let params = JSON.stringify(unit);
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'update-unit/'+id, params, {headers: headers});
+  }
+
+  deactivateMeasurementunit(token, id): Observable<any>{
+    let params = "";
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'deactivate-unit/'+id, params, {headers: headers});
+  }
+
+  activateMeasurementunit(token, id): Observable<any>{
+    let params = "";
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'activate-unit/'+id, params, {headers: headers});
+  }
+
+  getMeasurementunits(pag: number = 0): Observable<any>{
+    return this._http.get(this.url+'units?pag='+pag);
   }
 
   getMeasurementunitsA(): Observable<any>{
