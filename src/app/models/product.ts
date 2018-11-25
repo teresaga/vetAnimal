@@ -2,7 +2,7 @@ export class Product{
     constructor(
         public _id:string,
         public description: String,
-        public price: String,
+        public price: string,
         public cost: String,
         public provider: string,
         public measurementunit: string,

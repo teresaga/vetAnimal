@@ -8,14 +8,14 @@
                 <div class="form-group col-3">
                   <label class="form-label">Cliente</label>
                   <select class="form-control custom-select busq" id="cliente" [(ngModel)]="busquedaClient" (change)="changeClient()">
-                    <option [value]="null">Selecciona...</option>
+                    <option [value]="null" >Selecciona...</option>
                     <option *ngFor="let client of clients; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>
                   </select>
                 </div>
                 <div class="form-group col-2">
                   <label class="form-label">Mascota</label>
                   <select class="form-control custom-select busq" id="animal" [(ngModel)]="busquedaAnimal">
-                    <option [value]="null">Selecciona...</option>
+                    <option [value]="null" >Selecciona...</option>
                     <option *ngFor="let animal of animals; index as i" [value]="animal._id">{{i+1}}.- {{animal.name}}</option>
                   </select>
                 </div>
@@ -41,14 +41,14 @@
                     <label class="form-label">Estado</label>
                     <select class="form-control custom-select busq" id="animal" [(ngModel)]="busquedaStatus">
                       <option [value]="null">Selecciona...</option>
-                      <option [value]="PE">Pendiente</option>
-                      <option [value]="PR">En proceso</option>
-                      <option [value]="T">Terminada</option>
+                      <option [value]="'PE'">Pendiente</option>
+                      <option [value]="'PR'">En proceso</option>
+                      <option [value]="'T'">Terminada</option>
                     </select>
                   </div>
                   <div class="col-md-2 col-lg-1">
                     <br>
-                    <button type="button" class="btn btn-success" (click)="getActivities()" [disabled]="(busquedaClient==null || busquedaAnimal==null || busquedaStatus==null) && (busquedaFechaDe==null && busquedaFechaHasta == null)">
+                    <button type="button" class="btn btn-success" (click)="getActivities()" [disabled]="(busquedaClient==null || busquedaAnimal==null || busquedaStatus==null) && ((busquedaFechaDe==null || busquedaFechaDe=='') || (busquedaFechaHasta == null || busquedaFechaHasta==''))">
                         <i class="fas fa-search mr-2"></i>
                         Buscar
                     </button>
@@ -70,7 +70,7 @@
                 <thead>
                     <tr>
                         <th class="w-1">#</th>
-                        <th>Fecha</th>
+                        <th>Fecha y Hora</th>
                         <th>Servicio</th>
                         <th>Cliente</th>
                         <th>Mascota</th>
@@ -85,7 +85,7 @@
                 <tbody>
                 <tr *ngFor="let activity of activities; index as i">
                     <td><span class="text-muted">{{i+1+pag}}</span></td>
-                    <td>{{activity.date}}</td>
+                    <td>{{activity.date | datetime}}</td>
                     <td>{{activity.service.description}}</td>
                     <td>{{activity.client.name + " " +activity.client.paternal_surname}} <span *ngIf="activity.client.maternal_surname">{{" " + activity.client.maternal_surname}}</span></td>
                     <td>{{activity.animal.name}}</td>                    
@@ -94,17 +94,20 @@
                     <td>{{activity.start_date | dates}}</td>
                     <td *ngIf="activity.end_date != '' && activity.end_date != null">{{activity.end_date | dates}}</td><td *ngIf="activity.end_date == '' || activity.end_date == null">---</td>
                     <td>
-                        <span [ngClass]="{'bg-success': activity.status === 'A', 'bg-danger': activity.status === 'B'}" class="status-icon"></span> {{activity.status}}
+                        <span [ngClass]="{'bg-success': activity.status === 'PE', 'bg-warning': activity.status === 'PR', 'bg-secondary': activity.status === 'T'}" class="status-icon"></span>
+                        <span *ngIf="activity.status === 'PE'" >Pendiente</span>
+                        <span *ngIf="activity.status === 'PR'" >En Proceso</span>
+                        <span *ngIf="activity.status === 'T'" >Terminada</span>
                     </td>
                     <td>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-eye mr-2" style="color:blue;"></i>
+                        <a class="icon" *ngIf="activity.status!=='T'" (click)="openModaledit(editactivity, activity)">
+                            <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-edit mr-2" style="color:orange;"></i>
+                        <a class="icon" (click)="openModalStatus(startactivity, activity)" *ngIf="activity.status==='PE'">
+                            <i class="far fa-play-circle mr-2" style="color:green;" data-toggle="tooltip" title="Empezar"></i>
                         </a>
-                        <a class="icon" href="javascript:void(0)">
-                            <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
+                        <a class="icon" (click)="openModalStatus(finishactivity, activity)" *ngIf="activity.status==='PR'">
+                            <i class="far fa-pause-circle mr-2" style="color:red;" data-toggle="tooltip" title="Terminar"></i>
                         </a>
                     </td>
                 </tr>
@@ -115,8 +118,212 @@
   </div>
   
   <!--MODAL ALTA-->
-  <app-addactivity></app-addactivity>
+<ng-template #addactivity let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">NUEVA ACTIVIDAD</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">  
+
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                        <label for="cliente">Cliente</label>
+                        <select class="form-control custom-select" id="client" name="client" formControlName="client" (change)="changeClient2()">
+                                <option [value]="null">Selecciona...</option>
+                                <option *ngFor="let client of clients2; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>    
+                        </select> 
+                    </div>
+
+                    <div class="col-6">
+                        <label for="mascota">Mascota</label>
+                        <select class="form-control custom-select" id="animal" name="animal" formControlName="animal">
+                                <option [value]="null">Selecciona...</option>
+                                <option *ngFor="let animal of animals2; index as i" [value]="animal._id">{{i+1}}.- {{animal.name}}</option>
+                        </select> 
+                    </div>
+                </div>  
+            </div>
+            
+            <div class="form-group">
+                <div class="row gutters-xs">
+                <div class="col-6">
+                    <label for="fecha">Fecha</label>
+                    <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-calendar"></i>
+                    </span> 
+                    <input class="form-control" id="date" name="date" formControlName="date" type="date"> 
+                    </div>
+                </div>
+    
+                <div class="col-6">
+                    <label for="hora">Hora</label>
+                    <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-clock"></i>
+                    </span> 
+                    <input class="form-control" id="time" name="time" formControlName="time" type="time" value="00:00:00" step="1">  
+                    </div>
+                </div>
+                </div>  
+            </div>
+
+            <div class="form-group">
+            <label for="service">Servicio</label>
+            <select class="form-control custom-select" id="service" name="service" formControlName="service">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let service of services; index as i" [value]="service._id">{{i+1}}.- {{service.description}}</option>
+            </select>   
+            </div>
+
+            <div class="form-group">
+            <label for="worker">Empleado</label>
+            <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let worker of workers; index as i" [value]="worker._id">{{i+1}}.- {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</option>    
+            </select>   
+            </div>
+
+            <div class="form-group">
+            <label for="notes">Notas</label>
+            <textarea class="form-control" rows="2" id="notes" name="notes" formControlName="notes"></textarea>   
+            </div>
+
+            <div class="alert alert-success" *ngIf="status == 'success'">
+            Guardado exitosamente.
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddActivity()" [disabled]="!activityForm.valid">
+    </div>
+</ng-template>
   <!--MODAL ALTA END-->
+
+  <!--MODAL EDIT-->
+<ng-template #editactivity let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">EDITAR ACTIVIDAD</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">  
+
+            <div class="form-group">
+                <div class="row gutters-xs">
+                    <div class="col-6">
+                        <label for="cliente">Cliente</label>
+                        <select class="form-control custom-select" id="client" name="client" formControlName="client" (change)="changeClient2()">
+                                <option [value]="null">Selecciona...</option>
+                                <option *ngFor="let client of clients2; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>    
+                        </select> 
+                    </div>
+
+                    <div class="col-6">
+                        <label for="mascota">Mascota</label>
+                        <select class="form-control custom-select" id="animal" name="animal" formControlName="animal">
+                                <option [value]="null">Selecciona...</option>
+                                <option *ngFor="let animal of animals2; index as i" [value]="animal._id">{{i+1}}.- {{animal.name}}</option>
+                        </select> 
+                    </div>
+                </div>  
+            </div>
+            
+            <div class="form-group">
+                <div class="row gutters-xs">
+                <div class="col-6">
+                    <label for="fecha">Fecha</label>
+                    <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-calendar"></i>
+                    </span> 
+                    <input class="form-control" id="date" name="date" formControlName="date" type="date"> 
+                    </div>
+                </div>
+    
+                <div class="col-6">
+                    <label for="hora">Hora</label>
+                    <div class="input-icon">
+                    <span class="input-icon-addon">
+                        <i class="fe fe-clock"></i>
+                    </span> 
+                    <input class="form-control" id="time" name="time" formControlName="time" type="time" value="00:00:00" step="1">  
+                    </div>
+                </div>
+                </div>  
+            </div>
+
+            <div class="form-group">
+            <label for="service">Servicio</label>
+            <select class="form-control custom-select" id="service" name="service" formControlName="service">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let service of services; index as i" [value]="service._id">{{i+1}}.- {{service.description}}</option>
+            </select>   
+            </div>
+
+            <div class="form-group">
+            <label for="worker">Empleado</label>
+            <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let worker of workers; index as i" [value]="worker._id">{{i+1}}.- {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</option>    
+            </select>   
+            </div>
+
+            <div class="form-group">
+            <label for="notes">Notas</label>
+            <textarea class="form-control" rows="2" id="notes" name="notes" formControlName="notes"></textarea>   
+            </div>
+
+            <div class="alert alert-success" *ngIf="status == 'success'">
+            Cambios guardados exitosamente.
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitEditActivity()" [disabled]="!activityForm.valid">
+    </div>
+</ng-template>
+    <!--MODAL EDIT END-->
+
+<!--MODAL FINISH-->
+<ng-template #finishactivity let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">TERMINAR ACTIVIDAD</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea terminar la actividad?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Deactivate')">Terminar Actividad</button>
+    </div>
+</ng-template>
+<!--MODAL FINISH END-->
+
+<!--MODAL  START-->
+<ng-template #startactivity let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">INICIAR ACTIVIDAD</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+            <p>¿Desea iniciar la actividad?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Activate')">Iniciar Actividad</button>
+    </div>
+</ng-template>
+<!--MODAL START END-->
 
   <!--MODAL INFO-->
 <ng-template #information let-modal>

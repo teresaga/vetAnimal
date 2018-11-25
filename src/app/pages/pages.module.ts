@@ -18,7 +18,6 @@ import { ProductsComponent } from './products/products/products.component';
 import { UsersComponent } from './users/users/users.component';
 import { ConsultationsComponent } from './consultations/consultations/consultations.component';
 import { ActivitiesComponent } from './activities/activities/activities.component';
-import { AddactivityComponent } from './activities/addactivity/addactivity.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ReportsComponent } from './reports/reports/reports.component';
 import { HomeComponent } from './home/home.component';
@@ -39,6 +38,7 @@ import { RacesComponent } from './races/races/races.component';
 import { SpeciesComponent } from './species/species/species.component';
 import { HabitatsComponent } from './habitats/habitats/habitats.component';
 import { DatesPipe } from './pipes/dates.pipe';
+import { DatetimePipe } from './pipes/datetime.pipe';
 @NgModule({
   declarations: [
     PagesComponent,
@@ -46,7 +46,6 @@ import { DatesPipe } from './pipes/dates.pipe';
     ReportsComponent,
     SettingsComponent,
     ActivitiesComponent,
-    AddactivityComponent,
     ConsultationsComponent,
     UsersComponent,
     ProductsComponent,
@@ -68,7 +67,8 @@ import { DatesPipe } from './pipes/dates.pipe';
     RacesComponent,
     SpeciesComponent,
     HabitatsComponent,
-    DatesPipe
+    DatesPipe,
+    DatetimePipe
   ],
   imports: [
     SharedModule,

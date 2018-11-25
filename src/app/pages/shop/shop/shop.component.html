@@ -5,18 +5,27 @@
       </div>
       <div class="card-body">
           <div class="row">
-              <div class="input-icon mb-3 search">
-                  <input type="text" class="form-control" placeholder="ID o Nombre de Producto o Servicio...">
-                  <span class="input-icon-addon">
-                      <i class="fe fe-search"></i>
-                  </span>
-              </div>
-              <div class="col-md-1 col-lg-1">
-                  <button type="button" class="btn btn-primary">
-                      <i class="fe fe-plus-circle mr-2"></i>
-                      Agregar
-                  </button>
-              </div>
+              <div class="form-group col-6">
+                <label class="form-label">Nombre de Producto/Servicio</label>
+                <select class="form-control custom-select busq" id="cliente" [(ngModel)]="seleccionProducto">
+                    <option [value]="null" >Selecciona...</option>
+                    <option *ngFor="let product of products; index as i" [value]="product._id">{{product.description}}</option>
+                </select>
+                </div>
+              <div class="col-md-2 col-lg-2">
+                <br>
+                <button type="button" class="btn btn-primary" (click)="agregarProducto()">
+                    <i class="fe fe-plus-circle mr-2"></i>
+                    Agregar
+                </button>
+            </div>
+            <div class="form-group col-3">
+                <label class="form-label">Cliente</label>
+                <select class="form-control custom-select busq" id="cliente" [(ngModel)]="seleccionCliente">
+                    <option [value]="null">Selecciona...</option>
+                    <option *ngFor="let client of clients; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>
+                </select>
+            </div>
           </div>
       </div>
   </div>
@@ -25,25 +34,23 @@
           <table class="table card-table table-vcenter text-nowrap">
               <thead>
                   <tr>
-                      <th class="w-1">ID</th>
+                      <th class="w-1">#</th>
                       <th>Descripción</th>
                       <th>Precio</th>
                       <th>Cantidad</th>
-                      <th>IVA</th>
                       <th>Total</th>
                       <th></th>
                   </tr>
               </thead>
               <tbody>
-              <tr>
-                  <td><span class="text-muted">1</span></td>
-                  <td>Baño</td>
-                  <td>100</td>
-                  <td><input class="cantidad" type="number" value="1"></td>
-                  <td>16</td>
-                  <td>116</td>
+              <tr *ngFor="let saledetail2 of saledetails; index as i">
+                    <td><span class="text-muted">{{i+1}}</span></td>
+                    <td>{{saledetail2.name}}</td>
+                    <td>{{saledetail2.price}}</td>
+                    <td><input class="cantidad busq" min="1" type="number" value="{{saledetail2.quantity}}"  [(ngModel)]="saledetail2.quantity" (change)="cambiarTotal(i)" required></td>
+                    <td>{{saledetail2.amount}}</td>
                   <td>
-                      <a class="icon" href="javascript:void(0)">
+                      <a class="icon" (click)="eliminarProducto(i)">
                           <i class="fe fe-minus-circle mr-2" style="color:red;"></i>
                       </a>
                   </td>
@@ -54,16 +61,16 @@
   </div>
   <div class="col-4 card ml-auto">
       <div class="card-body">
-          <h3>Total: 116</h3>
+          <h3>Total: {{totalVenta}}</h3>
       </div>
 
       <div class="card-footer text-right">
         <div class="d-flex">
-          <button type="button" class="btn btn-success">
+          <button type="button" class="btn btn-success" (click)="this.openModalInfo(confirmar);" [disabled]="this.saledetails.length == 0">
               <i class="fe fe-check-circle mr-2"></i>
               Confirmar
           </button>
-          <button type="button" class="btn btn-danger ml-auto">
+          <button type="button" class="btn btn-danger ml-auto" (click)="cancelarVenta()" [disabled]="this.saledetails.length==0">
               <i class="fe fe-minus-circle mr-2"></i>
               Cancelar
           </button>
@@ -71,3 +78,43 @@
       </div>
   </div>
 </div>
+
+<!--MODAL INFO-->
+<ng-template #information let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">INFORMACION</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <h5 class="form-label">El Producto/Servicio seleccionado ya fue agregado</h5>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL INFO-->
+
+<!--MODAL CONFIRMAR-->
+<ng-template #confirmar let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">CONFIRMAR VENTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <div style="text-align: center">
+            <h3>Total: &nbsp; {{totalVenta}}</h3><br>
+            <h3>Importe: &nbsp;</h3><input type="number" class="form-control col-4 busq" style="margin-left:30%" [(ngModel)]="importeVenta" (change)="cambiarCambioVenta()"><br>
+            <h3>Cambio: &nbsp; {{cambio}} </h3>  
+        </div>  
+        
+        <div class="alert alert-success" *ngIf="status == 'success'">
+            Se ha registrado la venta exitosamente.
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <input type="submit" class="btn btn-success" value="Confirmar" name="enviar" id ="enviar" (click)="onSubmitAddSale()" [disabled]="cambio < 0 || importeVenta < totalVenta">
+    </div>
+</ng-template>
+<!--MODAL CONFIRMAR-->

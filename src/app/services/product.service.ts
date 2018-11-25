@@ -45,9 +45,23 @@ export class ProductService {
     return this._http.put(this.url+'activate-product/'+id, params, {headers: headers});
   }
 
+  getProduct(id): Observable<any>{
+    return this._http.get(this.url+'product/'+id);
+  }
+
   getProducts(token, pag: number = 0): Observable<any>{
     let headers = new HttpHeaders().set('Authorization', token);
     return this._http.get(this.url+'products?pag='+pag, {headers: headers});
+  }
+
+  getProductsA(token): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'productsa', {headers: headers});
+  }
+
+  getProductsServicesA(token): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'productsservicea', {headers: headers});
   }
 
   getProductCount(): Observable<any>{

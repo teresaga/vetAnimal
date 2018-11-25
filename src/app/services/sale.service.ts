@@ -25,11 +25,11 @@ export class SaleService {
     return this._http.post(this.url+'sale', params, {headers: headers});
   }
 
-  addSaleDetails(token, saledetails: Saledetails): Observable<any>{
+  addSaleDetails(token,saledetails: Saledetails): Observable<any>{
     let params = JSON.stringify(saledetails);
     let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
 
-    return this._http.post(this.url+'saledetails', params, {headers: headers});
+    return this._http.post(this.url+'saledetail', params, {headers: headers});
   }
   
   getSale(token, pag: number = 0, datestart, dateend ): Observable<any>{

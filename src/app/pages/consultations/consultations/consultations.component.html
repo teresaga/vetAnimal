@@ -39,7 +39,7 @@
                   </div>
                   <div class="col-md-2 col-lg-1">
                     <br>
-                    <button type="button" class="btn btn-success" (click)="getHistoryOfAnimal()" [disabled]="busquedaClient==null || busquedaAnimal==null || busquedaFechaDe==null || busquedaFechaHasta == null">
+                    <button type="button" class="btn btn-success" (click)="getHistoryOfAnimal()" [disabled]="(busquedaClient==null && busquedaAnimal==null) && ((busquedaFechaDe==null || busquedaFechaDe=='') || (busquedaFechaHasta == null || busquedaFechaHasta==''))">
                         <i class="fas fa-search mr-2"></i>
                         Buscar
                     </button>

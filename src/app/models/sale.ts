@@ -1,9 +1,8 @@
 export class Sale{
     constructor(
         public _id:string,
-        public amount: String,
+        public amount: string,
         public client: string,
-        public animal: string,
         public date: String
     ){
     }
