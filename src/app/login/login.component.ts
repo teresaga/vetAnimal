@@ -48,7 +48,6 @@ export class LoginComponent implements OnInit {
                 alert("El token no se ha generado");
               }else{
                 localStorage.setItem('token', this.token);
-                
                 this.status = 'success';
 
                 this._router.navigate(['/home']);

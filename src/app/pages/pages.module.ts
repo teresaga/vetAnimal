@@ -6,7 +6,7 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { PagesComponent } from './pages.component';
 import { PAGES_ROUTES } from './pages.routing';
- 
+
 import { SharedModule } from '../shared/shared.module';
 
 import { ClientsComponent } from './clients/clients/clients.component';

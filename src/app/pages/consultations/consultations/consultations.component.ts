@@ -264,4 +264,10 @@ export class ConsultationsComponent implements OnInit {
       this.consultationForm.get('client').setValue(null);
     }
   }
+
+  changeDatos(){
+    this.pag=0;
+    this.totalRegistros=0;
+    this.consultations=[];
+  }
 }

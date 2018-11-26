@@ -452,4 +452,10 @@ export class ActivitiesComponent implements OnInit {
       this.activityForm.get('client').setValue(null);
     }
   }
+
+  changeDatos(){
+    this.pag=0;
+    this.totalRegistros=0;
+    this.activities=[];
+  }
 }

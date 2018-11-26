@@ -14,7 +14,7 @@
 
               <div class="form-group">
                 <label class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="username" name="username" #username="ngModel" [(ngModel)]="user.username" placeholder="Usuario">
+                <input type="text" class="form-control busq" id="username" name="username" #username="ngModel" [(ngModel)]="user.username" placeholder="Usuario">
                 <span *ngIf="!username.valid && username.touched">
                     El usuario es obligatorio
                 </span>
@@ -27,7 +27,7 @@
                   <a href="./forgot-password.html" class="float-right small">I forgot password</a>
                     -->
                 </label>
-                <input type="password" class="form-control" id="password" name="password" #password="ngModel" [(ngModel)]="user.password" placeholder="Password">
+                <input type="password" class="form-control busq" id="password" name="password" #password="ngModel" [(ngModel)]="user.password" placeholder="Password">
                 <span *ngIf="!password.valid && password.touched">
                     La contraseña es obligatoria
                 </span>

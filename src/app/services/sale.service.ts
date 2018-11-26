@@ -32,13 +32,23 @@ export class SaleService {
     return this._http.post(this.url+'saledetail', params, {headers: headers});
   }
   
-  getSale(token, pag: number = 0, datestart, dateend ): Observable<any>{
+  getSales(token, pag: number = 0, datestart, dateend ): Observable<any>{
     let headers = new HttpHeaders().set('Authorization', token);
-    return this._http.get(this.url+'sale?pag='+pag+'&datestart='+datestart+'&dateend='+dateend,{headers: headers});
+    return this._http.get(this.url+'sales?pag='+pag+'&datestart='+datestart+'&dateend='+dateend,{headers: headers});
+  }
+
+  getSaleClient(token, id, datestart, dateend ): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'sales-client/'+id+'?datestart='+datestart+'&dateend='+dateend,{headers: headers});
   }
 
   getSaleDetails(token, id ): Observable<any>{
     let headers = new HttpHeaders().set('Authorization', token);
     return this._http.get(this.url+'saledetails/'+id,{headers: headers});
+  }
+
+  getSaleDetailsProduct(token, id ): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'saledetails-product/'+id,{headers: headers});
   }
 }
