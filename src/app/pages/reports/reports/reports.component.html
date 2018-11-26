@@ -7,31 +7,33 @@
             <div class="row">
                 <div class="form-group col-md-4 col-lg-4">
                   <label class="form-label">Tipo de informe</label>
-                  <select class="form-control custom-select" id="cliente">
-                      <option value="">Seleccionar...</option>
+                  <select class="form-control custom-select busq" id="tipoReporte" [(ngModel)]="tipoReporte" (change)="changeReport()">
+                      <option value="1">Reporte de ventas</option>
+                      <option value="2">Ventas por cliente</option>
+                      <option value="3">Ventas por Producto/Servicio</option>
                   </select>
                 </div>
-                <div class="form-group col-md-3 col-lg-3">
+                <div class="form-group col-md-3 col-lg-3" *ngIf="tipoReporte!=='3'">
                   <label class="form-label">De</label>
                   <div class="input-icon">
                     <span class="input-icon-addon">
                         <i class="fe fe-calendar"></i>
                     </span> 
-                    <input class="form-control" id="inicio" name="inicio" type="date" required> 
+                    <input class="form-control busq" id="inicio" name="inicio" type="date" [(ngModel)]="busquedaFechaDe"> 
                   </div>
                 </div>
-                <div class="form-group col-md-3 col-lg-3">
+                <div class="form-group col-md-3 col-lg-3" *ngIf="tipoReporte!=='3'">
                   <label class="form-label">Hasta</label>
                   <div class="input-icon">
                     <span class="input-icon-addon">
                         <i class="fe fe-calendar"></i>
                     </span> 
-                    <input class="form-control" id="fin" name="fin" type="date" required> 
+                    <input class="form-control busq" id="fin" name="fin" type="date" [(ngModel)]="busquedaFechaHasta"> 
                   </div>
                 </div>
                 <div class="col-md-1 col-lg-1">
                     <br>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAnimal">
+                    <button type="button" class="btn btn-success" (click)="realizarReporte()">
                         <i class="fe fe-search mr-2"></i>
                         Buscar
                     </button>
@@ -40,24 +42,130 @@
         </div>
     </div>
   
-    <div class="col-12 card">
+    <div class="">
+        <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
+        <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
+    </div>
+    <!--VENTAS-->
+    <div class="col-12 card" *ngIf="tipoReporte==='1'">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
                     <tr>
-                        <th class="w-1">ID</th>
-                        <th>Servicio</th>
-                        <th>Cantidad</th>
+                        <th class="w-1">#</th>
+                        <th>Importe</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><span class="text-muted">1</span></td>
-                    <td>BAÑO</td>
-                    <td>200</td>
+                    <tr *ngFor="let sale of sales; index as i">
+                        <td><span class="text-muted">{{i+1+pag}}</span></td>
+                        <td>{{sale.amount}}</td>
+                        <td *ngIf="sale.client">{{sale.client.name + " " + sale.client.paternal_surname}}<span *ngIf="sale.client.maternal_surname">{{" " + sale.client.maternal_surname}}</span></td><td *ngIf="!sale.client">---</td>
+                        <td>{{sale.date | dates}}</td>
+                    <td>
+                        <a class="icon" (click)="openModaldetails(detailssale, sale._id)">
+                            <i class="fe fe-eye mr-2" style="color:blue;" data-toggle="tooltip" title="Ver"></i>
+                        </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <!--VENTAS CLIENTE-->
+    <div class="col-12 card" *ngIf="tipoReporte==='2'">
+        <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap">
+                <thead>
+                    <tr>
+                        <th class="w-1">#</th>
+                        <th>Cliente</th>
+                        <th>Cantidad de compras realizadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let tabledetailsc of tabledetailsClient; index as i">
+                    <td><span class="text-muted">{{i+1+pag}}</span></td>
+                    <td>{{tabledetailsc.client}}</td>
+                    <td>{{tabledetailsc.quantity}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--VENTAS PRODUCTO-->
+    <div class="col-12 card" *ngIf="tipoReporte==='3'">
+        <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap">
+                <thead>
+                    <tr>
+                        <th class="w-1">#</th>
+                        <th>Producto / Servicio</th>
+                        <th>Cantidad vendida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let tabledetailsp of tabledetailsProduct; index as i">
+                        <td><span class="text-muted">{{i+1+pag}}</span></td>
+                        <td>{{tabledetailsp.client}}</td>
+                        <td>{{tabledetailsp.quantity}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
   </div>
+
+<!--MODAL DETALLE VENTA-->
+<ng-template #detailssale let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">DETALLES DE VENTA</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap">
+                <thead>
+                    <tr>
+                        <th class="w-1">#</th>
+                        <th>Producto / Servicio</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let saledetail of saledetails; index as i">
+                        <td><span class="text-muted">{{i+1+pag}}</span></td>
+                        <td>{{saledetail.product.description}}</td>
+                        <td>{{saledetail.price}}</td>
+                        <td>{{saledetail.quantity}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL DETALLE VENTA-->
+
+<!--MODAL INFO-->
+<ng-template #information let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">ERROR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <h5 class="form-label">No se encontró ningún registro</h5>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL INFO-->

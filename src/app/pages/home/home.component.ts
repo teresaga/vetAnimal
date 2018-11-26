@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   totalUser: number = 0;
   totalAnimal: number = 0;
   totalClient: number = 0;
-
+  public identity;
   constructor(
     private _providerService: ProviderService,
     private _productService: ProductService,
@@ -26,7 +26,9 @@ export class HomeComponent implements OnInit {
     private _userService: UserService,
     private _animalService: AnimalService,
     private _clientService: ClientService
-  ) { }
+  ) { 
+    this.identity = this._userService.getIdentity();
+  }
 
   ngOnInit() {
     this.getWorkers();

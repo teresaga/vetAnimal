@@ -24,30 +24,36 @@ import { HabitatsComponent } from './habitats/habitats/habitats.component';
 import { HomeComponent } from './home/home.component';
 
 
+import { LoginGuard} from '../services/guards/login.guard';
+import { AdminGuard} from '../services/guards/admin.guard';
+import { VetGuard} from '../services/guards/vet.guard';
+import { CajeroGuard} from '../services/guards/cajero.guard';
+
 const pagesRoutes: Routes = [
     {
         path: '',
         component: PagesComponent,
+        canActivate: [LoginGuard],
         children: [
             {path: 'home', component: HomeComponent},
 	        {path: 'clientes', component: ClientsComponent},
             {path: 'tienda', component: ShopComponent},
             {path: 'animales', component: AnimalsComponent},
-            {path: 'empleados', component: WorkersComponent},
-            {path: 'proveedores', component: ProvidersComponent},
-            {path: 'productos', component: ProductsComponent},
-            {path: 'usuarios', component: UsersComponent},
-            {path: 'consultas', component: ConsultationsComponent},
+            {path: 'empleados', component: WorkersComponent , canActivate: [VetGuard]},
+            {path: 'proveedores', component: ProvidersComponent , canActivate: [VetGuard]},
+            {path: 'productos', component: ProductsComponent , canActivate: [VetGuard]},
+            {path: 'usuarios', component: UsersComponent, canActivate: [AdminGuard]},
+            {path: 'consultas', component: ConsultationsComponent, canActivate: [VetGuard]},
             {path: 'actividades', component: ActivitiesComponent},
             {path: 'configuracion', component: SettingsComponent},
-            {path: 'informes', component: ReportsComponent},
-            {path: 'puestos', component: JobsComponent},
-            {path: 'tipos-pelo', component: HairsComponent},
-            {path: 'caracter', component: CharactersComponent},
-            {path: 'habitat', component: HabitatsComponent},
-            {path: 'especies', component: SpeciesComponent},
-            {path: 'razas', component: RacesComponent},
-            {path: 'unidades', component: MeasurementunitsComponent},
+            {path: 'informes', component: ReportsComponent, canActivate: [AdminGuard]},
+            {path: 'puestos', component: JobsComponent, canActivate: [AdminGuard]},
+            {path: 'tipos-pelo', component: HairsComponent, canActivate: [AdminGuard]},
+            {path: 'caracter', component: CharactersComponent, canActivate: [AdminGuard]},
+            {path: 'habitat', component: HabitatsComponent, canActivate: [AdminGuard]},
+            {path: 'especies', component: SpeciesComponent, canActivate: [AdminGuard]},
+            {path: 'razas', component: RacesComponent, canActivate: [AdminGuard]},
+            {path: 'unidades', component: MeasurementunitsComponent, canActivate: [AdminGuard]},
             {path: '', redirectTo: 'home', pathMatch: 'full'}
         ]
     }

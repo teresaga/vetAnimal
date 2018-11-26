@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -13,8 +14,9 @@ export class UserService {
   public identity;
   public token;
 
-  constructor(private _http: HttpClient) { 
+  constructor(private _http: HttpClient,private _route: ActivatedRoute, private _router: Router,) { 
     this.url = GLOBAL.url;
+    this.identity = this.getIdentity();
   }
 
   register(user_to_register: User, token): Observable<any>{
@@ -95,5 +97,17 @@ export class UserService {
 
   getUserCount(): Observable<any>{
     return this._http.get(this.url+'users-count');
+  }
+
+  logout(){
+    localStorage.clear();
+    this.identity = null;
+    this._router.navigate(['/login']);
+  }
+
+  estaLogueado(){
+    var token = this.getToken();
+    //console.log(token);
+    return (token ) ? true : false;
   }
 }
