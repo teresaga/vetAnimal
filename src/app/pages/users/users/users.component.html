@@ -89,32 +89,20 @@
     
                 <div class="form-group">
                 <label class="empleado">Empleado</label>
-            
-                <div class="input-group">
-                    <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
+                <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
                     <option [value]="null">Seleccionar...</option>
                     <option *ngFor="let worker of workers; index as i" [value]="worker._id">{{i+1}}.- {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</option>
                 </select> 
-                    <span class="input-group-append">
-                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
-                    </span>
-                </div>
                 </div>
     
                 <div class="form-group">
                 <label class="tipo">Rol</label>
-            
-                <div class="input-group">
-                    <select class="form-control custom-select" id="role" name="role" formControlName="role">
+                <select class="form-control custom-select" id="role" name="role" formControlName="role">
                     <option [value]="null">Seleccionar...</option>
                     <option [value]="'ADMIN'">1.- Administrador</option>
                     <option [value]="'VET'">2.- Veterinario</option>
                     <option [value]="'CAJERO'">3.- Cajero</option>
                     </select> 
-                    <span class="input-group-append">
-                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
-                    </span>
-                </div>
                 </div>
     
                 <div class="form-group">
@@ -153,32 +141,20 @@
     
                 <div class="form-group">
                 <label class="empleado">Empleado</label>
-            
-                <div class="input-group">
-                    <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
+                <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
                     <option [value]="null">Seleccionar...</option>
                     <option *ngFor="let worker of workers; index as i" [value]="worker._id">{{i+1}}.- {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</option>
                 </select> 
-                    <span class="input-group-append">
-                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
-                    </span>
-                </div>
                 </div>
     
                 <div class="form-group">
                 <label class="tipo">Rol</label>
-            
-                <div class="input-group">
-                    <select class="form-control custom-select" id="role" name="role" formControlName="role">
+                <select class="form-control custom-select" id="role" name="role" formControlName="role">
                     <option [value]="null">Seleccionar...</option>
                     <option [value]="'ADMIN'">1.- Administrador</option>
                     <option [value]="'VET'">2.- Veterinario</option>
                     <option [value]="'CAJERO'">3.- Cajero</option>
                     </select> 
-                    <span class="input-group-append">
-                    <button class="btn btn-primary" type="button"><i class="fe fe-plus-circle"></i></button>
-                    </span>
-                </div>
                 </div>
     
                 <div class="alert alert-success" *ngIf="status2 == 'success'">
