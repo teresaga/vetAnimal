@@ -45,6 +45,12 @@ export class ProductService {
     return this._http.put(this.url+'activate-product/'+id, params, {headers: headers});
   }
 
+  changeStockProduct(token, id,stock): Observable<any>{
+    let params = "";
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'stock-product/'+id+'?stock='+stock,params, {headers: headers});
+  }
   getProduct(id): Observable<any>{
     return this._http.get(this.url+'product/'+id);
   }

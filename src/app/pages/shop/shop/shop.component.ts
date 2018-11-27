@@ -22,6 +22,8 @@ declare var $:any;
 })
 export class ShopComponent implements OnInit{
   @ViewChild('information') modalInfo: Element;
+  @ViewChild('information2') modalInfo2: Element;
+  @ViewChild('information3') modalInfo3: Element;
   @ViewChild('confirmar') modalConfirmar: Element;
 
   //Variables para realizar busquedas
@@ -43,6 +45,7 @@ export class ShopComponent implements OnInit{
   //Producto seleccionado en el select de busqueda
   public seleccionProducto = null;
   public seleccionCliente = null;
+  public NombreProducto = null;
 
   //Variable para mostrar el total del producto
   public totalVenta = 0;
@@ -58,7 +61,7 @@ export class ShopComponent implements OnInit{
     private _saleService: SaleService,
   ) { 
     this.sale = new Sale('','','','');
-    this.saledetail =  new Saledetails('','','','','','','');
+    this.saledetail =  new Saledetails('','','','','','','','');
     this.product = new Product('','','','','','','','','','','','','');
     this.token = this._userService.getToken();
     this.url = GLOBAL.url;
@@ -78,50 +81,84 @@ export class ShopComponent implements OnInit{
   }
 
   onSubmitAddSale(){
-
-    this.sale.amount = (this.totalVenta).toString();
-    this.sale.client = this.seleccionCliente;
-    console.log(this.seleccionCliente);
-    this._saleService.addSale(this.token, this.sale).subscribe(
-      response => {
-        if(!response.sale){
-          this.status = 'error';
-        }else{
-          this.status = 'success';
-          this.sale = response.sale;
-
-          this.saledetail.sale=this.sale._id;
-          for (let detail of this.saledetails) {
-            this.saledetail.product=detail.product;
-            this.saledetail.price=detail.price;
-            this.saledetail.quantity=detail.quantity;
-            this._saleService.addSaleDetails(this.token, this.saledetail).subscribe(
-              response => {
-                if(!response.saledetail){
-                  this.status = 'error';
-                }else{
-                  this.status = 'success';
-                  this.saledetail = response.saledetail;
-                  this.cancelarVenta();
-                }
-              },
-              error => {
-                var errorMessage = <any>error;
-                if (errorMessage != null){
-                  this.status = 'error';
-                }
-              }
-            );
-          }
-        }
-      },
-      error => {
-        var errorMessage = <any>error;
-        if (errorMessage != null){
-          this.status = 'error';
+    this.NombreProducto="";
+    var ventaValida = "";
+    for (let detail2 of this.saledetails) {
+      if(detail2.stock!="null"){ console.log("hola");
+        var stockintermedio:number = +detail2.stock- +detail2.quantity; 
+        if(stockintermedio < 0 && ventaValida==""){
+          ventaValida = "f";
+          this.NombreProducto=detail2.name;
         }
       }
-    );
+    }
+    if(ventaValida==""){
+      this.sale.amount = (this.totalVenta).toString();
+      this.sale.client = this.seleccionCliente;
+      console.log(this.seleccionCliente);
+      this._saleService.addSale(this.token, this.sale).subscribe(
+        response => {
+          if(!response.sale){
+            this.status = 'error';
+          }else{
+            this.status = 'success';
+            this.sale = response.sale;
+
+            this.saledetail.sale=this.sale._id;
+            for (let detail of this.saledetails) {
+              this.saledetail.product=detail.product;
+              this.saledetail.price=detail.price;
+              this.saledetail.quantity=detail.quantity;
+              this._saleService.addSaleDetails(this.token, this.saledetail).subscribe(
+                response => {
+                  if(!response.saledetail){
+                    this.status = 'error';
+                  }else{
+                    this.status = 'success';
+                    this.saledetail = response.saledetail;
+                    this.cancelarVenta();
+                  }
+                },
+                error => {
+                  var errorMessage = <any>error;
+                  if (errorMessage != null){
+                    this.status = 'error';
+                  }
+                }
+              );
+              //VERIFICA SI EL PRODUCTO NO ES UN SERVICIO Y ACTUALIZA SU STOCK
+              if(detail.stock!="null"){
+                var stockActual= +detail.stock - +detail.quantity;
+                this._productService.changeStockProduct(this.token, detail.product, stockActual).subscribe(
+                  response => {
+                    if(!response.product){
+                    }else{
+                      this.getProductsA();
+                    }
+                  },
+                  error => {
+                    var errorMessage = <any>error;
+                    if (errorMessage != null){
+                    }
+                  }
+                );
+              }
+              
+            }
+          }
+        },
+        error => {
+          var errorMessage = <any>error;
+          if (errorMessage != null){
+            this.status = 'error';
+          }
+        }
+      );
+    }else{
+      this.modalService.dismissAll();
+      this.openModalInfo(this.modalInfo3);
+    }
+    
   }
   ///////////////////////////////////////////////////////////
   //            AGREGAR PRODUCTOS A LA LISTA               //
@@ -142,9 +179,19 @@ export class ShopComponent implements OnInit{
         if(response.product){
           this.product = response.product;
 
-          this.saledetails.push({_id: '',sale: '', name: this.product.description ,product: this.seleccionProducto, quantity: '1', price: this.product.price, amount: this.product.price});
-
-          this.totalVenta=this.totalVenta + +this.product.price;
+          if(this.product.typeproduct=="5bebc3d03cf30da624b42291" && this.product.stock=="0"){
+            this.seleccionProducto="null";
+            this.openModalInfo(this.modalInfo2);
+          }else{
+            var stock;
+            if(this.product.typeproduct=="5bebc3d03cf30da624b42291"){
+              stock = this.product.stock;
+            }else{
+              stock = "null";
+            }
+            this.saledetails.push({_id: '',sale: '', name: this.product.description ,product: this.seleccionProducto, quantity: '1', price: this.product.price, amount: this.product.price, stock: stock});
+            this.totalVenta=this.totalVenta + +this.product.price;
+          }
         }
       }, error => {
         console.log(<any>error);

@@ -6,7 +6,8 @@ export class Saledetails{
         public name: String,
         public quantity: string,
         public price: string,
-        public amount: string
+        public amount: string,
+        public stock: string
     ){
     }
 }
