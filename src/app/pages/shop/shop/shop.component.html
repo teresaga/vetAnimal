@@ -95,6 +95,38 @@
 </ng-template>
 <!--MODAL INFO-->
 
+<!--MODAL INFO-->
+<ng-template #information2 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">ERROR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <h5 class="form-label">No hay existencias del producto seleccionado</h5>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL INFO-->
+
+<!--MODAL INFO-->
+<ng-template #information3 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">ERROR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <h5 class="form-label">No hay suficientes existencias del producto: <strong>{{NombreProducto}}</strong></h5>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL INFO-->
+
 <!--MODAL CONFIRMAR-->
 <ng-template #confirmar let-modal>
     <div class="modal-header">
