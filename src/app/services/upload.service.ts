@@ -17,10 +17,11 @@ export class UploadService {
     return new Promise(function(resolve, reject){
       var fromData: any = new FormData();
       var xhr = new XMLHttpRequest();
-
+      fromData.append(name, files[0], files[0].name);
+      /*
       for(var i = 0; i < files.length; i++){
         fromData.append(name, files[i], files[i].name);
-      }
+      }*/
 
       xhr.onreadystatechange = function(){
         if(xhr.readyState == 4){
@@ -32,7 +33,7 @@ export class UploadService {
         }
       }
 
-      xhr.open('POST', url, true);
+      xhr.open('PUT', url, true);
       xhr.setRequestHeader('Authorization',token);
       xhr.send(fromData);
     });

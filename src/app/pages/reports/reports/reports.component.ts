@@ -6,6 +6,8 @@ import { Product } from 'src/app/models/product';
 import { ProductService } from '../../../services/product.service';
 import { Client } from '../../../models/client';
 import { ClientService } from '../../../services/client.service';
+import { Corte } from '../../../models/corte';
+import { CorteService } from '../../../services/corte.service';
 
 import { Tables } from 'src/app/models/tables';
 import { Sale } from 'src/app/models/sale';
@@ -31,6 +33,7 @@ export class ReportsComponent implements OnInit {
   public sales: Sale[];
   public clients: Client[];
   public products: Product[];
+  public cortes: Corte[];
   public tabledetailsClient: Array<Tables> = [];
   public tabledetailsProduct: Array<Tables> = [];
 
@@ -41,6 +44,7 @@ export class ReportsComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private _clientService: ClientService,
+    private _corteService: CorteService,
     private _userService: UserService,
     private _productService: ProductService,
     private _saleService: SaleService,
@@ -80,6 +84,9 @@ export class ReportsComponent implements OnInit {
     if(this.tipoReporte=="3"){
       this.tabledetailsProduct.splice(0,this.tabledetailsProduct.length);
       this.getProducts();
+    }
+    if(this.tipoReporte=="4"){
+      this.getCortes();
     }
   }
 
@@ -211,6 +218,25 @@ export class ReportsComponent implements OnInit {
     
   }
 
+  ////////////////////////////////////////////
+  //    REPORTE DE CORTES DE CAJA            //
+  ////////////////////////////////////////////
+  //Obtener registros de Productos
+  getCortes(){
+    this._corteService.getCortes(this.token, this.pag, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
+      response => {
+        if(response.cortes){
+          this.cortes= response.cortes;
+          
+        this.totalRegistros = response.total;
+        }
+        
+      }, error => {
+        console.log(<any>error);
+      } 
+      
+    );
+  }
   ////////////////////////////////////////////
   //               PAGINACION               //
   ////////////////////////////////////////////

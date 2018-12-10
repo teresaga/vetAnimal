@@ -11,6 +11,7 @@
                       <option value="1">Reporte de ventas</option>
                       <option value="2">Ventas por cliente</option>
                       <option value="3">Ventas por Producto/Servicio</option>
+                      <option value="4">Cortes de Caja</option>
                   </select>
                 </div>
                 <div class="form-group col-md-3 col-lg-3" *ngIf="tipoReporte!=='3'">
@@ -64,7 +65,7 @@
                         <td><span class="text-muted">{{i+1+pag}}</span></td>
                         <td>{{sale.amount}}</td>
                         <td *ngIf="sale.client">{{sale.client.name + " " + sale.client.paternal_surname}}<span *ngIf="sale.client.maternal_surname">{{" " + sale.client.maternal_surname}}</span></td><td *ngIf="!sale.client">---</td>
-                        <td>{{sale.date | dates}}</td>
+                        <td>{{sale.date | datetime}}</td>
                     <td>
                         <a class="icon" (click)="openModaldetails(detailssale, sale._id)">
                             <i class="fe fe-eye mr-2" style="color:blue;" data-toggle="tooltip" title="Ver"></i>
@@ -113,6 +114,33 @@
                         <td>{{tabledetailsp.client}}</td>
                         <td>{{tabledetailsp.quantity}}</td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--VENTAS-->
+    <div class="col-12 card" *ngIf="tipoReporte==='4'">
+        <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap">
+                <thead>
+                    <tr>
+                        <th class="w-1">#</th>
+                        <th>Fecha y hora Inicio</th>
+                        <th>Fecha y hora Cierre</th>
+                        <th>Ganancia</th>
+                        <th>Depósito</th>
+                        <th>Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let corte of cortes; index as i">
+                        <td><span class="text-muted">{{i+1+pag}}</span></td>
+                        <td>{{corte.start_date | datetime}}</td>
+                        <td>{{corte.finish_date | datetime}}</td>
+                        <td>{{corte.money_sales}}</td>
+                        <td>{{corte.money_save}}</td>
+                        <td>{{corte.user.username}}</td>
+                </tr>
                 </tbody>
             </table>
         </div>

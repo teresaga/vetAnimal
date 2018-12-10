@@ -5,11 +5,6 @@
         <img src="../../assets/img/vetanimal.png" class="header-brand-img" alt="tabler logo">
       </a>
         <div class="d-flex order-lg-2 ml-auto">
-          <div class="d-none d-md-flex">
-            <a class="nav-link icon" [routerLink]="['/actividades']" [routerLinkActive]="['active']">
-                <i class="far fa-calendar-alt"></i>
-            </a>
-          </div>
         <!--FOTO DE USUARIO Y CONFIGURACIONES-->
         <div class="dropdown">
           <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
@@ -18,7 +13,7 @@
             </div>
             <span class="ml-2 d-none d-lg-block">
               <span class="text-default">{{identity.username}}</span>
-              <small *ngIf="identity.role=='ADMIN'" class="text-muted d-block mt-1">Administrator</small>
+              <small *ngIf="identity.role=='ADMIN'" class="text-muted d-block mt-1">Administrador</small>
               <small *ngIf="identity.role=='VET'" class="text-muted d-block mt-1">Veterinario</small>
               <small *ngIf="identity.role=='CAJERO'" class="text-muted d-block mt-1">Cajero</small>
             </span>
@@ -54,37 +49,37 @@
               <i class="fe fe-home"></i> Home
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="identity.role=='CAJERO'">
             <a [routerLink]="['/tienda']" [routerLinkActive]="['active']" class="nav-link">
               <i class="fe fe-shopping-cart"></i> Tienda
             </a>
           </li>
-          <li class="nav-item" *ngIf="identity.role=='ADMIN' || identity.role=='VET'">
+          <li class="nav-item" *ngIf="identity.role=='VET'">
             <a [routerLink]="['/consultas']" [routerLinkActive]="['active']" class="nav-link">
               <i class="far fa-clipboard"></i> Consultas
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="identity.role=='VET'">
             <a [routerLink]="['/clientes']" [routerLinkActive]="['active']" class="nav-link">
               <i class="fe fe-user"></i> Clientes
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="identity.role=='VET'">
             <a [routerLink]="['/animales']" [routerLinkActive]="['active']" class="nav-link">
               <i class="fas fa-paw"></i> Mascotas
             </a>
           </li>
-          <li class="nav-item" *ngIf="identity.role=='ADMIN' || identity.role=='VET'">
+          <li class="nav-item" *ngIf="identity.role=='ADMIN'">
             <a [routerLink]="['/empleados']" [routerLinkActive]="['active']" class="nav-link">
               <i class="fe fe-user"></i> Empleados
             </a>
           </li>
-          <li class="nav-item" *ngIf="identity.role=='ADMIN' || identity.role=='VET'">
+          <li class="nav-item" *ngIf="identity.role=='ADMIN'">
             <a [routerLink]="['/proveedores']" [routerLinkActive]="['active']" class="nav-link">
               <i class="fe fe-truck"></i> Proveedores
             </a>
           </li>
-          <li class="nav-item" *ngIf="identity.role=='ADMIN' || identity.role=='VET'">
+          <li class="nav-item" *ngIf="identity.role=='ADMIN'">
             <a [routerLink]="['/productos']" [routerLinkActive]="['active']" class="nav-link">
               <i class="fe fe-box"></i> Productos
             </a>
@@ -94,6 +89,12 @@
               <i class="fas fa-clipboard-list"></i> Informes
             </a>
           </li>
+          
+          <li class="nav-item" *ngIf="identity.role=='ADMIN' || identity.role=='CAJERO'">
+              <a [routerLink]="['/actividades']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="far fa-calendar-alt"></i> Agenda
+              </a>
+            </li>
           <li class="nav-item dropdown" *ngIf="identity.role=='ADMIN'">
             <a [routerLinkActive]="['active']" class="nav-link" data-toggle="dropdown"><i class="fe fe-settings"></i> Panel de Control</a>
             <div class="dropdown-menu dropdown-menu-arrow">

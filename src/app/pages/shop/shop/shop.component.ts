@@ -7,6 +7,8 @@ import { Product } from 'src/app/models/product';
 import { ProductService } from '../../../services/product.service';
 import { Client } from '../../../models/client';
 import { ClientService } from '../../../services/client.service';
+import { Corte } from '../../../models/corte';
+import { CorteService } from '../../../services/corte.service';
 
 import { Sale } from 'src/app/models/sale';
 import { Saledetails } from 'src/app/models/saledetails';
@@ -24,23 +26,32 @@ export class ShopComponent implements OnInit{
   @ViewChild('information') modalInfo: Element;
   @ViewChild('information2') modalInfo2: Element;
   @ViewChild('information3') modalInfo3: Element;
+  @ViewChild('information4') modalInfo4: Element;
   @ViewChild('confirmar') modalConfirmar: Element;
 
   //Variables para realizar busquedas
+  corteForm: FormGroup;
+  public fechaactual = null;
   public sale: Sale;
   public saledetail: Saledetails;
   public product: Product;
+  public corte: Corte;
+  public corte2: Corte;
   public status: string;
+  public status2: string;
   public id: string;
 
   //token
   public url: string;
   public token;
+  public identity;
 
   //Arrays para mostrar en select y los productos en la tabla
   public products: Product[];
   public clients: Client[];
   public saledetails: Array<Saledetails> = [];
+  
+  public salesCorte: Array<Sale> = [];//PARA OBTENER VENTAS
 
   //Producto seleccionado en el select de busqueda
   public seleccionProducto = null;
@@ -48,6 +59,7 @@ export class ShopComponent implements OnInit{
   public NombreProducto = null;
 
   //Variable para mostrar el total del producto
+  public corteGanancias = 0;
   public totalVenta = 0;
   public cambio = 0;
   public importeVenta = 0;
@@ -56,6 +68,7 @@ export class ShopComponent implements OnInit{
     private pf: FormBuilder,
     private modalService: NgbModal,
     private _clientService: ClientService,
+    private _corteService: CorteService,
     private _userService: UserService,
     private _productService: ProductService,
     private _saleService: SaleService,
@@ -63,15 +76,36 @@ export class ShopComponent implements OnInit{
     this.sale = new Sale('','','','');
     this.saledetail =  new Saledetails('','','','','','','','');
     this.product = new Product('','','','','','','','','','','','','');
+    this.corte = new Corte('','','','','','','');
+    this.corte2 = new Corte('','','','','','','');
     this.token = this._userService.getToken();
+    this.identity= this._userService.getIdentity();
     this.url = GLOBAL.url;
     this.status = "";
+    this.status2 = "";
+    
   }
 
   ngOnInit() {
     this.getProductsA();
     this.getClientsA();
+    this.corteForm = this.pf.group({
+      money_save: ['', Validators.required]
+    });
   }
+
+  openModal(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'sm'}).result.then((result) => {
+      
+    }, (reason) => {
+      if(this.status2=='success'){
+        this.status2='';
+        this.corteForm.reset();
+      }
+    });
+    this.getSales();
+  }
+
 
   openModalInfo(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'sm'}).result.then((result) => {
@@ -84,7 +118,7 @@ export class ShopComponent implements OnInit{
     this.NombreProducto="";
     var ventaValida = "";
     for (let detail2 of this.saledetails) {
-      if(detail2.stock!="null"){ console.log("hola");
+      if(detail2.stock!="null"){ 
         var stockintermedio:number = +detail2.stock- +detail2.quantity; 
         if(stockintermedio < 0 && ventaValida==""){
           ventaValida = "f";
@@ -95,7 +129,7 @@ export class ShopComponent implements OnInit{
     if(ventaValida==""){
       this.sale.amount = (this.totalVenta).toString();
       this.sale.client = this.seleccionCliente;
-      console.log(this.seleccionCliente);
+
       this._saleService.addSale(this.token, this.sale).subscribe(
         response => {
           if(!response.sale){
@@ -143,6 +177,22 @@ export class ShopComponent implements OnInit{
                   }
                 );
               }
+              //AGREGAR CORTE DE CAJA
+              this._corteService.getUltimoCorte(this.token).subscribe(
+                response => {
+                  if(response.corte){
+                    this.corte = response.corte;
+
+                    if(this.corte.status=='T'){
+                      this._corteService.addCorte(this.token, this.corte).subscribe();
+                    }
+                  }else{
+                    this._corteService.addCorte(this.token, this.corte).subscribe();
+                  }
+                }, error => {
+                  console.log(<any>error);
+                } 
+              );
               
             }
           }
@@ -160,6 +210,33 @@ export class ShopComponent implements OnInit{
     }
     
   }
+
+  onSubmitAddCorte(){
+    if (this.corte2.money_sales=="0"){
+      this.openModalInfo(this.modalInfo4);
+      this.corteForm.reset();
+    }else{
+      this.corte2.money_save = this.corteForm.get('money_save').value;
+      this.corte2.user = this.identity._id;
+
+      this._corteService.editCorte(this.token, this.corte2._id, this.corte2).subscribe(
+        response => {
+          if(!response.corte){
+            this.status2 = 'error';
+          }else{
+            this.status2 = 'success';
+          }
+        },
+        error => {
+          var errorMessage = <any>error;
+          if (errorMessage != null){
+            this.status2 = 'error';
+          }
+        }
+      );
+    }
+  }
+
   ///////////////////////////////////////////////////////////
   //            AGREGAR PRODUCTOS A LA LISTA               //
   ///////////////////////////////////////////////////////////
@@ -239,7 +316,7 @@ export class ShopComponent implements OnInit{
     this.saledetails.splice(0,this.saledetails.length);
   }
   ///////////////////////////////////////////////////////////
-  //                BUSQUEDA DE PRODUCTOS                  //
+  //                      BUSQUEDAS                         //
   ///////////////////////////////////////////////////////////
   //Obtener registros de Productos
   getProductsA(){
@@ -270,4 +347,50 @@ export class ShopComponent implements OnInit{
     );
     
   }
+
+  //Obtener registros de ventas y obtiene la ganancia de las ventas
+  getSales(){
+    this.corteGanancias = 0;
+    var date = new Date();
+    this.fechaactual=date.toISOString();
+    
+    this._corteService.getUltimoCorte(this.token).subscribe(
+      response => {
+        if(response.corte){
+          this.corte2 = response.corte;
+
+          if(this.corte2.status=='T'){
+            this.corte2 = new Corte('','','','','','','','');
+            this.corte2.money_sales = "0";
+          }else{
+            this._saleService.getSalesSinLimite(this.token, this.corte2.start_date, this.fechaactual).subscribe(
+              response => {
+                if(response.sales){
+                  this.salesCorte = response.sales;
+                  for (let sale of this.salesCorte) {
+                    this.corteGanancias = this.corteGanancias + +sale.amount;
+                  }
+
+                  //PONER GANANCIAS
+                  this.corte2.money_sales = this.corteGanancias.toString();
+                }
+              }, error => {
+                console.log(<any>error);
+              } 
+              
+            );
+          }
+        }else{
+          
+          this.corte2 = new Corte('','','','','','','','');
+          this.corte2.money_sales = "0";
+        }
+      }, error => {
+        console.log(<any>error);
+      }
+    );
+    
+  }
+
+
 }
