@@ -97,20 +97,24 @@
                     <td>{{activity.start_date | dates}}</td>
                     <td *ngIf="activity.end_date != '' && activity.end_date != null">{{activity.end_date | dates}}</td><td *ngIf="activity.end_date == '' || activity.end_date == null">---</td>
                     <td>
-                        <span [ngClass]="{'bg-success': activity.status === 'PE', 'bg-warning': activity.status === 'PR', 'bg-secondary': activity.status === 'T'}" class="status-icon"></span>
+                        <span [ngClass]="{'bg-success': activity.status === 'PE', 'bg-warning': activity.status === 'PR', 'bg-secondary': activity.status === 'T', 'bg-danger': activity.status === 'C'}" class="status-icon"></span>
                         <span *ngIf="activity.status === 'PE'" >Pendiente</span>
                         <span *ngIf="activity.status === 'PR'" >En Proceso</span>
                         <span *ngIf="activity.status === 'T'" >Terminada</span>
+                        <span *ngIf="activity.status === 'C'" >Cancelada</span>
                     </td>
                     <td>
-                        <a class="icon" *ngIf="activity.status!=='T'" (click)="openModaledit(editactivity, activity)">
+                        <a class="icon" *ngIf="activity.status!=='T' && activity.status!=='C'" (click)="openModaledit(editactivity, activity)">
                             <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>
                         <a class="icon" (click)="openModalStatus(startactivity, activity)" *ngIf="activity.status==='PE'">
                             <i class="far fa-play-circle mr-2" style="color:green;" data-toggle="tooltip" title="Empezar"></i>
                         </a>
                         <a class="icon" (click)="openModalStatus(finishactivity, activity)" *ngIf="activity.status==='PR'">
-                            <i class="far fa-pause-circle mr-2" style="color:red;" data-toggle="tooltip" title="Terminar"></i>
+                            <i class="far fa-pause-circle mr-2" style="color:orange;" data-toggle="tooltip" title="Terminar"></i>
+                        </a>
+                        <a class="icon" (click)="openModalStatus(cancelactivity, activity)" *ngIf="activity.status!=='T' && activity.status!=='C'">
+                            <i class="fas fa-ban mr-2" style="color:red;" data-toggle="tooltip" title="Cancelar"></i>
                         </a>
                     </td>
                 </tr>
@@ -293,7 +297,22 @@
     </div>
 </ng-template>
     <!--MODAL EDIT END-->
-
+<!--MODAL FINISH-->
+<ng-template #cancelactivity let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">CANCELAR ACTIVIDAD</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <p>¿Desea cancelar la actividad?</p>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Cancel')">Cancelar Actividad</button>
+    </div>
+</ng-template>
+<!--MODAL FINISH END-->
 <!--MODAL FINISH-->
 <ng-template #finishactivity let-modal>
     <div class="modal-header">

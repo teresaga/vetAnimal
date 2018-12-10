@@ -149,6 +149,9 @@ export class ActivitiesComponent implements OnInit {
       if(result=='Activate'){
         this.startActivity(activity);
       }
+      if(result=='Cancel'){
+        this.cancelActivity(activity);
+      }
     }, (reason) => {
     });
   }
@@ -225,6 +228,18 @@ export class ActivitiesComponent implements OnInit {
   ////////////////////////////////////////////////////////////
   //             CAMBIAR ESTADO DE ACTIVIDAD                //
   ////////////////////////////////////////////////////////////
+  cancelActivity(activity : Activity){
+    this._activityService.cancelActivity(this.token, activity._id).subscribe(
+      response => {
+        if(!response.activity){
+          console.log("Error en el servidor");
+        }
+        this.getActivities();
+      },error  => {
+        console.log("Error en el servidor");
+      }
+    );
+  }
   finishActivity(activity : Activity){
     this._activityService.finishActivity(this.token, activity._id).subscribe(
       response => {

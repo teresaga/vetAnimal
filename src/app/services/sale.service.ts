@@ -37,6 +37,11 @@ export class SaleService {
     return this._http.get(this.url+'sales?pag='+pag+'&datestart='+datestart+'&dateend='+dateend,{headers: headers});
   }
 
+  getSalesSinLimite(token,datestart, dateend ): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'sales-sinlimite?datestart='+datestart+'&dateend='+dateend,{headers: headers});
+  }
+
   getSaleClient(token, id, datestart, dateend ): Observable<any>{
     let headers = new HttpHeaders().set('Authorization', token);
     return this._http.get(this.url+'sales-client/'+id+'?datestart='+datestart+'&dateend='+dateend,{headers: headers});

@@ -59,6 +59,10 @@
           </table>
       </div>
   </div>
+
+  <div class="">
+    <button  (click)="openModal(addcorte)" class="btn btn-warning">CORTE DE CAJA</button>
+    </div>
   <div class="col-4 card ml-auto">
       <div class="card-body">
           <h3>Total: {{totalVenta}}</h3>
@@ -78,6 +82,39 @@
       </div>
   </div>
 </div>
+
+
+<!--MODAL ALTA-->
+<ng-template #addcorte let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">CORTE DE CAJA</h4>
+      <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+  </div>
+
+  <div class="modal-body">
+      <form [formGroup]="corteForm" (ngSubmit)="onSubmit()">  
+        <div class="form-group">
+            <label for="nombre" class="form-label">Ganancias por ventas</label>&nbsp;
+            {{corteGanancias}}  
+        </div>
+
+          <div class="form-group">
+              <label class="money_save" class="form-label">Depósito de ventas</label>
+              <input class="form-control" id="money_save" name="money_save" type="number" formControlName="money_save"> 
+
+          </div>
+
+          <div class="alert alert-success" *ngIf="status2 == 'success'">
+              Guardado exitosamente.
+          </div>
+      </form>
+  </div>
+  <div class="modal-footer d-flex">
+      <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
+      <input type="submit" class="btn btn-success" value="Guardar" name="enviar" id ="enviar" (click)="onSubmitAddCorte()" [disabled]="!corteForm.valid">
+  </div>
+</ng-template>
+<!--MODAL ALTA END-->
 
 <!--MODAL INFO-->
 <ng-template #information let-modal>
@@ -123,6 +160,22 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-danger cerrar" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+<!--MODAL INFO-->
+
+<!--MODAL INFO-->
+<ng-template #information4 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">ERROR</h4>
+        <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+    </div>
+    <div class="modal-body">
+        <h5 class="form-label">No se ha realizado ninguna venta</h5>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning cerrar" (click)="modal.dismiss()">Cerrar</button>
     </div>
 </ng-template>
 <!--MODAL INFO-->

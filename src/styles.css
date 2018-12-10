@@ -9,6 +9,19 @@ Dashboard UI
  * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+
+ 
+ .loader {
+  position: fixed;
+  margin-left: 50%;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  opacity: .8;
+}
+
+ /*ESTILOS*/
  .image_for_edit img{
 	width: 60px;
 }

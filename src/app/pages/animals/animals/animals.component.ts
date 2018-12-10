@@ -162,8 +162,8 @@ export class AnimalsComponent implements OnInit {
     this.animalForm.get('client').setValue(animal.client._id);
     this.animalForm.get('name').setValue(animal.name);
     this.animalForm.get('sex').setValue(animal.sex);    
-    var p = animal.birthdate;
-    this.animalForm.get('birthdate').setValue(  p.split('/')[2] + "-" + p.split('/')[1] + "-" + p.split('/')[0]);
+    //var p = animal.birthdate;
+    this.animalForm.get('birthdate').setValue( animal.birthdate);
 
     this.animalForm.get('weight').setValue(animal.weight);
     this.animalForm.get('height').setValue(animal.height);
@@ -400,6 +400,7 @@ export class AnimalsComponent implements OnInit {
 
           if(this.fileToUpload){
             //Subir imagen del animal
+            //console.log(this.fileToUpload);
             this._uploadService.makeFileRequest(this.url+'upload-image-animal/'+this.animal._id, [], this.fileToUpload, this.token, 'image')
             .then((result: any) => {
               this.animal.image = result.image;

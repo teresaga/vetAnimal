@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/vet-animal",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

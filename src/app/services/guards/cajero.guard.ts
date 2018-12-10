@@ -16,7 +16,7 @@ export class CajeroGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     let identity =  this._userService.getIdentity();
     
-    if(identity && (identity.role == "CAJERO" || identity.role == "VET" || identity.role == "ADMIN")){
+    if(identity && (identity.role == "CAJERO" || identity.role == "ADMIN")){
       return true;
     }else{
       this._userService.logout();

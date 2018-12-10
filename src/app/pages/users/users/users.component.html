@@ -37,19 +37,19 @@
               </thead>
               <tbody>
                 <tr *ngFor="let user of users | searchUsers: busqueda; index as i">
-                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">
+                    <td *ngIf="user.surname!='admin' ">
                         <span *ngIf="identity._id!='admin'" class="text-muted">{{i+1+pag}}</span>
                         <span *ngIf="identity._id=='admin'" class="text-muted">{{i+1+pag-1}}</span>
                     </td>
-                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">{{user.username}}</td>
-                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">{{user.worker.name + " " +user.worker.paternal_surname +" " + user.worker.maternal_surname}}</td>
-                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">{{user.role}}</td>
-                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">{{user.start_date | dates}}</td>
-                      <td *ngIf="user.end_date != '' && user.end_date != null && user.surname!='admin' && identity._id!=user._id">{{user.end_date | dates}}</td><td *ngIf="user.end_date == '' || user.end_date == null && user.surname!='admin' && identity._id!=user._id">---</td>
-                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">
+                    <td *ngIf="user.surname!='admin'">{{user.username}}</td>
+                    <td *ngIf="user.surname!='admin'"><span *ngIf="user.worker">{{user.worker.name + " " +user.worker.paternal_surname +" " + user.worker.maternal_surname}}</span></td>
+                    <td *ngIf="user.surname!='admin'">{{user.role}}</td>
+                    <td *ngIf="user.surname!='admin'">{{user.start_date | dates}}</td>
+                      <td *ngIf="user.end_date != '' && user.end_date != null && user.surname!='admin'">{{user.end_date | dates}}</td><td *ngIf="user.end_date == '' || user.end_date == null && user.surname!='admin'">---</td>
+                    <td *ngIf="user.surname!='admin' ">
                         <span [ngClass]="{'bg-success': user.status === 'A', 'bg-danger': user.status === 'B'}" class="status-icon"></span> {{user.status}}
                     </td>
-                    <td *ngIf="user.surname!='admin' && identity._id!=user._id">
+                    <td *ngIf="user.surname!='admin' ">
                         <a class="icon" (click)="openModaledit(edituser, user)">
                             <i class="fe fe-edit mr-2" style="color:orange;" data-toggle="tooltip" title="Editar"></i>
                         </a>

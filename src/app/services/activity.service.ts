@@ -30,6 +30,12 @@ export class ActivityService {
 
     return this._http.put(this.url+'update-activity/'+id, params, {headers: headers});
   }
+  cancelActivity(token, id): Observable<any>{
+    let params = "";
+    let headers = new HttpHeaders().set('Content-Type','application/json').set('Authorization', token);
+
+    return this._http.put(this.url+'cancel-activity/'+id, params, {headers: headers});
+  }
 
   finishActivity(token, id): Observable<any>{
     let params = "";
