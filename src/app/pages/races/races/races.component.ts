@@ -18,6 +18,7 @@ export class RacesComponent implements OnInit {
   raceForm: FormGroup;
   public race: Race;
   public status: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -46,6 +47,7 @@ export class RacesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargando = false;
     this.raceForm = this.pf.group({
       name: ['', Validators.required],
       specie: ['', Validators.required]
@@ -190,12 +192,14 @@ export class RacesComponent implements OnInit {
   //          OBTENER RAZAS Y REALIZAR PAGINACION           //
   ////////////////////////////////////////////////////////////
   getRaces(){
+    this.cargando = true;
     this._raceService.getRaces(this.pag).subscribe(
       response => {
         
         if(response.races){
           this.races = response.races;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);

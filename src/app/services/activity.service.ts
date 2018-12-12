@@ -80,4 +80,14 @@ export class ActivityService {
     let headers = new HttpHeaders().set('Authorization', token);
     return this._http.get(this.url+'activities-date?pag='+pag+'&datestart='+datestart+'&dateend='+dateend,{headers: headers});
   }
+
+  getActivities_dateWorker(token, pag: number = 0, datestart, dateend, worker ): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'activities-date-worker?pag='+pag+'&datestart='+datestart+'&dateend='+dateend+'&worker='+worker,{headers: headers});
+  }
+
+  getActivities_animalDateWorker(token, pag: number = 0, animal ,datestart, dateend, worker ): Observable<any>{
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this._http.get(this.url+'activities-animal-date-worker/'+animal+'?pag='+pag+'&datestart='+datestart+'&dateend='+dateend+'&worker='+worker,{headers: headers});
+  }
 }

@@ -90,7 +90,7 @@
             </a>
           </li>
           
-          <li class="nav-item" *ngIf="identity.role=='ADMIN' || identity.role=='CAJERO'">
+          <li class="nav-item">
               <a [routerLink]="['/actividades']" [routerLinkActive]="['active']" class="nav-link">
                 <i class="far fa-calendar-alt"></i> Agenda
               </a>

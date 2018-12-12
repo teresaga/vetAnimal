@@ -18,6 +18,7 @@ export class ProvidersComponent implements OnInit {
   public status: string;
   public status2: string;
   public id: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -43,6 +44,7 @@ export class ProvidersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargando = false;
     this.getProviders();
     
     this.providerForm = this.pf.group({
@@ -201,12 +203,14 @@ export class ProvidersComponent implements OnInit {
   //         OBTENER PROVEEDOR Y REALIZAR PAGINACION        //
   ////////////////////////////////////////////////////////////
   getProviders(){
+    this.cargando = true;
     this._providerService.getProviders(this.token, this.pag).subscribe(
       response => {
         
         if(response.providers){
           this.providers = response.providers;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);

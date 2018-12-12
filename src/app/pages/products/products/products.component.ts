@@ -26,6 +26,7 @@ export class ProductsComponent implements OnInit {
   public status: string;
   public status2: string;
   public id: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -39,6 +40,7 @@ export class ProductsComponent implements OnInit {
   //Variables para mostrar productos y realizar paginacion
   public products: Product[];
   public busqueda;
+  public busqueda5;
   pag: number = 0;
   totalRegistros: number = 0;
 
@@ -64,6 +66,7 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargando = false;
     this.getTypeproductsA();
     this.getMeasurementunitsA();
     this.getProvidersA();
@@ -86,6 +89,11 @@ export class ProductsComponent implements OnInit {
     this.servicio();
   }
 
+  openModalBusqueda(content){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    }, (reason) => {
+    });
+  }
   openModal(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       
@@ -317,12 +325,14 @@ export class ProductsComponent implements OnInit {
   //         OBTENER PRODUCTOS Y REALIZAR PAGINACION        //
   ////////////////////////////////////////////////////////////
   getProducts(){
+    this.cargando = true;
     this._productService.getProducts(this.token, this.pag).subscribe(
       response => {
         
         if(response.products){
           this.products = response.products;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);

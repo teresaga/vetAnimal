@@ -17,6 +17,7 @@ export class HabitatsComponent implements OnInit {
   habitatForm: FormGroup;
   public habitat: Habitat;
   public status: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -41,6 +42,7 @@ constructor(
 }
 
 ngOnInit() {
+  this.cargando = false;
   this.getHabitats();
   this.habitatForm = this.pf.group({
     name: ['', Validators.required]
@@ -164,12 +166,14 @@ activateHabitat(habitat : Habitat){
 //          OBTENER HABITAT Y REALIZAR PAGINACION         //
 ////////////////////////////////////////////////////////////
 getHabitats(){
+  this.cargando = true;
   this._habitatService.getHabitats(this.pag).subscribe(
     response => {
       
       if(response.habitats){
         this.habitats = response.habitats;
         this.totalRegistros = response.total;
+        this.cargando = false;
       }
     }, error => {
       console.log(<any>error);

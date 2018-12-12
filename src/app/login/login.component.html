@@ -32,15 +32,17 @@
                     La contraseña es obligatoria
                 </span>
               </div>
-              <div class="form-group">
-                  
-                <!--
-                <label class="form-label custom-checkbox">
-                    <input type="checkbox" class="form-input"/>
-                    Remember me
-                </label>
-              -->
-              </div>
+              
+              
+  <div class="animated fadeIn" *ngIf="cargando===true">
+
+    
+    <div class="alert alert-dark" *ngIf="cargando">
+      <div class="row">
+          Iniciando sesión &nbsp;&nbsp; <i class="fa fa-refresh fa-spin fa-2x"></i>
+      </div>
+  </div>
+</div>
               <div class="form-footer">
                 <input type="submit" class="btn btn-primary btn-block" value="Entrar">
               </div>

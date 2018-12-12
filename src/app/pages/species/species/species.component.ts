@@ -16,6 +16,7 @@ export class SpeciesComponent implements OnInit {
   specieForm: FormGroup;
   public specie: Specie;
   public status: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -39,6 +40,7 @@ export class SpeciesComponent implements OnInit {
     this.status = "";
   }
   ngOnInit() {
+    this.cargando = false;
     this.getSpecies();
     this.specieForm = this.pf.group({
       name: ['', Validators.required]
@@ -162,12 +164,14 @@ export class SpeciesComponent implements OnInit {
   //          OBTENER ESPECIES Y REALIZAR PAGINACION        //
   ////////////////////////////////////////////////////////////
   getSpecies(){
+    this.cargando = true;
     this._specieService.getSpecies(this.pag).subscribe(
       response => {
         
         if(response.species){
           this.species = response.species;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);

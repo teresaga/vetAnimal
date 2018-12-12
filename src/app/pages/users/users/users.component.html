@@ -20,7 +20,25 @@
           </div>
       </div>
   </div>
-  <div class="col-12 card">
+
+  
+  <div class="">
+    <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
+    <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
+</div>
+
+
+<div class="col-sm-12 animated fadeIn" *ngIf="cargando===true">
+
+    <div class="alert alert-dark text-center">
+        <strong>Cargando</strong>
+        <br>
+        <i class="fa fa-refresh fa-spin fa-2x"></i>
+        <br>
+        <span>Espere por favor</span>
+    </div>
+</div>
+  <div class="col-12 card" *ngIf="!cargando">
       <div class="table-responsive">
           <table class="table card-table table-vcenter text-nowrap">
               <thead>
@@ -89,10 +107,15 @@
     
                 <div class="form-group">
                 <label class="empleado">Empleado</label>
+                <div class="input-group">
                 <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
                     <option [value]="null">Seleccionar...</option>
                     <option *ngFor="let worker of workers; index as i" [value]="worker._id">{{i+1}}.- {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</option>
                 </select> 
+                <span class="input-group-append">
+                <button class="btn btn-primary" type="button" (click)="openModalBusqueda(buscarempleado)"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
                 </div>
     
                 <div class="form-group">
@@ -141,10 +164,15 @@
     
                 <div class="form-group">
                 <label class="empleado">Empleado</label>
+                <div class="input-group">
                 <select class="form-control custom-select" id="worker" name="worker" formControlName="worker">
                     <option [value]="null">Seleccionar...</option>
                     <option *ngFor="let worker of workers; index as i" [value]="worker._id">{{i+1}}.- {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</option>
                 </select> 
+                <span class="input-group-append">
+                <button class="btn btn-primary" type="button" (click)="openModalBusqueda(buscarempleado2)"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
                 </div>
     
                 <div class="form-group">
@@ -204,4 +232,76 @@
     </div>
 </ng-template>
 <!--MODAL ACTIVAR END-->
+
+<!--MODAL BUSCAR EMPLEADO-->
+<ng-template #buscarempleado let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">REALIZAR BÚSQUEDA - EMPLEADO</h4>
+            <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+        </div>
+        <div class="modal-body">
+                <div class="form-group">
+                        <input type="text" class="form-control busq" placeholder="Buscar" [(ngModel)]="busqueda6">
+                    </div>
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap">
+                    <thead>
+                        <tr>
+                            <th class="w-1">#</th>
+                            <th>Nombre</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let worker of workers | busquedas: busqueda6; index as i">
+                            <td><span class="text-muted">{{i+1}}</span></td>
+                            <td> {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</td>
+                          <td>
+                            <button (click)="this.userForm.get('worker').setValue(worker._id); busqueda6='';" [ngClass]="{'active': this.userForm.get('worker').value==worker._id}" class="btn btn-outline-success btn-circle">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ng-template>
+    <!--MODAL INFO-->
+    
+<!--MODAL BUSCAR EMPLEADO-->
+<ng-template #buscarempleado2 let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">REALIZAR BÚSQUEDA - EMPLEADO</h4>
+            <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+        </div>
+        <div class="modal-body">
+                <div class="form-group">
+                        <input type="text" class="form-control busq" placeholder="Buscar" [(ngModel)]="busqueda8">
+                    </div>
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap">
+                    <thead>
+                        <tr>
+                            <th class="w-1">#</th>
+                            <th>Nombre</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let worker of workers | busquedas: busqueda8; index as i">
+                            <td><span class="text-muted">{{i+1}}</span></td>
+                            <td> {{worker.name + " " + worker.paternal_surname + " " + worker.maternal_surname}}</td>
+                          <td>
+                            <button (click)="this.userEditForm.get('worker').setValue(worker._id); busqueda8='';" [ngClass]="{'active': this.userEditForm.get('worker').value==worker._id}" class="btn btn-outline-success btn-circle">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ng-template>
+    <!--MODAL INFO-->
 

@@ -25,7 +25,17 @@
         <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
         <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
     </div>
-    <div class="col-12 card">
+    <div class="col-sm-12 animated fadeIn" *ngIf="cargando===true">
+
+        <div class="alert alert-dark text-center">
+            <strong>Cargando</strong>
+            <br>
+            <i class="fa fa-refresh fa-spin fa-2x"></i>
+            <br>
+            <span>Espere por favor</span>
+        </div>
+    </div>
+    <div class="col-12 card" *ngIf="!cargando">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
@@ -118,10 +128,15 @@
         <div *ngIf="productForm.controls.typeproduct.value == '5bebc3d03cf30da624b42291'">
             <div class="form-group">
                 <label for="proveedor">Proveedor</label>
+                <div class="input-group">
                 <select class="form-control custom-select" id="provider" name="provider" formControlName="provider">
                 <option [value]="null">Seleccionar proveedor...</option>
                 <option *ngFor="let provider of providers; index as i" [value]="provider._id">{{i+1}}.- {{provider.name}}</option>
                 </select>   
+                <span class="input-group-append">
+                <button class="btn btn-primary" type="button" (click)="openModalBusqueda(buscarproveedor)"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
             </div>
 
             <div class="row gutters-xs">
@@ -214,10 +229,15 @@
         <div *ngIf="productForm.controls.typeproduct.value == '5bebc3d03cf30da624b42291'">
             <div class="form-group">
                 <label for="proveedor">Proveedor</label>
+                <div class="input-group">
                 <select class="form-control custom-select" id="provider" name="provider" formControlName="provider">
                 <option [value]="null">Seleccionar proveedor...</option>
                 <option *ngFor="let provider of providers; index as i" [value]="provider._id">{{i+1}}.- {{provider.name}}</option>
-                </select>   
+                </select>     
+                <span class="input-group-append">
+                <button class="btn btn-primary" type="button" (click)="openModalBusqueda(buscarproveedor)"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
             </div>
 
             <div class="row gutters-xs">
@@ -338,3 +358,40 @@
     </div>
 </ng-template>
 <!--MODALS SELECTS END-->
+
+
+     <!--MODAL BUSCAR PROVEEDOR-->
+     <ng-template #buscarproveedor let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title">REALIZAR BÚSQUEDA - PROVEEDOR</h4>
+                <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+            </div>
+            <div class="modal-body">
+                    <div class="form-group">
+                            <input type="text" class="form-control busq" placeholder="Buscar" [(ngModel)]="busqueda5">
+                        </div>
+                <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="w-1">#</th>
+                                <th>Nombre</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let provider of providers | busquedas: busqueda5; index as i">
+                                <td><span class="text-muted">{{i+1}}</span></td>
+                                <td> {{provider.name}}</td>
+                              <td>
+                                <button (click)="this.productForm.get('provider').setValue(provider._id); busqueda5='';" [ngClass]="{'active': this.productForm.get('provider').value==provider._id}" class="btn btn-outline-success btn-circle">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </ng-template>
+        <!--MODAL INFO-->

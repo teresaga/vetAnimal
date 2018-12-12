@@ -16,6 +16,7 @@ export class CharactersComponent implements OnInit {
   characterForm: FormGroup;
   public character: Character;
   public status: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -40,6 +41,7 @@ export class CharactersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargando = false;
     this.getCharacters();
     this.characterForm = this.pf.group({
       name: ['', Validators.required]
@@ -163,12 +165,14 @@ export class CharactersComponent implements OnInit {
   //          OBTENER CARACTER Y REALIZAR PAGINACION        //
   ////////////////////////////////////////////////////////////
   getCharacters(){
+    this.cargando = true;
     this._characterService.getCharacters(this.pag).subscribe(
       response => {
         
         if(response.characters){
           this.characters = response.characters;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);

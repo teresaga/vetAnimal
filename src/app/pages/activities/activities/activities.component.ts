@@ -27,10 +27,12 @@ export class ActivitiesComponent implements OnInit {
     public activity: Activity;
     public status: string;
     public id: string;
+    cargando: boolean = true;
 
     //token
     public url: string;
     public token;
+    public identity;
 
     //Arreglos para selects
     public animals: Animal[];
@@ -49,6 +51,9 @@ export class ActivitiesComponent implements OnInit {
     public busquedaFechaHasta = null;
     public activities: Activity[];
     public busqueda;
+    public busqueda3;
+    public busqueda4;
+    public busqueda7;
     pag: number = 0;
     totalRegistros: number = 0;
 
@@ -65,6 +70,7 @@ export class ActivitiesComponent implements OnInit {
       this.activity = new Activity('','','','','','','','','','');
 
       this.token = this._userService.getToken();
+      this.identity = this._userService.getIdentity();
       this.url = GLOBAL.url;
       this.status = "";
       var date = new Date();
@@ -73,6 +79,7 @@ export class ActivitiesComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.cargando = false;
     this.getClients();
     this.activityForm = this.pf.group({
       date: ['', Validators.required],
@@ -86,7 +93,11 @@ export class ActivitiesComponent implements OnInit {
     this.getServicesA();
     this.getWorkersA();
   }
-
+  openModalBusqueda(content){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    }, (reason) => {
+    });
+  }
   openModal(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       
@@ -305,74 +316,122 @@ export class ActivitiesComponent implements OnInit {
   }
 
   getActivities(){
+    this.cargando = true;
 
-    if((this.busquedaStatus!=null && this.busquedaStatus!="null") && (this.busquedaAnimal!=null && this.busquedaAnimal!="null") && (this.busquedaClient!=null && this.busquedaClient!="null")){
-      this._activityService.getActivities_animalStatusDate(this.token, this.pag, this.busquedaAnimal, this.busquedaStatus, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
-        response => {
-          if(response.activities){
-            this.activities = response.activities;
-            this.totalRegistros = response.total;
-            if(this.totalRegistros==0){
-              this.openModalInfo(this.modalInfo);
+    if(this.identity.role=="VET"){
+      if((this.busquedaStatus==null || this.busquedaStatus=="null") && (this.busquedaAnimal!=null && this.busquedaAnimal!="null") && (this.busquedaClient!=null && this.busquedaClient!="null")){
+        this._activityService.getActivities_animalDateWorker(this.token, this.pag, this.busquedaAnimal, this.busquedaFechaDe, this.busquedaFechaHasta, this.identity.worker).subscribe(
+          response => {
+            if(response.activities){
+              this.activities = response.activities;
+              this.totalRegistros = response.total;
+              this.cargando = false;
+              if(this.totalRegistros==0){
+                this.openModalInfo(this.modalInfo);
+              }
             }
-          }
-        }, error => {
-          console.log(<any>error);
-        } 
-        
-      );
-    }
-    if((this.busquedaStatus==null || this.busquedaStatus=="null") && (this.busquedaAnimal!=null && this.busquedaAnimal!="null") && (this.busquedaClient!=null && this.busquedaClient!="null")){
-      this._activityService.getActivities_animalDate(this.token, this.pag, this.busquedaAnimal, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
-        response => {
-          if(response.activities){
-            this.activities = response.activities;
-            this.totalRegistros = response.total;
-            if(this.totalRegistros==0){
-              this.openModalInfo(this.modalInfo);
+          }, error => {
+            console.log(<any>error);
+          } 
+          
+        );
+      }
+      if((this.busquedaStatus==null || this.busquedaStatus=="null") && (this.busquedaAnimal==null || this.busquedaAnimal=="null") && (this.busquedaClient==null || this.busquedaClient=="null")){
+        this._activityService.getActivities_dateWorker(this.token, this.pag, this.busquedaFechaDe, this.busquedaFechaHasta, this.identity.worker).subscribe(
+          response => {
+            if(response.activities){
+              this.activities = response.activities;
+              this.totalRegistros = response.total;
+              this.cargando = false;
+              if(this.totalRegistros==0){
+                this.openModalInfo(this.modalInfo);
+              }
             }
-          }
-        }, error => {
-          console.log(<any>error);
-        } 
-        
-      );
-    }
-    if((this.busquedaStatus!=null && this.busquedaStatus!="null") && (this.busquedaAnimal==null || this.busquedaAnimal=="null") && (this.busquedaClient==null || this.busquedaClient=="null")){
-      this._activityService.getActivities_statusDate(this.token, this.pag, this.busquedaStatus, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
-        response => {
-          if(response.activities){
-            this.activities = response.activities;
-            this.totalRegistros = response.total;
-            if(this.totalRegistros==0){
-              this.openModalInfo(this.modalInfo);
+          }, error => {
+            console.log(<any>error);
+          } 
+          
+        );
+      }
+      if((this.busquedaFechaDe==null) && this.busquedaFechaHasta==null){
+        this.cargando = false;
+        this.openModalInfo(this.modalInfo);
+      }
+    }else{
+      if((this.busquedaStatus!=null && this.busquedaStatus!="null") && (this.busquedaAnimal!=null && this.busquedaAnimal!="null") && (this.busquedaClient!=null && this.busquedaClient!="null")){
+        this._activityService.getActivities_animalStatusDate(this.token, this.pag, this.busquedaAnimal, this.busquedaStatus, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
+          response => {
+            if(response.activities){
+              this.activities = response.activities;
+              this.totalRegistros = response.total;
+              this.cargando = false;
+              if(this.totalRegistros==0){
+                this.openModalInfo(this.modalInfo);
+              }
             }
-          }
-        }, error => {
-          console.log(<any>error);
-        } 
-        
-      );
-    }
-    if((this.busquedaStatus==null || this.busquedaStatus=="null") && (this.busquedaAnimal==null || this.busquedaAnimal=="null") && (this.busquedaClient==null || this.busquedaClient=="null")){
-      this._activityService.getActivities_date(this.token, this.pag, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
-        response => {
-          if(response.activities){
-            this.activities = response.activities;
-            this.totalRegistros = response.total;
-            if(this.totalRegistros==0){
-              this.openModalInfo(this.modalInfo);
+          }, error => {
+            console.log(<any>error);
+          } 
+          
+        );
+      }
+      if((this.busquedaStatus==null || this.busquedaStatus=="null") && (this.busquedaAnimal!=null && this.busquedaAnimal!="null") && (this.busquedaClient!=null && this.busquedaClient!="null")){
+        this._activityService.getActivities_animalDate(this.token, this.pag, this.busquedaAnimal, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
+          response => {
+            if(response.activities){
+              this.activities = response.activities;
+              this.totalRegistros = response.total;
+              this.cargando = false;
+              if(this.totalRegistros==0){
+                this.openModalInfo(this.modalInfo);
+              }
             }
-          }
-        }, error => {
-          console.log(<any>error);
-        } 
-        
-      );
+          }, error => {
+            console.log(<any>error);
+          } 
+          
+        );
+      }
+      if((this.busquedaStatus!=null && this.busquedaStatus!="null") && (this.busquedaAnimal==null || this.busquedaAnimal=="null") && (this.busquedaClient==null || this.busquedaClient=="null")){
+        this._activityService.getActivities_statusDate(this.token, this.pag, this.busquedaStatus, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
+          response => {
+            if(response.activities){
+              this.activities = response.activities;
+              this.totalRegistros = response.total;
+              this.cargando = false;
+              if(this.totalRegistros==0){
+                this.openModalInfo(this.modalInfo);
+              }
+            }
+          }, error => {
+            console.log(<any>error);
+          } 
+          
+        );
+      }
+      if((this.busquedaStatus==null || this.busquedaStatus=="null") && (this.busquedaAnimal==null || this.busquedaAnimal=="null") && (this.busquedaClient==null || this.busquedaClient=="null")){
+        this._activityService.getActivities_date(this.token, this.pag, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
+          response => {
+            if(response.activities){
+              this.activities = response.activities;
+              this.totalRegistros = response.total;
+              this.cargando = false;
+              if(this.totalRegistros==0){
+                this.openModalInfo(this.modalInfo);
+              }
+            }
+          }, error => {
+            console.log(<any>error);
+          } 
+          
+        );
+      }
+      if((this.busquedaFechaDe==null) && this.busquedaFechaHasta==null){
+        this.cargando = false;
+        this.openModalInfo(this.modalInfo);
+      }
     }
-    if((this.busquedaFechaDe==null) && this.busquedaFechaHasta==null){
-      this.openModalInfo(this.modalInfo);
-    }
+    
   }
 
   cambiarPag( valor: number){

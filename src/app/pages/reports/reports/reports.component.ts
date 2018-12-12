@@ -24,6 +24,7 @@ export class ReportsComponent implements OnInit {
   //token
   public url: string;
   public token;
+  cargando: boolean = true;
 
   public tipoReporte = "1";
   public busquedaFechaDe = null;
@@ -58,6 +59,7 @@ export class ReportsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargando = false;
   }
 
   openModalInfo(content) {
@@ -74,6 +76,7 @@ export class ReportsComponent implements OnInit {
   }
 
   realizarReporte(){
+    this.cargando = true;
     if(this.tipoReporte=="1"){
       this.getSales();
     }
@@ -103,12 +106,16 @@ export class ReportsComponent implements OnInit {
   ////////////////////////////////////////////
   //Obtener registros de Productos
   getProducts(){
+    this.cargando = true;
     this._productService.getProducts(this.token, this.pag).subscribe(
       response => {
         if(response.products){
           this.products = response.products;
           for (let product of this.products) {
               this.getSaleProduct(product);
+              if(product == this.products[this.products.length-1]){
+                this.cargando = false;
+              }
           }
           
         this.totalRegistros = response.total;
@@ -148,6 +155,7 @@ export class ReportsComponent implements OnInit {
   ////////////////////////////////////////////
   //Obtener registros de Clientes
   getClients(){
+    this.cargando = true;
     this._clientService.getClients(this.token, this.pag).subscribe(
       response => {
         if(response.clients){
@@ -155,6 +163,9 @@ export class ReportsComponent implements OnInit {
           this.totalRegistros = response.total;
           for (let client of this.clients) {
               this.getSaleClient(client);
+              if(client == this.clients[this.clients.length-1]){
+                this.cargando = false;
+              }
           }
         }
       }, error => {
@@ -186,11 +197,13 @@ export class ReportsComponent implements OnInit {
   ////////////////////////////////////////////
   //Obtener registros de ventas
   getSales(){
+    this.cargando = true;
     this._saleService.getSales(this.token,this.pag,this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
       response => {
         if(response.sales){
           this.sales = response.sales;
           this.totalRegistros = response.total;
+          this.cargando = false;
           if(this.totalRegistros==0){
             this.openModalInfo(this.modalInfo);
           }
@@ -223,10 +236,12 @@ export class ReportsComponent implements OnInit {
   ////////////////////////////////////////////
   //Obtener registros de Productos
   getCortes(){
+    this.cargando = true;
     this._corteService.getCortes(this.token, this.pag, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
       response => {
         if(response.cortes){
           this.cortes= response.cortes;
+          this.cargando = false;
           
         this.totalRegistros = response.total;
         }

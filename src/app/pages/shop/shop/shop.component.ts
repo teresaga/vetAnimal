@@ -40,6 +40,8 @@ export class ShopComponent implements OnInit{
   public status: string;
   public status2: string;
   public id: string;
+  public busqueda2;
+  public busqueda3;
 
   //token
   public url: string;
@@ -112,6 +114,12 @@ export class ShopComponent implements OnInit{
     }, (reason) => {
     });
     this.status="";
+  }
+
+  openModalBusqueda(content){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    }, (reason) => {
+    });
   }
 
   onSubmitAddSale(){

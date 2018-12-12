@@ -15,6 +15,7 @@ export class MeasurementunitsComponent implements OnInit {
   unitForm: FormGroup;
   public measurementunit: Measurementunit;
   public status: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -39,6 +40,7 @@ export class MeasurementunitsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargando = false;
     this.getMeasurementunits();
     this.unitForm = this.pf.group({
       name: ['', Validators.required]
@@ -164,11 +166,13 @@ export class MeasurementunitsComponent implements OnInit {
   //          OBTENER UNIDADES Y REALIZAR PAGINACION         //
   ////////////////////////////////////////////////////////////
   getMeasurementunits(){
+    this.cargando = true;
     this._measurementunitService.getMeasurementunits(this.pag).subscribe(
       response => {
         
         if(response.measurementunits){
           this.measurementunits = response.measurementunits;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);
