@@ -47,8 +47,18 @@
         <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
         <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
     </div>
+    <div class="col-sm-12 animated fadeIn" *ngIf="cargando===true">
+
+        <div class="alert alert-dark text-center">
+            <strong>Cargando</strong>
+            <br>
+            <i class="fa fa-refresh fa-spin fa-2x"></i>
+            <br>
+            <span>Espere por favor</span>
+        </div>
+    </div>
     <!--VENTAS-->
-    <div class="col-12 card" *ngIf="tipoReporte==='1'">
+    <div class="col-12 card" *ngIf="tipoReporte==='1' && !cargando">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
@@ -77,7 +87,7 @@
         </div>
     </div>
     <!--VENTAS CLIENTE-->
-    <div class="col-12 card" *ngIf="tipoReporte==='2'">
+    <div class="col-12 card" *ngIf="tipoReporte==='2' && !cargando">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
@@ -98,7 +108,7 @@
         </div>
     </div>
     <!--VENTAS PRODUCTO-->
-    <div class="col-12 card" *ngIf="tipoReporte==='3'">
+    <div class="col-12 card" *ngIf="tipoReporte==='3' && !cargando">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
@@ -119,7 +129,7 @@
         </div>
     </div>
     <!--VENTAS-->
-    <div class="col-12 card" *ngIf="tipoReporte==='4'">
+    <div class="col-12 card" *ngIf="tipoReporte==='4' && !cargando">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>

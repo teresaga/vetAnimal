@@ -18,11 +18,14 @@ import { ConsultationService } from '../../../services/consultation.service';
 })
 export class ConsultationsComponent implements OnInit {
   @ViewChild('information') modalInfo: Element;
+  @ViewChild('information2') modalInfo2: Element;
+
   //Para form y registrar consultas
   consultationForm: FormGroup;
   public consultation: Consultation;
   public status: string;
   public id: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -42,6 +45,8 @@ export class ConsultationsComponent implements OnInit {
   public busquedaFechaHasta = null;
   public consultations: Consultation[];
   public busqueda;
+  public busqueda3;
+  public busqueda4;
   pag: number = 0;
   totalRegistros: number = 0;
 
@@ -63,8 +68,13 @@ export class ConsultationsComponent implements OnInit {
     this.busquedaFechaDe=date.toISOString().slice(0,10);
     this.busquedaFechaHasta=date.toISOString().slice(0,10);
   }
-
+  openModalBusqueda(content){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    }, (reason) => {
+    });
+  }
   ngOnInit() {
+    this.cargando = false;
     this.getClients();
     this.consultationForm = this.pf.group({
       client: ['', Validators.required],
@@ -191,21 +201,29 @@ export class ConsultationsComponent implements OnInit {
   }
 
   getHistoryOfAnimal(){
-    this._consultationService.getHistoryOfAnimal(this.token, this.busquedaAnimal, this.pag, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
-      response => {
-        console.log(response);
-        if(response.consultations){
-          this.consultations = response.consultations;
-          this.totalRegistros = response.total;
-          if(this.totalRegistros==0){
-            this.openModalInfo(this.modalInfo);
+    this.cargando = true;
+    if(this.busquedaAnimal==null || this.busquedaAnimal=="null"){
+      this.cargando=false;
+      this.openModalInfo(this.modalInfo2);
+    }else{
+      this._consultationService.getHistoryOfAnimal(this.token, this.busquedaAnimal, this.pag, this.busquedaFechaDe, this.busquedaFechaHasta).subscribe(
+        response => {
+          console.log(response);
+          if(response.consultations){
+            this.consultations = response.consultations;
+            this.totalRegistros = response.total;
+            this.cargando = false;
+            if(this.totalRegistros==0){
+              this.openModalInfo(this.modalInfo);
+            }
           }
-        }
-      }, error => {
-        console.log(<any>error);
-      } 
-      
-    );
+        }, error => {
+          console.log(<any>error);
+        } 
+        
+      );
+    }
+    
   }
 
   cambiarPag( valor: number){

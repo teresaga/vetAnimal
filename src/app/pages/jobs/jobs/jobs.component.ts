@@ -16,6 +16,7 @@ export class JobsComponent implements OnInit {
   jobForm: FormGroup;
   public job: Job;
   public status: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -163,12 +164,14 @@ export class JobsComponent implements OnInit {
   //          OBTENER PUESTOS Y REALIZAR PAGINACION         //
   ////////////////////////////////////////////////////////////
   getJobs(){
+    this.cargando = true;
     this._jobService.getJobs(this.pag).subscribe(
       response => {
         
         if(response.jobs){
           this.jobs = response.jobs;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);

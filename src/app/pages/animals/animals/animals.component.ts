@@ -33,6 +33,7 @@ export class AnimalsComponent implements OnInit {
   public p : String;
   public status: string;
   public id: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -41,6 +42,7 @@ export class AnimalsComponent implements OnInit {
   //Variables para mostrar animales y realizar paginacion
   public animals: Animal[];
   public busquedaClient = null;
+  public busqueda3;
   pag: number = 0;
   totalRegistros: number = 0;
 
@@ -86,8 +88,13 @@ export class AnimalsComponent implements OnInit {
     this.url = GLOBAL.url;
     this.status = "";
   }
-
+  openModalBusqueda(content){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    }, (reason) => {
+    });
+  }
   ngOnInit() {
+    this.cargando = false;
     this.getClients();
     this.getHabitatsA();
     this.getCharactersA();
@@ -467,12 +474,14 @@ export class AnimalsComponent implements OnInit {
   }
 
   getAnimalsofClient(){
+    this.cargando = true;
     this._animalService.getAnimalsClient(this.token, this.busquedaClient, this.pag).subscribe(
       response => {
         
         if(response.animals){
           this.animals = response.animals;
           this.totalRegistros = response.total;
+          this.cargando = false;
           if(this.totalRegistros==0){
             this.openModalInfo(this.modalInfo);
           }

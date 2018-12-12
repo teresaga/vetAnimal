@@ -17,6 +17,7 @@ export class ClientsComponent implements OnInit {
   public client: Client;
   public status: string;
   public id: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -41,6 +42,7 @@ export class ClientsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargando = false;
     this.getClients();
 
     this.clientForm = this.pf.group({
@@ -205,12 +207,14 @@ export class ClientsComponent implements OnInit {
   //         OBTENER CLIENTES Y REALIZAR PAGINACION         //
   ////////////////////////////////////////////////////////////
   getClients(){
+    this.cargando = true;
     this._clientService.getClients(this.token, this.pag).subscribe(
       response => {
         
         if(response.clients){
           this.clients = response.clients;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);

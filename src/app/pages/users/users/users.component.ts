@@ -19,6 +19,7 @@ export class UsersComponent implements OnInit {
   public user: User;
   public status: string;
   public status2: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -31,6 +32,8 @@ export class UsersComponent implements OnInit {
   //Variables para mostrar productos y realizar paginacion
   public users: User[];
   public busqueda;
+  public busqueda6;
+  public busqueda8;
   pag: number = 0;
   totalRegistros: number = 0;
 
@@ -53,8 +56,14 @@ export class UsersComponent implements OnInit {
     this.message = "";
     this.message2 = "";
   }
+  openModalBusqueda(content){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    }, (reason) => {
+    });
+  }
 
   ngOnInit() {
+    this.cargando = false;
     this.getUsers();
     this.getWorkersA();
     this.userForm = this.pf.group({
@@ -215,12 +224,14 @@ export class UsersComponent implements OnInit {
   //          OBTENER USUARIOS Y REALIZAR PAGINACION        //
   ////////////////////////////////////////////////////////////
   getUsers(){
+    this.cargando = true;
     this._userService.getUsers(this.token, this.identity._id, this.pag).subscribe(
       response => {
         
         if(response.users){
           this.users = response.users;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);

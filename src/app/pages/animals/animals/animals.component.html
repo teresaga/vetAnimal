@@ -7,10 +7,15 @@
           <div class="row">
               <div class="form-group col-md-4 col-lg-4">
                 <label class="form-label">Cliente</label>
+                <div class="input-group">
                 <select class="form-control custom-select busq" id="cliente" [(ngModel)]="busquedaClient">
                     <option [value]="null">Selecciona...</option>
                     <option *ngFor="let client of clients; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>
                 </select>
+                <span class="input-group-append">
+                <button class="btn btn-primary" type="button" (click)="openModalBusqueda(buscar2)"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
               </div>
               <div class="col-md-2 col-lg-1">
                     <br>
@@ -34,7 +39,17 @@
         <button (click)="cambiarPag(-5)" class="btn btn-secondary" [disabled]="pag <= 0">Anteriores</button>
         <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
     </div>
-  <div class="col-12 card">
+    <div class="col-sm-12 animated fadeIn" *ngIf="cargando===true">
+
+        <div class="alert alert-dark text-center">
+            <strong>Cargando</strong>
+            <br>
+            <i class="fa fa-refresh fa-spin fa-2x"></i>
+            <br>
+            <span>Espere por favor</span>
+        </div>
+    </div>
+  <div class="col-12 card" *ngIf="!cargando">
       <div class="table-responsive">
           <table class="table card-table table-vcenter text-nowrap">
               <thead>
@@ -45,8 +60,8 @@
                       <th>Raza</th>
                       <th>Fecha de<br> Nacimiento</th>
                       <th>Sexo</th>
-                      <th>Altura</th>
-                      <th>Peso</th>
+                      <th>Altura (Cm)</th>
+                      <th>Peso (Kg)</th>
                       <th>Cliente</th>
                       <th>Fecha Alta</th>
                       <th>Fecha Baja</th>
@@ -110,11 +125,16 @@
               <div class="row gutters-xs">
                   <div class="col-6">
                       <label for="cliente">Cliente</label>
+                      <div class="input-group">
                       <select class="form-control custom-select" id="client" name="client" formControlName="client">
                             <option [value]="null">Selecciona...</option>
                             <option *ngFor="let client of clients2; index as i" [value]="client._id">{{i+1}}.- {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</option>
     
                       </select> 
+                      <span class="input-group-append">
+                      <button class="btn btn-primary" type="button" (click)="openModalBusqueda(buscarcliente2)"><i class="fas fa-search"></i></button>
+                      </span>
+                  </div>
                   </div>
 
                   <div class="col-6">
@@ -235,12 +255,12 @@
 
           <div class="row gutters-xs">
                 <div class="col-3">
-                    <label for="peso">Peso</label>
+                    <label for="peso">Peso (Kg)</label>
                     <input class="form-control" id="weight" type="text" name="weight" formControlName="weight"> 
                 </div>
     
                 <div class="col-3">
-                    <label for="altura">Altura</label>
+                    <label for="altura">Altura (Cm)</label>
                     <input class="form-control" id="height" type="text" name="height" formControlName="height"> 
                 </div>
             <div class="col-6">
@@ -307,11 +327,16 @@
                 <div class="row gutters-xs">
                     <div class="col-6">
                         <label for="cliente">Cliente</label>
+                        <div class="input-group">
                         <select class="form-control custom-select" id="client" name="client" formControlName="client">
                             <option [value]="null">Selecciona...</option>
                             <option *ngFor="let client of clients2; index as i" [value]="client._id">{{i+1}}.- {{client.name  + " " + client.paternal_surname + " " + client.maternal_surname}}</option>
     
                         </select> 
+                        <span class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click)="openModalBusqueda(buscarcliente2)"><i class="fas fa-search"></i></button>
+                        </span>
+                    </div>
                     </div>
 
                     <div class="col-6">
@@ -432,12 +457,12 @@
 
             <div class="row gutters-xs">
                 <div class="col-3">
-                    <label for="peso">Peso</label>
+                    <label for="peso">Peso (Kg)</label>
                     <input class="form-control" id="weight" type="text" name="weight" formControlName="weight"> 
                 </div>
     
                 <div class="col-3">
-                    <label for="altura">Altura</label>
+                    <label for="altura">Altura (Cm)</label>
                     <input class="form-control" id="height" type="text" name="height" formControlName="height"> 
                 </div>
             <div class="col-6">
@@ -609,12 +634,12 @@
 
           <div class="row gutters-xs">
                 <div class="col-3">
-                    <label for="peso" class="form-label">Peso</label>&nbsp;
+                    <label for="peso" class="form-label">Peso (Kg)</label>&nbsp;
                     {{animal.weight}}
                 </div>
     
                 <div class="col-3">
-                    <label for="altura" class="form-label">Altura</label>&nbsp;
+                    <label for="altura" class="form-label">Altura (Cm)</label>&nbsp;
                     {{animal.height}}
                 </div>
                 <div class="col-3">
@@ -754,3 +779,76 @@
     </div>
 </ng-template>
 <!--MODAL INFO-->
+
+
+<!--MODAL BUSCAR CLIENTE-->
+<ng-template #buscar2 let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">REALIZAR BÚSQUEDA - CLIENTE</h4>
+            <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+        </div>
+        <div class="modal-body">
+                <div class="form-group">
+                        <input type="text" class="form-control busq" placeholder="Buscar" [(ngModel)]="busqueda3">
+                    </div>
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap">
+                    <thead>
+                        <tr>
+                            <th class="w-1">#</th>
+                            <th>Descripción</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let client of clients | busquedas: busqueda3; index as i">
+                          <td><span class="text-muted">{{i+1}}</span></td>
+                          <td> {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</td>
+                        <td>
+                            <button (click)="busquedaClient= client._id" [ngClass]="{'active': busquedaClient==client._id}" class="btn btn-outline-success btn-circle">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ng-template>
+    <!--MODAL INFO-->
+
+    <!--MODAL BUSCAR CLIENTE-->
+<ng-template #buscarcliente2 let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">REALIZAR BÚSQUEDA - CLIENTE</h4>
+            <button class="close" aria-label="Close" (click)="modal.dismiss()"></button>   
+        </div>
+        <div class="modal-body">
+                <div class="form-group">
+                        <input type="text" class="form-control busq" placeholder="Buscar" [(ngModel)]="busqueda3">
+                    </div>
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap">
+                    <thead>
+                        <tr>
+                            <th class="w-1">#</th>
+                            <th>Descripción</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let client of clients2 | busquedas: busqueda3; index as i">
+                          <td><span class="text-muted">{{i+1}}</span></td>
+                          <td> {{client.name + " " + client.paternal_surname + " " + client.maternal_surname}}</td>
+                        <td>
+                            <button (click)="this.animalForm.get('client').setValue(client._id); busqueda3='';" [ngClass]="{'active': this.animalForm.get('client').value==client._id}" class="btn btn-outline-success btn-circle">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ng-template>
+    <!--MODAL INFO-->

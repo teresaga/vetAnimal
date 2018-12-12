@@ -26,7 +26,18 @@
         <button (click)="cambiarPag(5)" class="btn btn-secondary" [disabled]="pag+5 >= totalRegistros">Siguientes</button>
     </div>
 
-    <div class="col-12 card">
+    
+    <div class="col-sm-12 animated fadeIn" *ngIf="cargando===true">
+  
+        <div class="alert alert-dark text-center">
+            <strong>Cargando</strong>
+            <br>
+            <i class="fa fa-refresh fa-spin fa-2x"></i>
+            <br>
+            <span>Espere por favor</span>
+        </div>
+    </div>
+    <div class="col-12 card" *ngIf="!cargando">
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap">
                 <thead>
@@ -92,7 +103,6 @@
 
           <div class="form-group">
             <label for="nombre">Nombre </label>&nbsp;
-            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.name.invalid && workerForm.controls.name.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
             <div class="input-icon">
                 <span class="input-icon-addon">
                     <i class="fe fe-user"></i>
@@ -105,12 +115,10 @@
               <div class="row gutters-xs">
                   <div class="col-6">
                     <label for="app">Apellido Paterno</label>&nbsp;
-                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.paternal_surname.invalid && workerForm.controls.paternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                     <input class="form-control" id="paternal_surname" name="paternal_surname" type="text" formControlName="paternal_surname">
                   </div>
                   <div class="col-6">
                     <label for="app">Apellido Materno</label>&nbsp;
-                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.maternal_surname.invalid && workerForm.controls.maternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                     <input class="form-control" id="maternal_surname" name="maternal_surname" type="text" formControlName="maternal_surname">
                   </div>
               </div>  
@@ -118,7 +126,6 @@
           
           <div class="form-group">
             <label for="direccion">Dirección</label>&nbsp;
-            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.address.invalid && workerForm.controls.address.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
             <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"></textarea>
           </div>
           
@@ -126,7 +133,6 @@
             <div class="row gutters-xs">
               <div class="col-6">
                 <label for="telefono">Teléfono</label>&nbsp;
-                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.tel.invalid && workerForm.controls.tel.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                 <div class="input-icon">
                     <span class="input-icon-addon">
                         <i class="fe fe-phone"></i>
@@ -136,7 +142,6 @@
               </div>
               <div class="col-6">
                     <label for="fechanac">Fecha de nacimiento</label>&nbsp;
-                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.birthdate.invalid && workerForm.controls.birthdate.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
 
                     <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
                 </div>
@@ -145,7 +150,6 @@
 
           <div class="form-group">
             <label for="email">Email</label>&nbsp;
-            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.email.invalid && workerForm.controls.email.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
             <div class="input-icon">
                 <span class="input-icon-addon">
                     <i class="fe fe-mail"></i>
@@ -157,14 +161,12 @@
           <div class="row gutters-xs">
             <div class="col-6">
               <label for="salary">Salario</label>&nbsp;
-              <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.salary.invalid && workerForm.controls.salary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
               <input class="form-control" id="salary" name="salary" type="text" formControlName="salary">
             </div>
 
             <div class="col-6">
               <div class="form-group">
                 <label class="puesto">Puesto</label>&nbsp;
-                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.job.invalid && workerForm.controls.job.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
           
                 <div class="input-group">
                   <select class="form-control custom-select" id="job" formControlName="job"> 
@@ -184,12 +186,10 @@
             <div class="row gutters-xs">
                 <div class="col-6">
                   <label for="entrada">Entrada</label>&nbsp;
-                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.entry_horary.invalid && workerForm.controls.entry_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                   <input class="form-control" id="entry_horary" name="entry_horary" type="time" value="00:00:00" step="1" formControlName="entry_horary"> 
                 </div>
                 <div class="col-6">
                   <label for="salida">Salida</label>&nbsp;
-                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.departure_horary.invalid && workerForm.controls.departure_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                   <input class="form-control" id="departure_horary" name="departure_horary" type="time" value="00:00:00" step="1" formControlName="departure_horary"> 
                 </div>
             </div>  
@@ -218,7 +218,6 @@
 
           <div class="form-group">
             <label for="nombre">Nombre </label>&nbsp;
-            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.name.invalid && workerForm.controls.name.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
             <div class="input-icon">
                 <span class="input-icon-addon">
                     <i class="fe fe-user"></i>
@@ -231,12 +230,10 @@
               <div class="row gutters-xs">
                   <div class="col-6">
                     <label for="app">Apellido Paterno</label>&nbsp;
-                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.paternal_surname.invalid && workerForm.controls.paternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                     <input class="form-control" id="paternal_surname" name="paternal_surname" type="text" formControlName="paternal_surname">
                   </div>
                   <div class="col-6">
                     <label for="app">Apellido Materno</label>&nbsp;
-                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.maternal_surname.invalid && workerForm.controls.maternal_surname.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                     <input class="form-control" id="maternal_surname" name="maternal_surname" type="text" formControlName="maternal_surname">
                   </div>
               </div>  
@@ -244,7 +241,6 @@
           
           <div class="form-group">
             <label for="direccion">Dirección</label>&nbsp;
-            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.address.invalid && workerForm.controls.address.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
             <textarea class="form-control" rows="2" id="address" name="address" formControlName="address"></textarea>
           </div>
           
@@ -252,7 +248,6 @@
             <div class="row gutters-xs">
               <div class="col-6">
                 <label for="telefono">Teléfono</label>&nbsp;
-                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.tel.invalid && workerForm.controls.tel.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                 <div class="input-icon">
                     <span class="input-icon-addon">
                         <i class="fe fe-phone"></i>
@@ -262,7 +257,6 @@
               </div>
               <div class="col-6">
                     <label for="fechanac">Fecha de nacimiento</label>&nbsp;
-                    <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.birthdate.invalid && workerForm.controls.birthdate.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
 
                     <input class="form-control" id="birthdate" name="birthdate" type="date" formControlName="birthdate"> 
                 </div>
@@ -271,7 +265,6 @@
 
           <div class="form-group">
             <label for="email">Email</label>&nbsp;
-            <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.email.invalid && workerForm.controls.email.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
             <div class="input-icon">
                 <span class="input-icon-addon">
                     <i class="fe fe-mail"></i>
@@ -283,14 +276,12 @@
           <div class="row gutters-xs">
             <div class="col-6">
               <label for="salary">Salario</label>&nbsp;
-              <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.salary.invalid && workerForm.controls.salary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
               <input class="form-control" id="salary" name="salary" type="text" formControlName="salary">
             </div>
 
             <div class="col-6">
               <div class="form-group">
                 <label class="puesto">Puesto</label>&nbsp;
-                <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.job.invalid && workerForm.controls.job.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
           
                 <div class="input-group">
                   <select class="form-control custom-select" id="job" formControlName="job"> 
@@ -310,12 +301,10 @@
             <div class="row gutters-xs">
                 <div class="col-6">
                   <label for="entrada">Entrada</label>&nbsp;
-                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.entry_horary.invalid && workerForm.controls.entry_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                   <input class="form-control" id="entry_horary" name="entry_horary" type="time" value="00:00:00" step="1" formControlName="entry_horary"> 
                 </div>
                 <div class="col-6">
                   <label for="salida">Salida</label>&nbsp;
-                  <i class="fas fa-exclamation-circle" style="color:red;" *ngIf="workerForm.controls.departure_horary.invalid && workerForm.controls.departure_horary.touched" data-toggle="tooltip" title="Falta llenar campo"></i>
                   <input class="form-control" id="departure_horary" name="departure_horary" type="time" value="00:00:00" step="1" formControlName="departure_horary"> 
                 </div>
             </div>  

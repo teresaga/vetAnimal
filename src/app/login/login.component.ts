@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   public identity;
   public token;
   public status: string;
+  cargando: boolean = true;
 
   constructor(
     private _route: ActivatedRoute,
@@ -25,9 +26,11 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargando = false;
   }
 
   onSubmit() {
+    this.cargando = true;
     //Loguear al usuario y conseguir el objeto
     this._userService.signup(this.user).subscribe(
       response => {
@@ -49,6 +52,7 @@ export class LoginComponent implements OnInit {
               }else{
                 localStorage.setItem('token', this.token);
                 this.status = 'success';
+                this.cargando = false;
 
                 this._router.navigate(['/home']);
               }

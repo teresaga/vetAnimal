@@ -44,7 +44,7 @@ const pagesRoutes: Routes = [
             {path: 'productos', component: ProductsComponent , canActivate: [AdminGuard]},
             {path: 'usuarios', component: UsersComponent, canActivate: [AdminGuard]},
             {path: 'consultas', component: ConsultationsComponent, canActivate: [VetGuard]},
-            {path: 'actividades', component: ActivitiesComponent, canActivate: [CajeroGuard]},
+            {path: 'actividades', component: ActivitiesComponent},
             {path: 'configuracion', component: SettingsComponent},
             {path: 'informes', component: ReportsComponent, canActivate: [AdminGuard]},
             {path: 'puestos', component: JobsComponent, canActivate: [AdminGuard]},

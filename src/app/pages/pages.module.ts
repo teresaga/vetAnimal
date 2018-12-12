@@ -39,6 +39,7 @@ import { SpeciesComponent } from './species/species/species.component';
 import { HabitatsComponent } from './habitats/habitats/habitats.component';
 import { DatesPipe } from './pipes/dates.pipe';
 import { DatetimePipe } from './pipes/datetime.pipe';
+import { BusquedasPipe } from './pipes/busquedas.pipe';
 @NgModule({
   declarations: [
     PagesComponent,
@@ -68,7 +69,8 @@ import { DatetimePipe } from './pipes/datetime.pipe';
     SpeciesComponent,
     HabitatsComponent,
     DatesPipe,
-    DatetimePipe
+    DatetimePipe,
+    BusquedasPipe
   ],
   imports: [
     SharedModule,

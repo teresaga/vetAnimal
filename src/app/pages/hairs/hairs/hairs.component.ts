@@ -16,6 +16,7 @@ export class HairsComponent implements OnInit {
   hairForm: FormGroup;
   public hair: Hair;
   public status: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -40,6 +41,7 @@ constructor(
 }
 
 ngOnInit() {
+  this.cargando = false;
   this.getHairs();
   this.hairForm = this.pf.group({
     name: ['', Validators.required]
@@ -163,12 +165,14 @@ activateHair(hair : Hair){
 //      OBTENER TIPO DE PELO Y REALIZAR PAGINACION        //
 ////////////////////////////////////////////////////////////
 getHairs(){
+  this.cargando = true;
   this._hairService.getHairs(this.pag).subscribe(
     response => {
       
       if(response.hairs){
         this.hairs = response.hairs;
         this.totalRegistros = response.total;
+        this.cargando = false;
       }
     }, error => {
       console.log(<any>error);

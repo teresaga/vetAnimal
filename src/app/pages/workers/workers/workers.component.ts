@@ -20,6 +20,7 @@ export class WorkersComponent implements OnInit {
   public status: string;
   public status2: string;
   public id: string;
+  cargando: boolean = true;
 
   //token
   public url: string;
@@ -53,6 +54,7 @@ export class WorkersComponent implements OnInit {
   }
   
   ngOnInit() {
+    this.cargando = false;
     this.getWorkers();
     this.getJobsA();
     this.jobForm = this.pf.group({
@@ -292,12 +294,14 @@ export class WorkersComponent implements OnInit {
   //         OBTENER EMPLEADOS Y REALIZAR PAGINACION        //
   ////////////////////////////////////////////////////////////
   getWorkers(){
+    this.cargando = true;
     this._workerService.getWokers(this.token, this.pag).subscribe(
       response => {
         
         if(response.workers){
           this.workers = response.workers;
           this.totalRegistros = response.total;
+          this.cargando = false;
         }
       }, error => {
         console.log(<any>error);
